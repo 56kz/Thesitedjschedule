@@ -1,0 +1,6 @@
+<h1>Cabinas</h1>
+
+<% @rooms.each do |r| %>
+<%= link_to r.name, room_schedules_path(r) %>
+<br>
+<% end %>

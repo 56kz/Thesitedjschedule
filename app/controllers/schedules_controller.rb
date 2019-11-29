@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
   def index
-    @schedules = Schedule.all
+    @schedules = Schedule.where(room_id: params[:room_id])
     @reservations = Reservation.all
   end
 

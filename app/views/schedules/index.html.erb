@@ -1,58 +1,10 @@
 <h1>Horarios</h1>
 
-<table>
-  <tr>
-    <th>Id</th>
-    <th>Nombre</th>
-    <th>Sala</th>
-  </tr>
 
-  <% @schedules.each do |s| %>
-    <tr>
-      <td><%= s.id %></td>
-      <td><%= s.name %></td>
-      <td><%= s.room.name %></td>
-    </tr>
-  <% end %>
-
-</table>
-
-
-<h1>Horarios Disponibles</h1>
-<table>
-  <tr>
-    <th>Horario</th>
-    <th>Sala</th>
-  </tr>
-
-  <% @schedules.each do |s|%>
-  <tr>
-    <td><%= s.name %></td>
-    <td><%= s.room.name %></td>
-  </tr>
-  <% end %>
-</table>
-
-
-
-
-<h1>Horarios Reservados</h1>
-
-<table>
-  <tr>
-    <th>Horario</th>
-    <th>Suscripción</th>
-    <th>Usuario</th>
-    <th>Sala</th>
-  </tr>
-
-  <% @reservations.each do |r| %>
-    <tr>
-      <td><%= r.schedule.name %></td>
-      <td><%= r.suscription.name %></td>
-      <td><%= r.suscription.user.name %></td>
-      <td><%= r.schedule.room.name %></td>
-    </tr>
-  <% end %>
-
-</table>
+   <% @schedules.each do |s| %>
+      <% if Reservation.where(schedule_id: s.id).empty? %>
+      <p><%= s.name %></p>
+      <% else %>
+      <p><%= Reservation.where(schedule_id: s.id).first.suscription.user.name %></p>
+      <% end %>
+   <% end %>
