@@ -1,0 +1,32 @@
+<%= link_to "Crear Suscripcion", new_suscription_path, class: "btn btn-primary" %>
+
+<h1>Suscripciones</h1>
+
+<table>
+  <tr>
+    <th>Tipo</th>
+    <th>Estado</th>
+    <th>Horas</th>
+    <th>Cabinas</th>
+    <th>Observaciones</th>
+    <th>Suscriptor</th>
+    <th></th>
+  </tr>
+
+  <% @suscriptions.each do |s| %>
+    <tr>
+      <td><%= s.name %></td>
+      <td><%= s.status %></td>
+      <td><%= s.hours %></td>
+      <td><%= s.rooms %></td>
+      <td><%= s.observations %></td>
+      <td><%= s.user.name %></td>
+      <td>
+        <%= link_to "Editar", edit_suscription_path(s) %>
+        <%= link_to "Eliminar", s, method: :delete, data: { confirm: "Seguro deseas eliminar la suscripción?" } %>
+      </td>
+    </tr>
+  <% end %>
+
+
+</table>

@@ -1,0 +1,26 @@
+<h1>Editar Suscripción</h1>
+  <%= form_for @suscription do |s| %>
+
+
+    <div class="form-group">
+      <%= s.select :name, Suscription.names.keys %>
+    </div>
+    <div class="form-group">
+      <%= s.label "Activo" %> <br />
+      <%= s.check_box :status %>
+    </div>
+    <div class="form-group">
+      <%= s.text_field :user_id, class: "form-control input-lg", placeholder: "Id de Usuario" %>
+    </div>
+    <div class="form-group">
+      <%= s.label "Horas" %> <br />
+      <%= s.select :hours, Suscription.hours.keys %>
+    </div>
+    <div class="form-group">
+      <%= s.text_field :observations, class: "form-control input-lg", placeholder: "Observaciones" %>
+    </div>
+    <div>
+      <%= s.submit "Editar Suscripción", class: "btn btn-primary btn-lg btn-block" %>
+    </div>
+
+  <% end %>

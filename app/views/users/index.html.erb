@@ -1,0 +1,30 @@
+<%= link_to "Crear Usuario", new_user_path, class: "btn btn-primary" %>
+
+<h1>Usuarios</h1>
+
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Nombre</th>
+    <th>Teléfono</th>
+    <th>Email</th>
+    <th>Rol</th>
+    <th></th>
+  </tr>
+
+  <% @users.each do |u| %>
+    <tr>
+      <td><%= u.id %></td>
+      <td><%= u.name %></td>
+      <td><%= u.phone %></td>
+      <td><%= u.email %></td>
+      <td><%= u.rol %></td>
+      <td>
+        <%= link_to "Editar", edit_user_path(u) %>
+        <%= link_to "Eliminar", u, method: :delete, data: { confirm: "Seguro deseas eliminar el usuario?" } %>
+      </td>
+    </tr>
+  <% end %>
+
+</table>

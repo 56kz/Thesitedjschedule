@@ -1,0 +1,19 @@
+<h1>Editar Usuario</h1>
+  <%= form_for @user do |u| %>
+
+    <div class="form-group">
+      <%= u.text_field :name, class: "form-control input-lg", placeholder: "Nombre" %>
+    </div>
+    <div class="form-group">
+      <%= u.email_field :email, class: "form-control input-lg", placeholder: "Email" %>
+    </div>
+    <div class="form-group">
+      <%= u.text_field :phone, class: "form-control input-lg", placeholder: "Celular" %>
+    </div>
+    <div class="form-group">
+      <%= u.select :rol, User.rols.keys %>
+    </div>
+    <div>
+      <%= u.submit "Editar Usuario", class: "btn btn-primary btn-lg btn-block" %>
+    </div>
+  <% end %>
