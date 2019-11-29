@@ -1,0 +1,21 @@
+<%= link_to "Crear Reserva", new_reservation_path  %>
+<h1>Reservas</h1>
+
+<table>
+  <tr>
+    <th>Horario</th>
+    <th>Suscripción</th>
+    <th>Usuario</th>
+    <th>Sala</th>
+  </tr>
+
+  <% @reservations.each do |r| %>
+    <tr>
+      <td><%= r.schedule.name %></td>
+      <td><%= r.suscription.name %></td>
+      <td><%= r.suscription.user.name %></td>
+      <td><%= r.schedule.room.name %></td>
+    </tr>
+  <% end %>
+
+</table>

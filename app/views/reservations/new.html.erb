@@ -1,0 +1,13 @@
+<h1>Crear Reserva</h1>
+
+<%= form_for @reservation do |r| %>
+  <div class="form-group">
+    <%= r.text_field :schedule_id, class: "form-control input-lg", placeholder: "Id de Horario" %>
+  </div>
+  <div class="form-group">
+    <%= r.text_field :suscription_id, class: "form-control input-lg", placeholder: "Id de Suscripción" %>
+  </div>
+  <div>
+    <%= r.submit "Crear Reserva", class: "btn btn-primary btn-lg btn-block" %>
+  </div>
+<% end %>

@@ -4,6 +4,7 @@
 
 <table>
   <tr>
+    <th>Id</th>
     <th>Tipo</th>
     <th>Estado</th>
     <th>Horas</th>
@@ -15,6 +16,7 @@
 
   <% @suscriptions.each do |s| %>
     <tr>
+      <td><%= s.id %></td>
       <td><%= s.name %></td>
       <td><%= s.status %></td>
       <td><%= s.hours %></td>

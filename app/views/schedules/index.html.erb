@@ -1,0 +1,18 @@
+<h1>Horarios</h1>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Nombre</th>
+    <th>Sala</th>
+  </tr>
+
+  <% @schedules.each do |s| %>
+    <tr>
+      <td><%= s.id %></td>
+      <td><%= s.name %></td>
+      <td><%= s.room.name %></td>
+    </tr>
+  <% end %>
+
+</table>
