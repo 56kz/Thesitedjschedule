@@ -1,27 +1,36 @@
-<h1>Crear Suscripción</h1>
-  <%= form_for @suscription do |s| %>
-    <div class="form-group">
-      <%= s.select :name, Suscription.names.keys %>
-    </div>
-    <div class="form-group">
-      <%= s.label "Activo" %> <br />
-      <%= s.check_box :status %>
-    </div>
-    <div class="form-group">
-      <%= s.text_field :user_id, class: "form-control input-lg", placeholder: "Id de Usuario" %>
-    </div>
-    <div class="form-group">
-      <%= s.label "Horas" %> <br />
-      <%= s.select :hours, Suscription.hours.keys %>
-    </div>
-    <div class="form-group">
-      <%= s.text_field :rooms, class: "form-control input-lg", placeholder: "Cabinas" %>
-    </div>
-    <div class="form-group">
-      <%= s.text_field :observations, class: "form-control input-lg", placeholder: "Observaciones" %>
-    </div>
-    <div>
-      <%= s.submit "Crear Suscripción", class: "btn btn-primary btn-lg btn-block" %>
-    </div>
+<div class="container text-center">
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-lg-4 col-lg-offset-4">
+      <h1>Crear Suscripción</h1>
+      <br>
+        <%= form_for @suscription do |s| %>
+          <div class="form-group">
+            <%= s.text_field :user_id, class: "form-control input-sm", placeholder: "Id de Usuario" %>
+          </div>
+          <div class="form-group">
+            <%= s.text_field :rooms, class: "form-control input-sm", placeholder: "Cabinas" %>
+          </div>
+          <div class="form-group">
+            <%= s.text_field :observations, class: "form-control input-sm", placeholder: "Observaciones" %>
+          </div>
+          <div class="form-group">
+            <%= s.label "Tipo" %> <br />
+            <%= s.select :name, Suscription.names.keys %>
+          </div>
+          <div class="form-group">
+            <%= s.label "Horas" %> <br />
+            <%= s.select :hours, Suscription.hours.keys %>
+          </div>
+          <div class="form-group">
+            <%= s.label "Activo" %> <br />
+            <%= s.check_box :status %>
+          </div>
+          <div>
+            <%= s.submit "Crear", class: "btn btn-primary btn-block" %>
+          </div>
 
-  <% end %>
+        <% end %>
+    </div>
+  </div>
+
+</div>
