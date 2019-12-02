@@ -10,7 +10,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to new_suscription_path, notice: "El Usuario fue creado"
+      redirect_to new_suscription_path, notice: "El Usuario fue creado con id: #{@user.id}"
     else
       render :new
     end

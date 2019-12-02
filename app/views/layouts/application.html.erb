@@ -28,6 +28,15 @@
       </div>
     </nav>
 
+
+    <% if flash[:notice] %>
+      <div class="alert alert-success text-center">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+
+
     <%= yield %>
   </body>
 </html>
