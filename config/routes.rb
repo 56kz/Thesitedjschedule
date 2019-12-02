@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+
+  root 'rooms#index'
   resources :reservations
   # resources :schedules
   resources :rooms do
