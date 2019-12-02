@@ -1,21 +1,29 @@
-<%= link_to "Crear Reserva", new_reservation_path  %>
-<h1>Reservas</h1>
+<%= link_to "Crear Reserva", new_reservation_path, class: "btn btn-primary" %>
 
-<table>
-  <tr>
-    <th>Horario</th>
-    <th>Suscripción</th>
-    <th>Usuario</th>
-    <th>Sala</th>
-  </tr>
+<div class="container text-center general-info">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <h1>Reservas</h1>
 
-  <% @reservations.each do |r| %>
-    <tr>
-      <td><%= r.schedule.name %></td>
-      <td><%= r.suscription.name %></td>
-      <td><%= r.suscription.user.name %></td>
-      <td><%= r.schedule.room.name %></td>
-    </tr>
-  <% end %>
+      <table class="table">
+        <tr>
+          <th>Horario</th>
+          <th>Suscripción</th>
+          <th>Usuario</th>
+          <th>Sala</th>
+        </tr>
 
-</table>
+        <% @reservations.each do |r| %>
+        <tr>
+          <td><%= r.schedule.name %></td>
+          <td><%= r.suscription.name %></td>
+          <td><%= r.suscription.user.name %></td>
+          <td><%= r.schedule.room.name %></td>
+        </tr>
+        <% end %>
+
+      </table>
+
+    </div>
+  </div>
+</div>
