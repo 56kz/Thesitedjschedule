@@ -26,6 +26,13 @@ if Room.count < 5
 end
 
 
-if Schedule.count < 1
-  Schedule.create(name: "2019-12-09 06:00:00", room_id: 1)
+# if Schedule.count < 1
+#   Schedule.create(day: "2019-12-09", hour: 6,room_id: 1)
+# end
+
+(Date.today.. Date.today+1.week).each do |d|
+  block = [6, 8, 10, 12, 14, 16, 18, 20]
+  block.each do |b|
+    Schedule.create(day: d, hour: b, room_id: 1)
+  end
 end

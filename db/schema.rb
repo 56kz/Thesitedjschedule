@@ -28,7 +28,8 @@ ActiveRecord::Schema.define(version: 2019_11_28_194710) do
   end
 
   create_table "schedules", force: :cascade do |t|
-    t.datetime "name"
+    t.date "day"
+    t.integer "hour"
     t.integer "room_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
