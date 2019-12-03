@@ -1,63 +1,19 @@
 <div class="container text-center general-info">
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
+      <h1>Reservas</h1><br>
 
       <table class="table">
         <tr>
           <th>Lunes</th>
           <th>Martes</th>
+          <th>Miércoles</th>
+          <th>Jueves</th>
+          <th>Viernes</th>
+          <th>Sábado</th>
         </tr>
-
-
-        <% @lunes.each do |s| %>
-          <% if Reservation.where(schedule_id: s.id).empty? %>
-          <tr><td><%= s.name %></td></tr>
-          <% else %>
-          <tr><td><%= Reservation.where(schedule_id: s.id).first.suscription.user.name %></td></tr>
-          <% end %>
-        <% end %>
-
-        <% @martes.each do |s| %>
-          <% if Reservation.where(schedule_id: s.id).empty? %>
-          <tr><td><%= s.name %></td></tr>
-          <% else %>
-          <tr><td><%= Reservation.where(schedule_id: s.id).first.suscription.user.name %></td></tr>
-          <% end %>
-        <% end %>
-
+        
       </table>
     </div>
   </div>
 </div>
-
-
-
-
-<table>
-  <tr>
-    <th>Lunes</th>
-    <th>Martes</th>
-    <th>Miercoles</th>
-  </tr>
-
-  <tr>
-    <td>
-      <% if Reservation.where(schedule_id: @lunes[0].id).empty? %>
-        <%= @lunes[0].name[11..15] + " am" %>
-      <% else %>
-        <%= Reservation.where(schedule_id: s.id).first.suscription.user.name %>
-      <% end %>
-    </td>
-
-
-    <td>
-      <% if Reservation.where(schedule_id: @martes[0].id).empty? %>
-        <%= @martes[0].name %>
-      <% else %>
-        <%= Reservation.where(schedule_id: s.id).first.suscription.user.name %>
-      <% end %>
-    </td>
-
-    <td>miercoles 6 8</td>
-  </tr>
-</table>

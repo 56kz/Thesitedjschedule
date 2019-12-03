@@ -1,13 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-#
-# (3.months.ago.to_date..Date.current)
-# times do |t|
 if User.count < 2
   User.create(name: "Ivan Silva", email: "i.so@gmail.com", phone: "3168219400", rol: 1)
   User.create(name: "Zorro master", email: "z@gmail.com", phone: "3502633499", rol: 2)
@@ -26,13 +16,11 @@ if Room.count < 5
 end
 
 
-# if Schedule.count < 1
-#   Schedule.create(day: "2019-12-09", hour: 6,room_id: 1)
-# end
-
-(Date.today.. Date.today+1.week).each do |d|
-  block = [6, 8, 10, 12, 14, 16, 18, 20]
-  block.each do |b|
-    Schedule.create(day: d, hour: b, room_id: 1)
+if Schedule.count < 1
+  (Date.today.. Date.today+1.week).each do |d|
+    block = [6, 8, 10, 12, 14, 16, 18, 20]
+    block.each do |b|
+      Schedule.create(day: d, hour: b, room_id: 1)
+    end
   end
 end
