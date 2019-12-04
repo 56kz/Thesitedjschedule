@@ -1,10 +1,11 @@
+
 <div class="container text-center general-info">
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
       <h1>Reservas</h1><br>
 
-      <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
-
+      <input type="text" id="rangepicker">
+      
     </div>
   </div>
 </div>
@@ -12,11 +13,5 @@
 
 
 <script>
-$(function() {
-  $('input[name="daterange"]').daterangepicker({
-    opens: 'left'
-  }, function(start, end, label) {
-    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-  });
-});
+  $("#rangepicker").daterangepicker();
 </script>
