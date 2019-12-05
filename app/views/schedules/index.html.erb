@@ -5,13 +5,27 @@
       <h1>Reservas</h1><br>
 
       <input type="text" id="rangepicker">
-      
+      <input type="text" name="day" value="10/24/1984" />
+
     </div>
   </div>
 </div>
 
 
 
+
+
+
 <script>
   $("#rangepicker").daterangepicker();
+  $('input[name="day"]').daterangepicker({
+    singleDatePicker: true,
+    showDropdowns: true,
+    minYear: 1901,
+    maxYear: parseInt(moment().format('YYYY'),10)
+  }, function(start, end, label) {
+    var years = moment().diff(start, 'years');
+    alert("You are " + years + " years old!");
+  });
+
 </script>
