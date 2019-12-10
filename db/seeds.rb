@@ -24,3 +24,7 @@ if Schedule.count < 1
     end
   end
 end
+
+if Reservation.count < 1
+  Reservation.create(schedule_id: 1, suscription_id: 1)
+end
