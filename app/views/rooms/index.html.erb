@@ -1,7 +1,11 @@
 <div class="container text-center general-info">
   <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-      <h1>Cabinas</h1><br>
+
+      <p>Bienvenido <%= @user_conected.name %></p>
+      <p>Estas Registrado en el programa <%= @active_suscription.name %></p>
+
+      <h1>Cabina</h1><br>
 
       <% @rooms.each do |r| %>
       <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
