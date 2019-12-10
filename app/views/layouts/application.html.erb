@@ -25,6 +25,12 @@
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrate</a></li>
           <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Ingresa</a></li>
+
+          <% if student_signed_in? %>
+          <!-- <li><a href="/students/sign_out/:student_id"><span></span>Salir</a></li> -->
+
+          <% end %>
+
         </ul>
       </div>
     </nav>
@@ -36,7 +42,10 @@
       </div>
     <% end %>
 
-
+    <h1>El usuario conectado es</h1>
+    <%= current_student.name %>
+    <p>su email es: </p>
+    <%= %>
 
     <%= yield %>
   </body>
