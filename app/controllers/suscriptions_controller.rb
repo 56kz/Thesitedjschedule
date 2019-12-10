@@ -1,4 +1,6 @@
 class SuscriptionsController < ApplicationController
+  before_action :authenticate_student!
+
   def index
     @suscriptions = Suscription.all
   end

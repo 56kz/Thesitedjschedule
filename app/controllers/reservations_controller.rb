@@ -1,4 +1,6 @@
 class ReservationsController < ApplicationController
+  before_action :authenticate_student!
+
   def index
     @reservations = Reservation.all
   end
@@ -6,7 +8,6 @@ class ReservationsController < ApplicationController
   def new
     @reservation = Reservation.new
   end
-
 
   def create
     @reservation = Reservation.new(reservation_params)

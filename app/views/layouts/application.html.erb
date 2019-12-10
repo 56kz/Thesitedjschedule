@@ -17,18 +17,23 @@
         <div class="navbar-header">
           <%= link_to "TheSite", root_path, class: "navbar-brand" %>
         </div>
-        <ul class="nav navbar-nav">
-          <li><%= link_to "Usuarios", users_path %></li>
-          <li><%= link_to "Suscripciones", suscriptions_path %></li>
-          <li><%= link_to "Reservas", reservations_path %></li>
-        </ul>
+        <% if student_signed_in? %>
+          <ul class="nav navbar-nav">
+            <li><%= link_to "Usuarios", users_path %></li>
+            <li><%= link_to "Suscripciones", suscriptions_path %></li>
+            <li><%= link_to "Reservas", reservations_path %></li>
+          </ul>
+        <% end %>
+
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrate</a></li>
-          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Ingresa</a></li>
+          <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrate</a></li>
+          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Ingresa</a></li> -->
 
           <% if student_signed_in? %>
-          <!-- <li><a href="/students/sign_out/:student_id"><span></span>Salir</a></li> -->
-
+            <li><%= link_to "Salir", destroy_student_session_path, method: :delete %></li>
+          <% else %>
+            <li><%= link_to "Ingresar", new_student_session_path %></li>
+            <li><%= link_to "Registrate", new_student_registration_path %></li>
           <% end %>
 
         </ul>
@@ -42,10 +47,12 @@
       </div>
     <% end %>
 
-    <h1>El usuario conectado es</h1>
-    <%= current_student.name %>
-    <p>su email es: </p>
-    <%= %>
+
+
+    <% if student_signed_in? %>
+      <p>tu correo es: <%= current_student.email %></p>
+    <% end %>
+
 
     <%= yield %>
   </body>
