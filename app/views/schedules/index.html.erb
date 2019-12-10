@@ -4,8 +4,7 @@
     <div class="col-sm-6 col-sm-offset-3">
       <h1>Reservas</h1><br>
 
-      <input type="text" id="rangepicker">
-      <input type="text" name="day" value="10/24/1984" />
+      <input type="text" name="daterange" value="" />
 
     </div>
   </div>
@@ -13,19 +12,21 @@
 
 
 
+<% form_tag room_schedules_path%>
+<% end %>
 
 
 
 <script>
-  $("#rangepicker").daterangepicker();
-  $('input[name="day"]').daterangepicker({
+
+
+  $(function() {
+  $('input[name="daterange"]').daterangepicker({
     singleDatePicker: true,
-    showDropdowns: true,
-    minYear: 1901,
-    maxYear: parseInt(moment().format('YYYY'),10)
-  }, function(start, end, label) {
-    var years = moment().diff(start, 'years');
-    alert("You are " + years + " years old!");
+    opens: 'center'
+  }, function(start) {
+    alert("Quieres agendar clases el " + start.format('YYYY-MM-DD'));
   });
+});
 
 </script>
