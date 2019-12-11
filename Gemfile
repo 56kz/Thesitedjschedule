@@ -35,6 +35,7 @@ gem 'sassc-rails', '>= 2.1.0'
 gem 'jquery-rails'
 gem 'momentjs-rails', '~> 2.17', '>= 2.17.1'
 
+gem 'wdm', '>= 0.1.0' if Gem.win_platform?
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
@@ -42,7 +43,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'sqlite3'
+  gem 'sqlite3', git: "https://github.com/larskanis/sqlite3-ruby", branch: "add-gemspec"
 end
 
 group :development do
