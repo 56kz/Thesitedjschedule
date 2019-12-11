@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_student!
-  
+
   def index
     @users = User.all
   end
@@ -34,7 +34,6 @@ class UsersController < ApplicationController
   def destroy
     user = User.find(params[:id])
     user.destroy
-
     redirect_to users_path, notice: "El Usuario fue eliminado"
   end
 

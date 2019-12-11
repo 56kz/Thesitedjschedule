@@ -29,11 +29,12 @@
           <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrate</a></li>
           <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Ingresa</a></li> -->
 
-          <% if student_signed_in? %>
+          <% if student_signed_in? && current_student == "ivan@eas.edu.co" %>
             <li><%= link_to "Salir", destroy_student_session_path, method: :delete %></li>
+          <% elsif student_signed_in? %>
+            <li><%= link_to "Registro", new_student_registration_path %></li>
           <% else %>
             <li><%= link_to "Ingresar", new_student_session_path %></li>
-            <li><%= link_to "Registrate", new_student_registration_path %></li>
           <% end %>
 
         </ul>
@@ -46,6 +47,8 @@
         <%= flash[:notice] %>
       </div>
     <% end %>
+
+
 
 
     <%= yield %>
