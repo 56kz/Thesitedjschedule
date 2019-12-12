@@ -1,9 +1,10 @@
 <div class="container text-center general-info">
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
       <h1>Reservas</h1><br>
 
-      <input type="text" name="daterange" value="" />
+      <!--<input type="text" name="daterange" value="" />-->
+      <div id='calendar'></div>
 
     </div>
   </div>
@@ -11,17 +12,26 @@
 
 
 
+<<<<<<< HEAD
+=======
+<%# form_tag room_schedules_path%>
+<%# end %>
+
+
+>>>>>>> js_integration
 
 <script>
 
+var calendarEl = document.getElementById('calendar');
 
-  $(function() {
-  $('input[name="daterange"]').daterangepicker({
-    singleDatePicker: true,
-    opens: 'center'
-  }, function(start) {
-    alert("Quieres agendar clases el " + start.format('YYYY-MM-DD'));
-  });
+var calendar = new FullCalendar.Calendar(calendarEl, {
+  plugins: [ 'timeGrid' ],
+  defaultView: 'timeGridWeek',
+  locale: 'en',
+  height: 550,
+  timeFormat: 'h(:mm)a'
 });
+
+ calendar.render();
 
 </script>
