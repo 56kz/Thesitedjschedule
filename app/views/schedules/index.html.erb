@@ -3,22 +3,23 @@
   
   <h1>Reservas</h1>
 
-  <div id="external-events" class="col-sm-2 col-md-2">
+  <div id="external-events" class="col-sm-2 col-md-2 text-center">
     <p>
       <strong>Selección de Horarios</strong>
     </p>
 
+    <div class="input-group col-md-12 col-sm-12">
+      <span class="input-group-addon" id="date-picker">Fecha</span>
+      <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es' data-date-format='yyyy-mm-dd' aria-describedby="date-picker"/>
+      <input type="hidden" id="roow_id" value=<%= @room_id %>>
+      <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
+    </div><br>
 
-  <div class="input-group col-md-12 col-sm-12">
-    <span class="input-group-addon" id="date-picker">Fecha</span>
-    <input type='text' class='datepicker-here form-control' data-language='es' data-date-format='yyyy-mm-dd' aria-describedby="date-picker"/>
-  </div><br>
-
-  <div class="input-group col-md-12 col-sm-12">
-    <span class="input-group-addon" id="time-picker-label">Hora</span>
-    <input type='text' id="time-picker" class='form-control' data-language='es' aria-describedby="time-picker"/>
-  </div><br>
-    
+    <div class="input-group col-md-12 col-sm-12">
+      <span class="input-group-addon" id="time-picker-label">Hora</span>
+      <input type='text' id="time-picker" class='form-control' data-language='es' aria-describedby="time-picker"/>
+    </div><br>
+      
     
     <div class="btn-group-vertical" role="group">
         <div class="fc-event btn btn-primary">8:00 am 10:00 am</div>
@@ -49,15 +50,13 @@
     // initialize the external events
     // -----------------------------------------------------------------
 
-
-
     // initialize the calendar
     // -----------------------------------------------------------------
     var calendar = new Calendar(calendarEl, {
       plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
       defaultView: 'timeGridWeek',
       locale: 'es-us',
-      height: 550,
+      height: 600,
       minTime: '08:00:00', /* calendar start Timing */
       maxTime: '22:00:00',  /* calendar end Timing */
       timeFormat: 'h(:mm)a',
@@ -139,15 +138,13 @@
             }
 
            event={
-                title: 'Clase en Sala 1',
+                title: 'Clase en Sala ',
                 start: date,
                 end:end,
                 overlap:false,
                 backgroundColor:color,
                 borderColor:color
              }
-
-             console.log(event);
 
             function isOverlapping(event){
             // "calendar" on line below should ref the element on which fc has been called 
@@ -186,20 +183,38 @@
           //info.draggedEl.parentNode.removeChild(info.draggedEl);
       },
       eventClick: function(event, element) {
-
-
    
       }
     });
 
     calendar.render();
 
-    
   });
 
 $( ".fc-event " ).click(function() {
   val=$(this).text();
   $("#time-picker").val(val);
+});
+
+var disabledDays = [0];
+
+$(document).ready(function() {
+    $dd_picker = $('#date-pick');
+
+    $dd_picker.datepicker({
+      onSelect: function(formattedDate, date, inst){
+        inst.hide();
+      },
+      onRenderCell: function (date, cellType) {
+        if (cellType == 'day') {
+            var day = date.getDay(),
+                isDisabled = disabledDays.indexOf(day) != -1;
+            return {
+                disabled: isDisabled
+            }
+        }
+    }
+    });
 });
 
 
