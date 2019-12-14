@@ -1,44 +1,57 @@
 <div class="container">
-  <div class="row">
-  
-  <h1>Reservas</h1>
+    <div class="row">
 
-  <div id="external-events" class="col-sm-2 col-md-2 text-center">
-    <p>
-      <strong>Selección de Horarios</strong>
-    </p>
+        <h1>Reservas</h1>
 
-    <div class="input-group col-md-12 col-sm-12">
-      <span class="input-group-addon" id="date-picker">Fecha</span>
-      <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es' data-date-format='yyyy-mm-dd' aria-describedby="date-picker"/>
-      <input type="hidden" id="roow_id" value=<%= @room_id %>>
-      <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
-    </div><br>
+        <div id="external-events" class="col-sm-2 col-md-2 text-center">
+            <p>
+                <strong>Selección de Horarios</strong>
+            </p>
 
-    <div class="input-group col-md-12 col-sm-12">
-      <span class="input-group-addon" id="time-picker-label">Hora</span>
-      <input type='text' id="time-picker" class='form-control' data-language='es' aria-describedby="time-picker"/>
-    </div><br>
-      
-    
-    <div class="btn-group-vertical" role="group">
-        <div class="fc-event btn btn-primary">8:00 am 10:00 am</div>
-        <div class="fc-event btn btn-primary">10:00 am 12:00 pm</div>
-        <div class="fc-event btn btn-primary">12:00 pm 02:00 pm</div>
-        <div class="fc-event btn btn-primary">2:00 pm 4:00 pm</div>
-        <div class="fc-event btn btn-primary">4:00 pm 6:00 pm</div>
-        <div class="fc-event btn btn-primary">6:00 pm 8:00 pm</div>
-        <div class="fc-event btn btn-primary">8:00 pm 10:00 pm</div>
+            <div class="input-group col-md-12 col-sm-12">
+                <span class="input-group-addon" id="date-picker">Fecha</span>
+                <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es'
+                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off" />
+                <input type="hidden" id="roow_id" value=<%= @room_id %>>
+                <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
+            </div><br>
+
+            <div class="input-group col-md-12 col-sm-12">
+                <span class="input-group-addon" id="time-picker-label">Hora</span>
+                <input type='text' id="time-picker" class='form-control' data-language='es'
+                    aria-describedby="time-picker" autocomplete="off" />
+            </div><br>
+
+
+            <div class="btn-group-vertical" role="group">
+                <div class="fc-event btn btn-primary">8:00 am 10:00 am</div>
+                <div class="fc-event btn btn-primary">10:00 am 12:00 pm</div>
+                <div class="fc-event btn btn-primary">12:00 pm 02:00 pm</div>
+                <div class="fc-event btn btn-primary">2:00 pm 4:00 pm</div>
+                <div class="fc-event btn btn-primary">4:00 pm 6:00 pm</div>
+                <div class="fc-event btn btn-primary">6:00 pm 8:00 pm</div>
+                <div class="fc-event btn btn-primary">8:00 pm 10:00 pm</div>
+            </div>
+        </div>
+
+        <div class="col-sm-8 col-md-8 col-sm-offset-1 col-md-offset-1">
+            <div id='calendar'></div>
+        </div>
     </div>
-  </div>
-
-    <div class="col-sm-8 col-md-8 col-sm-offset-1 col-md-offset-1">
-      <div id='calendar'></div>
-    </div>
-  </div>
 </div>
 
-
-<script>
-
-</script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"
+    integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.js"
+    integrity="sha256-F4ovzqUMsKm41TQVQO+dWHQA+sshyOUdmnDcTPMIHkM=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.js"
+    integrity="sha256-I1bdnmA3OtkQwlbwNbJQ2y+kH2fIXfnIjhAfYhxJqiY=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.js"
+    integrity="sha256-Q7vy6GHSfPnAFHnyM58AAI+jLJRBr3o7VHGlu+6mUlY=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/locales-all.js"
+    integrity="sha256-j8iQxZfxQSVcV2dj1WTX23PmeujqjfyYg122dWJ9zw8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.js"
+    integrity="sha256-MJ15XCTL71Z+hio+iodzZBMJFmxsuOCnozIN43XBJ5k=" crossorigin="anonymous"></script>
