@@ -1,37 +1,206 @@
-<div class="container text-center general-info">
+<div class="container">
   <div class="row">
-    <div class="col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
-      <h1>Reservas</h1><br>
+  
+  <h1>Reservas</h1>
 
-      <!--<input type="text" name="daterange" value="" />-->
+  <div id="external-events" class="col-sm-2 col-md-2">
+    <p>
+      <strong>Selección de Horarios</strong>
+    </p>
+
+
+  <div class="input-group col-md-12 col-sm-12">
+    <span class="input-group-addon" id="date-picker">Fecha</span>
+    <input type='text' class='datepicker-here form-control' data-language='es' data-date-format='yyyy-mm-dd' aria-describedby="date-picker"/>
+  </div><br>
+
+  <div class="input-group col-md-12 col-sm-12">
+    <span class="input-group-addon" id="time-picker-label">Hora</span>
+    <input type='text' id="time-picker" class='form-control' data-language='es' aria-describedby="time-picker"/>
+  </div><br>
+    
+    
+    <div class="btn-group-vertical" role="group">
+        <div class="fc-event btn btn-primary">8:00 am 10:00 am</div>
+        <div class="fc-event btn btn-primary">10:00 am 12:00 pm</div>
+        <div class="fc-event btn btn-primary">12:00 pm 02:00 pm</div>
+        <div class="fc-event btn btn-primary">2:00 pm 4:00 pm</div>
+        <div class="fc-event btn btn-primary">4:00 pm 6:00 pm</div>
+        <div class="fc-event btn btn-primary">6:00 pm 8:00 pm</div>
+        <div class="fc-event btn btn-primary">8:00 pm 10:00 pm</div>
+    </div>
+  </div>
+
+    <div class="col-sm-8 col-md-8 col-sm-offset-1 col-md-offset-1">
       <div id='calendar'></div>
-
     </div>
   </div>
 </div>
 
 
-
-<<<<<<< HEAD
-=======
-<%# form_tag room_schedules_path%>
-<%# end %>
-
-
->>>>>>> js_integration
-
 <script>
 
-var calendarEl = document.getElementById('calendar');
+  document.addEventListener('DOMContentLoaded', function() {
 
-var calendar = new FullCalendar.Calendar(calendarEl, {
-  plugins: [ 'timeGrid' ],
-  defaultView: 'timeGridWeek',
-  locale: 'en',
-  height: 550,
-  timeFormat: 'h(:mm)a'
+    var Calendar = FullCalendar.Calendar;
+
+    var calendarEl = document.getElementById('calendar');
+
+    // initialize the external events
+    // -----------------------------------------------------------------
+
+
+
+    // initialize the calendar
+    // -----------------------------------------------------------------
+    var calendar = new Calendar(calendarEl, {
+      plugins: [ 'interaction', 'dayGrid', 'timeGrid' ],
+      defaultView: 'timeGridWeek',
+      locale: 'es-us',
+      height: 550,
+      minTime: '08:00:00', /* calendar start Timing */
+      maxTime: '22:00:00',  /* calendar end Timing */
+      timeFormat: 'h(:mm)a',
+      themeSystem: 'standalone',
+      eventOverlap: false,
+      header: {
+        right: 'prev,next today',
+        center: 'title',
+        left: 'addEventButton,month,agendaWeek,agendaDay,listMonth'
+      },
+      customButtons: {
+        addEventButton: {
+          text: 'Programar',
+          click: function() {
+            
+            dateStr=$('.datepicker-here').val()
+            time_range=$('#time-picker').val()
+            inicio=0
+            fin=0
+
+            switch (time_range) {
+              case '8:00 am 10:00 am':
+                inicio='08';
+                fin='10';
+                break;
+              case '10:00 am 12:00 pm':
+                inicio='10';
+                fin='12';
+                break;
+              case '12:00 pm 02:00 pm':
+                inicio='12';
+                fin='14';
+                break;
+              case '2:00 pm 4:00 pm':
+                inicio='14';
+                fin='16';
+                break;
+              case '4:00 pm 6:00 pm':
+                inicio='16';
+                fin='18';
+                break;
+              case '6:00 pm 8:00 pm':
+                inicio='18';
+                fin='20';
+                break;
+              case '8:00 pm 10:00 pm':
+                inicio='20';
+                fin='22';
+                break;
+            }
+
+            var date = new Date(dateStr + 'T' + inicio + ':00:00'); // will be in local time
+            var end = new Date(dateStr + 'T' + fin + ':00:00'); // will be in local time
+            
+            const date_m = moment(date);
+            const dow = date_m.day();
+
+            var color="";
+
+            switch (dow) {
+              case 1:
+                color='#6495ED';
+                break;
+              case 2:
+                color='#8A2BE2' ;
+                break;
+              case 3:
+                color='#DC143C';
+                break;
+              case 4:
+                color='#FF8C00';
+                break;
+              case 5:
+                color='#20B2AA';
+                break;
+              case 6:
+                color='#5F9EA0';
+                break;
+            }
+
+           event={
+                title: 'Clase en Sala 1',
+                start: date,
+                end:end,
+                overlap:false,
+                backgroundColor:color,
+                borderColor:color
+             }
+
+             console.log(event);
+
+            function isOverlapping(event){
+            // "calendar" on line below should ref the element on which fc has been called 
+              var array = calendar.getEvents();
+              
+              for(i in array){
+                  if (event.end > array[i].start && event.start < array[i].end){
+                    return true;
+                  }
+              }
+                return false;
+            }
+
+            if (!isNaN(date.valueOf()) &&  !isOverlapping(event)) { // valid?
+              calendar.addEvent(event);
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Fecha invalida o no está disponible.'
+              })
+            }
+          }
+        }
+      },
+      eventOverlap:false,
+      backgroundColor:'blue',
+      editable: false,
+      droppable: false, // this allows things to be dropped onto the calendar
+      /*businessHours: {
+        dow: [ 1, 2, 3, 4, 5], 
+        start: '08:00',
+        end: '22:00', 
+      },*/
+      drop: function(info) {
+          //info.draggedEl.parentNode.removeChild(info.draggedEl);
+      },
+      eventClick: function(event, element) {
+
+
+   
+      }
+    });
+
+    calendar.render();
+
+    
+  });
+
+$( ".fc-event " ).click(function() {
+  val=$(this).text();
+  $("#time-picker").val(val);
 });
 
- calendar.render();
 
 </script>
