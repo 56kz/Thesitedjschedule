@@ -56,8 +56,6 @@ document.addEventListener("turbolinks:load", function () {
                 color: 'blue',
                 click: function () {
 
-                    //Get all server events to avoid duplicate schedules
-                    load_server_events();
 
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
@@ -100,11 +98,17 @@ document.addEventListener("turbolinks:load", function () {
 
                     const date_m = moment(date);
                     const dow = date_m.day();
+                    
+                    var sabado=false
+
+                    if (dow==6 && (inicio=='08' || inicio=='20')){
+                        sabado=true
+                    }
 
                     var color = get_color(dow);
 
                     event = {
-                        title: 'Clase en Cabina ' + $('#roow_id').val(),
+                        title: '(Nuevo) Clase en Cabina ' + $('#roow_id').val(),
                         start: date,
                         end: end,
                         overlap: false,
@@ -112,19 +116,7 @@ document.addEventListener("turbolinks:load", function () {
                         borderColor: color
                     }
 
-                    function isOverlapping(event) {
-                        // "calendar" on line below should ref the element on which fc has been called 
-                        var array = calendar.getEvents();
-
-                        for (i in array) {
-                            if (event.end > array[i].start && event.start < array[i].end) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    if (!isNaN(date.valueOf()) && !isOverlapping(event)) { // valid?
+                    if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
                         calendar.addEvent(event);
                     } else {
                         Swal.fire({
@@ -137,42 +129,86 @@ document.addEventListener("turbolinks:load", function () {
             },
             saveEventButton: {
                 text: 'Guardar',
-                click: function () {
+                click:  function () {
+
+                    //Get all server events to avoid duplicate schedules
 
                     var all_events = calendar.getEvents();
+                    var completed = 0
+                    var for_save = 0
+                    var error_save=0
 
                     for (i in all_events) {
-                        let date_m = moment(all_events[i].start);
-                        let date_event=date_m.format("DD/MM/YYYY")
-                        let start = date_m.format("HH")
-
-                        data="suscription_id=" + $('#suscription_id').val()
-                                +"&schedule_id=1"
-                                +"&start_hour=" + start
-                                +"&reserve_date=" + date_event
-                                + "&room=" + $('#roow_id').val()
-
-                        $.ajax({
-                            type: "GET",
-                            url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
-                            data: data,
-                            success: function(data, textStatus, xhr){
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Ok!',
-                                    text: 'Programación guardada de manera exitosa!',
-                                  })
-                                console.log("server response: "+xhr.status);
-                                console.log(data);
-                            }
-                        });
-    
+                        let title = all_events[i].title
+                        if (title.indexOf("(Nuevo)") !== -1) {
+                            for_save += 1
+                        }
                     }
 
+                    $.ajaxSetup({
+                        async: false
+                     });
 
+                    for (i in all_events) {
+                        
+                        let title = all_events[i].title
+
+                        if (title.indexOf("(Nuevo)") !== -1) {
+                            let date_m = moment(all_events[i].start);
+                            let date_event = date_m.format("DD/MM/YYYY")
+                            let start = date_m.format("HH")
+
+                            data = "suscription_id=" + $('#suscription_id').val()
+                                + "&schedule_id=1"
+                                + "&start_hour=" + start
+                                + "&reserve_date=" + date_event
+                                + "&room=" + $('#roow_id').val()
+
+                            $.ajax({
+                                type: "GET",
+                                url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
+                                data: data,
+                                success:function(data, textStatus, xhr){
+                                    if(data.status_code=="0"){
+                                        error_save+=1
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    if (for_save == completed) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: '...',
+                            text: 'No se encontraron clases por guardar.',
+                        })
+                    }
+                    if (error_save >0) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: '...',
+                            text: 'No fue posible guardar todos los eventos.',
+                        })
+                    }else{
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Bien hecho!',
+                            text: 'Se guardó la programación.',
+                        })
+
+                    }
+                    
+                    var eventos_local = calendar.getEvents();
+
+                    for (i in eventos_local){
+                        calendar.getEventById(eventos_local[i].id).remove();
+                    }
+
+                    load_server_events();
                 }
+                
             }
-
         },
         eventOverlap: false,
         backgroundColor: 'blue',
@@ -195,7 +231,7 @@ document.addEventListener("turbolinks:load", function () {
 
     $('.fc-saveEventButton-button').addClass("btn-success");
 
-    $(".fc-event ").click(function () {
+    $(".hour-btn").click(function () {
         val = $(this).text();
         $("#time-picker").val(val);
     });
@@ -225,16 +261,17 @@ document.addEventListener("turbolinks:load", function () {
     });
 
     function load_server_events() {
+
         $.ajax({
             type: "GET",
             url: '/rooms/' + $('#roow_id').val() + '/schedules.json',
-            success: function(data, textStatus, xhr){
+            success: function (data, textStatus, xhr) {
                 for (i in data) {
-                    console.log("Reserve date:" + data[i].reserve_date)
 
-                    var s_date=data[i].reserve_date;
-                    var s_inicio=data[i].start_hour;
-                    var s_fin=data[i].start_hour+2;
+                    var s_date = data[i].reserve_date;
+                    var s_inicio = Right('0' + data[i].start_hour, 2);
+                    var s_fin = Right('0' + (data[i].start_hour + 2), 2);
+                    var sucrip_id=data[i].suscription_id
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -242,10 +279,16 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    var color=get_color(dow);
+                    if (sucrip_id!=$('#suscription_id').val()){
+                        var color = '#708090'
+                        title= 'Cabina Ocupada'
+                    }else{
+                        var color = get_color(dow);
+                        title= 'Clase en Cabina ' + $('#roow_id').val()
+                    }
 
                     event = {
-                        title: 'Clase en Cabina ' + $('#roow_id').val(),
+                        title: title,
                         start: date,
                         end: end,
                         overlap: false,
@@ -253,13 +296,17 @@ document.addEventListener("turbolinks:load", function () {
                         borderColor: color
                     }
 
-                    calendar.addEvent(event);
+                    if (!isOverlapping(event)) {
+                        calendar.addEvent(event);
+                    }
+
+
                 }
             }
         });
     }
 
-    function get_color(dow){
+    function get_color(dow) {
         var color = "";
 
         switch (dow) {
@@ -283,6 +330,29 @@ document.addEventListener("turbolinks:load", function () {
                 break;
         }
         return color
+    }
+
+    function Right(str, n) {
+        if (n <= 0)
+            return "";
+        else if (n > String(str).length)
+            return str;
+        else {
+            var iLen = String(str).length;
+            return String(str).substring(iLen, iLen - n);
+        }
+    }
+
+    function isOverlapping(event) {
+        // "calendar" on line below should ref the element on which fc has been called 
+        var array = calendar.getEvents();
+
+        for (i in array) {
+            if (event.end > array[i].start && event.start < array[i].end) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //finish turbolinks load wrapper
