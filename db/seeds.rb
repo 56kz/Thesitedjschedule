@@ -26,5 +26,5 @@ if Schedule.count < 1
 end
 
 if Reservation.count < 1
-  Reservation.create(schedule_id: 1, suscription_id: 1)
+  Reservation.create(schedule_id: 1, suscription_id: 1, start_hour: 8, reserve_date: '2019-12-10', room: 1)
 end
