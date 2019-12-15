@@ -17,7 +17,7 @@ class SchedulesController < ApplicationController
     puts schedules_params
     
     if @reservation.save
-      redirect_to reservations_path, notice: "La reserva fue creada"
+      render :json => {:result => "Data saved successfully!"}
     end
   end
 

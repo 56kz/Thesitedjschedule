@@ -173,7 +173,16 @@ document.addEventListener("turbolinks:load", function () {
                         $.ajax({
                             type: "GET",
                             url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
-                            data: data
+                            data: data,
+                            success: function(data, textStatus, xhr){
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Ok!',
+                                    text: 'Programación guardada de manera exitosa!',
+                                  })
+                                console.log("server response: "+xhr.status);
+                                console.log(data);
+                            }
                         });
     
                     }
