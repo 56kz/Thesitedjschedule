@@ -56,74 +56,84 @@ document.addEventListener("turbolinks:load", function () {
                 color: 'blue',
                 click: function () {
 
-
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
                     inicio = 0
                     fin = 0
 
-                    switch (time_range) {
-                        case '8:00 am 10:00 am':
-                            inicio = '08';
-                            fin = '10';
-                            break;
-                        case '10:00 am 12:00 pm':
-                            inicio = '10';
-                            fin = '12';
-                            break;
-                        case '12:00 pm 02:00 pm':
-                            inicio = '12';
-                            fin = '14';
-                            break;
-                        case '2:00 pm 4:00 pm':
-                            inicio = '14';
-                            fin = '16';
-                            break;
-                        case '4:00 pm 6:00 pm':
-                            inicio = '16';
-                            fin = '18';
-                            break;
-                        case '6:00 pm 8:00 pm':
-                            inicio = '18';
-                            fin = '20';
-                            break;
-                        case '8:00 pm 10:00 pm':
-                            inicio = '20';
-                            fin = '22';
-                            break;
-                    }
+                    var CurrentDate = moment(new Date()).format("DD-MM-YYYY");
+                    GivenDate = moment(dateStr).format("DD-MM-YYYY");
 
-                    var date = new Date(dateStr + 'T' + inicio + ':00:00'); // will be in local time
-                    var end = new Date(dateStr + 'T' + fin + ':00:00'); // will be in local time
-
-                    const date_m = moment(date);
-                    const dow = date_m.day();
-                    
-                    var sabado=false
-
-                    if (dow==6 && (inicio=='08' || inicio=='20')){
-                        sabado=true
-                    }
-
-                    var color = get_color(dow);
-
-                    event = {
-                        title: '(Nuevo) Clase en Cabina ' + $('#roow_id').val(),
-                        start: date,
-                        end: end,
-                        overlap: false,
-                        backgroundColor: color,
-                        borderColor: color
-                    }
-
-                    if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
-                        calendar.addEvent(event);
-                    } else {
+                    if(GivenDate < CurrentDate){
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Fecha invalida o no está disponible.'
+                            text: 'No puedes programar en una fecha pasada.'
                         })
+                    }else{
+                        
+                        switch (time_range) {
+                            case '8:00 am 10:00 am':
+                                inicio = '08';
+                                fin = '10';
+                                break;
+                            case '10:00 am 12:00 pm':
+                                inicio = '10';
+                                fin = '12';
+                                break;
+                            case '12:00 pm 02:00 pm':
+                                inicio = '12';
+                                fin = '14';
+                                break;
+                            case '2:00 pm 4:00 pm':
+                                inicio = '14';
+                                fin = '16';
+                                break;
+                            case '4:00 pm 6:00 pm':
+                                inicio = '16';
+                                fin = '18';
+                                break;
+                            case '6:00 pm 8:00 pm':
+                                inicio = '18';
+                                fin = '20';
+                                break;
+                            case '8:00 pm 10:00 pm':
+                                inicio = '20';
+                                fin = '22';
+                                break;
+                        }
+    
+                        var date = new Date(dateStr + 'T' + inicio + ':00:00'); // will be in local time
+                        var end = new Date(dateStr + 'T' + fin + ':00:00'); // will be in local time
+    
+                        const date_m = moment(date);
+                        const dow = date_m.day();
+                        var sabado=false
+    
+                        if (dow==6 && (inicio=='08' || inicio=='20')){
+                            sabado=true
+                        }
+    
+                        var color = get_color(dow);
+    
+                        event = {
+                            title: '(Nuevo) Clase en Cabina ' + $('#roow_id').val(),
+                            start: date,
+                            end: end,
+                            overlap: false,
+                            backgroundColor: color,
+                            borderColor: color
+                        }
+    
+                        if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
+                            calendar.addEvent(event);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Fecha invalida o no está disponible.'
+                            })
+                        }
                     }
                 }
             },
