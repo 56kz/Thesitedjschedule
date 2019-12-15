@@ -5,10 +5,19 @@ class SchedulesController < ApplicationController
 
   def index
  
+    @room_id=params[:room_id]
     @user_conected = User.find_by(email: current_student.email)
     @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
-    @reservations = Reservation.all
-    @room_id=params[:room_id]
+    @reservations = Reservation.where(room: @room_id)
+    
+
+    respond_to do |format|
+
+      format.html # show.html.erb
+      format.json { render json: @reservations }
+    
+     end
+
   end
 
   def new

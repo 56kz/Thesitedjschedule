@@ -56,6 +56,9 @@ document.addEventListener("turbolinks:load", function () {
                 color: 'blue',
                 click: function () {
 
+                    //Get all server events to avoid duplicate schedules
+                    load_server_events();
+
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
                     inicio = 0
@@ -98,28 +101,7 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    var color = "";
-
-                    switch (dow) {
-                        case 1:
-                            color = '#6495ED';
-                            break;
-                        case 2:
-                            color = '#8A2BE2';
-                            break;
-                        case 3:
-                            color = '#DC143C';
-                            break;
-                        case 4:
-                            color = '#FF8C00';
-                            break;
-                        case 5:
-                            color = '#20B2AA';
-                            break;
-                        case 6:
-                            color = '#5F9EA0';
-                            break;
-                    }
+                    var color = get_color(dow);
 
                     event = {
                         title: 'Clase en Cabina ' + $('#roow_id').val(),
@@ -213,7 +195,6 @@ document.addEventListener("turbolinks:load", function () {
 
     $('.fc-saveEventButton-button').addClass("btn-success");
 
-
     $(".fc-event ").click(function () {
         val = $(this).text();
         $("#time-picker").val(val);
@@ -239,9 +220,70 @@ document.addEventListener("turbolinks:load", function () {
             }
         });
 
+        load_server_events();
 
     });
 
+    function load_server_events() {
+        $.ajax({
+            type: "GET",
+            url: '/rooms/' + $('#roow_id').val() + '/schedules.json',
+            success: function(data, textStatus, xhr){
+                for (i in data) {
+                    console.log("Reserve date:" + data[i].reserve_date)
+
+                    var s_date=data[i].reserve_date;
+                    var s_inicio=data[i].start_hour;
+                    var s_fin=data[i].start_hour+2;
+
+                    var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
+                    var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
+
+                    const date_m = moment(date);
+                    const dow = date_m.day();
+
+                    var color=get_color(dow);
+
+                    event = {
+                        title: 'Clase en Cabina ' + $('#roow_id').val(),
+                        start: date,
+                        end: end,
+                        overlap: false,
+                        backgroundColor: color,
+                        borderColor: color
+                    }
+
+                    calendar.addEvent(event);
+                }
+            }
+        });
+    }
+
+    function get_color(dow){
+        var color = "";
+
+        switch (dow) {
+            case 1:
+                color = '#6495ED';
+                break;
+            case 2:
+                color = '#8A2BE2';
+                break;
+            case 3:
+                color = '#DC143C';
+                break;
+            case 4:
+                color = '#FF8C00';
+                break;
+            case 5:
+                color = '#20B2AA';
+                break;
+            case 6:
+                color = '#5F9EA0';
+                break;
+        }
+        return color
+    }
 
     //finish turbolinks load wrapper
 
