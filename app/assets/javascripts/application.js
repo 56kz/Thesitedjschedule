@@ -46,9 +46,9 @@ document.addEventListener("turbolinks:load", function () {
         themeSystem: 'standalone',
         eventOverlap: false,
         header: {
-            right: 'prev,next today',
+            left: 'addEventButton,saveEventButton',
             center: 'title',
-            left: 'addEventButton,saveEventButton,month,agendaWeek,agendaDay,listMonth'
+            right: 'dayGridMonth,timeGridWeek,prev,today,next'
         },
         customButtons: {
             addEventButton: {
@@ -61,8 +61,10 @@ document.addEventListener("turbolinks:load", function () {
                     inicio = 0
                     fin = 0
 
-                    var CurrentDate = moment(new Date()).format("DD-MM-YYYY");
-                    GivenDate = moment(dateStr).format("DD-MM-YYYY");
+                    var CurrentDate = moment(new Date()).startOf('day');
+                    GivenDate = moment(dateStr);
+
+                    console.log(GivenDate, CurrentDate)
 
                     if(GivenDate < CurrentDate){
                         Swal.fire({
@@ -71,7 +73,7 @@ document.addEventListener("turbolinks:load", function () {
                             text: 'No puedes programar en una fecha pasada.'
                         })
                     }else{
-                        
+
                         switch (time_range) {
                             case '8:00 am 10:00 am':
                                 inicio = '08';

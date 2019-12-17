@@ -11,7 +11,7 @@
             <div class="input-group col-md-12 col-sm-12">
                 <span class="input-group-addon" id="date-picker">Fecha</span>
                 <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es'
-                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off" />
+                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off" readonly="readonly"/>
                 <input type="hidden" id="roow_id" value=<%= @room_id %>>
                 <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
             </div><br>
@@ -19,7 +19,7 @@
             <div class="input-group col-md-12 col-sm-12">
                 <span class="input-group-addon" id="time-picker-label">Hora</span>
                 <input type='text' id="time-picker" class='form-control' data-language='es'
-                    aria-describedby="time-picker" autocomplete="off" />
+                    aria-describedby="time-picker" autocomplete="off" readonly="readonly"/>
             </div><br>
 
 
