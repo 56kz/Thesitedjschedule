@@ -31,31 +31,21 @@
             <li><%= link_to "Reservas", reservations_path %></li>
           </ul>
         <% end %>
-
         <ul class="nav navbar-nav navbar-right">
-          <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span>Registrate</a></li>
-          <li><a href="#"><span class="glyphicon glyphicon-log-in"></span>Ingresa</a></li> -->
-
-          <% if student_signed_in? && current_student == "ivan@eas.edu.co" %>
-          <li><%= link_to "Ingresar", new_student_session_path %></li>
-          <% else %>
-          <li><%= link_to "Registro", new_student_registration_path %></li>
+          <% if student_signed_in? %>
           <li><%= link_to "Salir", destroy_student_session_path, method: :delete %></li>
+          <% else %>
+          <li><%= link_to "Ingresar", new_student_session_path %></li>
           <% end %>
-
         </ul>
       </div>
     </nav>
-
 
     <% if flash[:notice] %>
       <div class="alert alert-success text-center">
         <%= flash[:notice] %>
       </div>
     <% end %>
-
-
-
 
     <%= yield %>
 
