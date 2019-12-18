@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_student!
 
   def index
-    @users = User.all
+    @users = User.all.reverse
   end
 
   def new
@@ -33,8 +33,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    user = User.find(params[:id])
-    user.destroy
+    @user = User.find(params[:id])
+    @user.destroy
     redirect_to users_path, notice: "El Usuario fue eliminado"
   end
 
