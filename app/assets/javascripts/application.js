@@ -47,7 +47,7 @@ document.addEventListener("turbolinks:load", function () {
         eventOverlap: false,
         header: {
             left: 'addEventButton,saveEventButton',
-            center: 'title',
+            center: '',
             right: 'dayGridMonth,timeGridWeek,prev,today,next'
         },
         customButtons: {
@@ -63,8 +63,6 @@ document.addEventListener("turbolinks:load", function () {
 
                     var CurrentDate = moment(new Date()).startOf('day');
                     GivenDate = moment(dateStr);
-
-                    console.log(GivenDate, CurrentDate)
 
                     if(GivenDate < CurrentDate){
                         Swal.fire({
@@ -235,7 +233,71 @@ document.addEventListener("turbolinks:load", function () {
             //info.draggedEl.parentNode.removeChild(info.draggedEl);
         },
         eventClick: function (event, element) {
+                        
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "¿Deseas eliminar esta programación?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, borrar!'
+            }).then((result) => {
+                if (result.value) {
 
+                    var event_id=event.event.extendedProps.reserv_id
+                    var start_date=event.event.start
+                    var suscription_id=event.event.extendedProps.suscrip_id
+                    
+                    var CurrentDate = moment(new Date()).startOf('day');
+                    GivenDate = moment(start_date).format("DD-MM-YYYY");
+
+                    if(GivenDate < CurrentDate){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'No puedes borrar una programación pasada.'
+                        })
+                    }else{
+
+                        $.ajaxSetup({
+                            async: false
+                         });
+    
+                        $.ajax({
+                            type: "DELETE",
+                            url: '/rooms/' + $('#roow_id').val() + '/schedules/'+event_id+'?suscription_id='+suscription_id,
+                            success:function(data, textStatus, xhr){
+                                console.log(data.status_code)
+                                if (data.status_code==1){
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Se borró la programación.',
+                                        'success'
+                                    )
+                                }else{
+                                    Swal.fire(
+                                        'Oops',
+                                        'No puedes borrar esta programación.',
+                                        'error'
+                                    )
+                                }
+
+                            }
+                        });
+
+                    }
+                }
+
+                var eventos_local = calendar.getEvents();
+
+                for (i in eventos_local){
+                    calendar.getEventById(eventos_local[i].id).remove();
+                }
+                
+                load_server_events();
+
+            })
         }
     });
 
@@ -284,6 +346,8 @@ document.addEventListener("turbolinks:load", function () {
                     var s_inicio = Right('0' + data[i].start_hour, 2);
                     var s_fin = Right('0' + (data[i].start_hour + 2), 2);
                     var sucrip_id=data[i].suscription_id
+                    var reservation_id=data[i].id
+                    var suscription_id=data[i].suscription_id
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -305,7 +369,9 @@ document.addEventListener("turbolinks:load", function () {
                         end: end,
                         overlap: false,
                         backgroundColor: color,
-                        borderColor: color
+                        borderColor: color,
+                        reserv_id: reservation_id,
+                        suscrip_id: suscription_id
                     }
 
                     if (!isOverlapping(event)) {
@@ -365,6 +431,20 @@ document.addEventListener("turbolinks:load", function () {
             }
         }
         return false;
+    }
+
+    $( window ).resize(function() {
+        if($( window ).width()<=500){
+            calendar.changeView('timeGridDay');
+        }else{
+            calendar.changeView('timeGridWeek');
+        }
+    });
+
+    if($( window ).width()<=500){
+        calendar.changeView('timeGridDay');
+    }else{
+        calendar.changeView('timeGridWeek');
     }
 
     //finish turbolinks load wrapper
