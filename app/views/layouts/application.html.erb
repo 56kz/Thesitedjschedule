@@ -19,11 +19,18 @@
 
   <body>
 
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse navbar-static-top">
       <div class="container-fluid">
         <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapsed" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar""></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
           <%= link_to "TheSite", root_path, class: "navbar-brand" %>
         </div>
+        <div class="collapse navbar-collapse" id="navbar-collapsed">
         <% if student_signed_in? %>
           <ul class="nav navbar-nav">
             <li><%= link_to "Usuarios", users_path %></li>
@@ -38,6 +45,7 @@
           <li><%= link_to "Ingresar", new_student_session_path %></li>
           <% end %>
         </ul>
+        </div>
       </div>
     </nav>
 
