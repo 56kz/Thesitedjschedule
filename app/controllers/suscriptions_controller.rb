@@ -34,7 +34,6 @@ class SuscriptionsController < ApplicationController
   def destroy
     suscription = Suscription.find(params[:id])
     suscription.destroy
-
     redirect_to suscriptions_path, notice: "La Suscriprión fue eliminada"
   end
 
