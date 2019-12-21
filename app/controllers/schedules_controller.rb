@@ -5,23 +5,20 @@ class SchedulesController < ApplicationController
   respond_to :html, :json
 
   def index
- 
-    @room_id=params[:room_id]
+    @room_id = params[:room_id]
     @user_conected = User.find_by(email: current_student.email)
     @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
     @reservations = Reservation.where(room: @room_id)
-    
+
     respond_to do |format|
 
       format.html {}
       format.json { render json: @reservations }
-    
-     end
 
+    end
   end
 
   def new
-
     @reservation = Reservation.new(schedules_params)
 
     if Reservation.exists?(start_hour: params[:start_hour], reserve_date:params[:reserve_date], room: params[:room])
@@ -31,7 +28,7 @@ class SchedulesController < ApplicationController
         render :json => {:result => "Data saved successfully!",:status_code => "1"}
       end
     end
-  
+
   end
 
   def destroy

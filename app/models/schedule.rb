@@ -1,4 +1,4 @@
 class Schedule < ApplicationRecord
-  belongs_to :room
-  has_one :reservation
+  belongs_to :room, dependent: :destroy
+  has_one :reservation, dependent: :destroy
 end
