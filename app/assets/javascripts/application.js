@@ -40,7 +40,7 @@ document.addEventListener("turbolinks:load", function () {
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
         height: 720,
-        minTime: '08:00:00', /* calendar start Timing */
+        minTime: '06:00:00', /* calendar start Timing */
         maxTime: '22:00:00',  /* calendar end Timing */
         timeFormat: 'h(:mm)a',
         themeSystem: 'standalone',
@@ -73,49 +73,53 @@ document.addEventListener("turbolinks:load", function () {
                     }else{
 
                         switch (time_range) {
-                            case '8:00 am 10:00 am':
+                          case '6:00 - 8:00 am':
+                              inicio = '06';
+                              fin = '08';
+                              break;
+                            case '8:00 - 10:00 am':
                                 inicio = '08';
                                 fin = '10';
                                 break;
-                            case '10:00 am 12:00 pm':
+                            case '10:00 - 12:00 pm':
                                 inicio = '10';
                                 fin = '12';
                                 break;
-                            case '12:00 pm 02:00 pm':
+                            case '12:00- 02:00 pm':
                                 inicio = '12';
                                 fin = '14';
                                 break;
-                            case '2:00 pm 4:00 pm':
+                            case '2:00 - 4:00 pm':
                                 inicio = '14';
                                 fin = '16';
                                 break;
-                            case '4:00 pm 6:00 pm':
+                            case '4:00 - 6:00 pm':
                                 inicio = '16';
                                 fin = '18';
                                 break;
-                            case '6:00 pm 8:00 pm':
+                            case '6:00 - 8:00 pm':
                                 inicio = '18';
                                 fin = '20';
                                 break;
-                            case '8:00 pm 10:00 pm':
+                            case '8:00 - 10:00 pm':
                                 inicio = '20';
                                 fin = '22';
                                 break;
                         }
-    
+
                         var date = new Date(dateStr + 'T' + inicio + ':00:00'); // will be in local time
                         var end = new Date(dateStr + 'T' + fin + ':00:00'); // will be in local time
-    
+
                         const date_m = moment(date);
                         const dow = date_m.day();
                         var sabado=false
-    
-                        if (dow==6 && (inicio=='08' || inicio=='20')){
+
+                        if (dow==6 && (inicio=='08' || inicio=='18' || inicio=='06' || inicio=='20')){
                             sabado=true
                         }
-    
+
                         var color = get_color(dow);
-    
+
                         event = {
                             title: '(Nuevo) Clase en Cabina ' + $('#roow_id').val(),
                             start: date,
@@ -124,7 +128,7 @@ document.addEventListener("turbolinks:load", function () {
                             backgroundColor: color,
                             borderColor: color
                         }
-    
+
                         if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
                             calendar.addEvent(event);
                         } else {
@@ -160,7 +164,7 @@ document.addEventListener("turbolinks:load", function () {
                      });
 
                     for (i in all_events) {
-                        
+
                         let title = all_events[i].title
 
                         if (title.indexOf("(Nuevo)") !== -1) {
@@ -208,7 +212,7 @@ document.addEventListener("turbolinks:load", function () {
                         })
 
                     }
-                    
+
                     var eventos_local = calendar.getEvents();
 
                     for (i in eventos_local){
@@ -217,7 +221,7 @@ document.addEventListener("turbolinks:load", function () {
 
                     load_server_events();
                 }
-                
+
             }
         },
         eventOverlap: false,
@@ -225,9 +229,9 @@ document.addEventListener("turbolinks:load", function () {
         editable: false,
         droppable: false, // this allows things to be dropped onto the calendar
         /*businessHours: {
-          dow: [ 1, 2, 3, 4, 5], 
+          dow: [ 1, 2, 3, 4, 5],
           start: '08:00',
-          end: '22:00', 
+          end: '22:00',
         },*/
         drop: function (info) {
             //info.draggedEl.parentNode.removeChild(info.draggedEl);
@@ -423,7 +427,7 @@ document.addEventListener("turbolinks:load", function () {
     }
 
     function isOverlapping(event) {
-        // "calendar" on line below should ref the element on which fc has been called 
+        // "calendar" on line below should ref the element on which fc has been called
         var array = calendar.getEvents();
 
         for (i in array) {
@@ -451,4 +455,3 @@ document.addEventListener("turbolinks:load", function () {
     //finish turbolinks load wrapper
 
 })
-
