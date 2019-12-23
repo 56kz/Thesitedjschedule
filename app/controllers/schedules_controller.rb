@@ -1,6 +1,7 @@
 class SchedulesController < ApplicationController
-  before_action :authenticate_student!,  except: [:new]
-
+  before_action :authenticate_student!,  except: [:new, ]
+  skip_before_action :verify_authenticity_token  
+  
   respond_to :html, :json
 
   def index
@@ -26,6 +27,24 @@ class SchedulesController < ApplicationController
       if @reservation.save
         render :json => {:result => "Data saved successfully!",:status_code => "1"}
       end
+    end
+
+  end
+
+  def destroy
+    
+    @user_conected = User.find_by(email: current_student.email)
+    @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
+
+    if @active_suscription.id.to_i==params[:suscription_id].to_i
+      Reservation.where(id: params[:id]).destroy_all
+      
+      render :json => {
+        :result => "Data deleted successfully!",
+        :status_code => "1"
+      }
+    else
+      render :json => {:result => "Error, can't delete!", :status_code => "0"}
     end
 
   end
