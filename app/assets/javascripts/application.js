@@ -57,6 +57,10 @@ document.addEventListener("turbolinks:load", function () {
                     inicio = 0
                     fin = 0
 
+                    $.ajaxSetup({
+                        async: false
+                    });
+
                     var CurrentDate = moment(new Date()).startOf('day');
                     GivenDate = moment(dateStr);
 
@@ -160,6 +164,10 @@ document.addEventListener("turbolinks:load", function () {
                                         + "&start_hour=" + start
                                         + "&reserve_date=" + date_event
                                         + "&room=" + $('#roow_id').val()
+
+                                        $.ajaxSetup({
+                                            async: false
+                                        });
 
                                     $.ajax({
                                         type: "GET",
