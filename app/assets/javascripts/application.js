@@ -172,12 +172,7 @@ document.addEventListener("turbolinks:load", function () {
                                     $.ajax({
                                         type: "GET",
                                         url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
-                                        data: data,
-                                        success: function (data, textStatus, xhr) {
-                                            if (data.status_code == "0") {
-                                                error_save += 1
-                                            }
-                                        }
+                                        data: data
                                     });
                                 }
                             }
