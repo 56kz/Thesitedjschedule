@@ -48,6 +48,17 @@ document.addEventListener("turbolinks:load", function () {
             center: '',
             right: 'dayGridMonth,timeGridWeek,prev,today,next'
         },
+        eventRender: function(info) {
+            
+            var rol= $("#user_rol").val()
+
+            if (rol=="admin" || rol=="instructor"){
+                var username=info.event.extendedProps.username
+                info.el.querySelector('.fc-title').innerHTML = "<i>" + info.event.title + "</i>"+"<br> <span class='label label-default'>"+username+"</span>";
+            }
+
+        }
+        ,
         customButtons: {
             addEventButton: {
                 text: 'Programar',
@@ -351,6 +362,7 @@ document.addEventListener("turbolinks:load", function () {
                     var sucrip_id = data[i].suscription_id
                     var reservation_id = data[i].id
                     var suscription_id = data[i].suscription_id
+                    var usr_name=data[i].username
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -374,7 +386,8 @@ document.addEventListener("turbolinks:load", function () {
                         backgroundColor: color,
                         borderColor: color,
                         reserv_id: reservation_id,
-                        suscrip_id: suscription_id
+                        suscrip_id: suscription_id,
+                        username: usr_name
                     }
 
                     if (!isOverlapping(event)) {
