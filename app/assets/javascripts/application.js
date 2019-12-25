@@ -282,7 +282,7 @@ document.addEventListener("turbolinks:load", function () {
                             type: "DELETE",
                             url: '/rooms/' + $('#roow_id').val() + '/schedules/' + event_id + '?suscription_id=' + suscription_id,
                             success: function (data, textStatus, xhr) {
-                                console.log(data.status_code)
+
                                 if (data.status_code == 1) {
                                     Swal.fire(
                                         'Deleted!',
@@ -370,7 +370,7 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    if (sucrip_id != $('#suscription_id').val()) {
+                    if (sucrip_id != $('#suscription_id').val() && $("#user_rol").val()=="estudiante") {
                         var color = '#708090'
                         title = 'Cabina Ocupada'
                     } else {
