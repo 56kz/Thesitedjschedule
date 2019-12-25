@@ -9,11 +9,20 @@ class SchedulesController < ApplicationController
     @user_conected = User.find_by(email: current_student.email)
     @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
     @reservations = Reservation.where(room: @room_id)
+    @reservations_mod =  @reservations.as_json
+    @users = User.all
+
+    @reservations.each_with_index  { |item, index|
+      @user_id = Suscription.find_by(id: item.suscription_id).user_id
+      @user_name=@users.find_by(id: @user_id).name
+      @reservations_mod[index][:username]= @user_name
+    }
+
 
     respond_to do |format|
 
       format.html {}
-      format.json { render json: @reservations }
+      format.json { render json: @reservations_mod }
 
     end
   end
@@ -36,7 +45,7 @@ class SchedulesController < ApplicationController
     @user_conected = User.find_by(email: current_student.email)
     @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
 
-    if @active_suscription.id.to_i==params[:suscription_id].to_i
+    if @active_suscription.id.to_i==params[:suscription_id].to_i or @user_conected.rol!="estudiante"
       Reservation.where(id: params[:id]).destroy_all
 
       render :json => {
