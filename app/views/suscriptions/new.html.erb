@@ -77,39 +77,44 @@ document.addEventListener("turbolinks:load", function () {
         }
     });
 
-    $('#room-select').select2({placeholder: "Seleccione una cabina..."});
 
-    $('#js-data-name').on('select2:select', function (e) {
-      var data = e.params.data;
-      $("#suscription_user_id").val(data.id)
-    });
 
-    $('#room-select').on('select2:select', function (e) {
-      $("#suscription_rooms").val("")
-      data=$('#room-select').select2('data')
-      var ids=""
+    $(document).ready(function() {
+        $('#room-select').select2({placeholder: "Seleccione una cabina..."});
+          
+      $('#js-data-name').on('select2:select', function (e) {
+        var data = e.params.data;
+        $("#suscription_user_id").val(data.id)
+      });
 
-      for (i in data){
-        ids+=data[i].id
-      }
+      $('#room-select').on('select2:select', function (e) {
+        $("#suscription_rooms").val("")
+        data=$('#room-select').select2('data')
+        var ids=""
 
-      ids=ids.split("")
-      $("#suscription_rooms").val(ids)
+        for (i in data){
+          ids+=data[i].id
+        }
 
-    });
+        ids=ids.split("")
+        $("#suscription_rooms").val(ids)
 
-    $('#room-select').on('select2:unselect', function (e) {
-      $("#suscription_rooms").val("")
-      data=$('#room-select').select2('data')
-      var ids=""
+      });
 
-      for (i in data){
-        ids+=data[i].id
-      }
+      $('#room-select').on('select2:unselect', function (e) {
+        $("#suscription_rooms").val("")
+        data=$('#room-select').select2('data')
+        var ids=""
 
-      ids=ids.split("")
-      $("#suscription_rooms").val(ids)
- 
+        for (i in data){
+          ids+=data[i].id
+        }
+
+        ids=ids.split("")
+        $("#suscription_rooms").val(ids)
+  
+      });
+
     });
 
 });
