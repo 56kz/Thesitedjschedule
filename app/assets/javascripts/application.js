@@ -23,6 +23,7 @@
 document.addEventListener("turbolinks:load", function () {
 
     //turbolinks load wrapper
+    moment.tz.setDefault("America/Bogota");
 
     var Calendar = FullCalendar.Calendar;
 
