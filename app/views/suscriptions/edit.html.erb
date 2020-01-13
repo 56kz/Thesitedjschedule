@@ -1,7 +1,7 @@
-<div class="container text-center">
+<div class="container">
   <div class="row">
-    <div class="col-xs-8 col-xs-offset-2 col-lg-4 col-lg-offset-4">
-      <h1>Editar Suscripción</h1>
+    <div class="col-sm-4 mx-auto"><br>
+      <h1 class="text-center">Editar Suscripción</h1>
       <br>
         <%= form_for @suscription do |s| %>
           <div class="form-group">
@@ -21,7 +21,7 @@
             <%= s.label "Horas" %> <br />
             <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control input-sm" %>
           </div>
-          <div class="form-group">
+          <div class="form-group text-center">
             <%= s.label "Activo" %> <br />
             <%= s.check_box :status %>
           </div>

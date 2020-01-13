@@ -1,84 +1,102 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TheSite</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.css" integrity="sha256-nJK+Jim06EmZazdCbGddx5ixnqfXA13Wlw3JizKK1GU=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.css" integrity="sha256-QG5qcyovbK2zsUkGMWTVn0PZM1P7RVx0Z05QwB9dCeg=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.css" integrity="sha256-UpqyFskjj8q6ioNCrwGzObqiE56OxEYuSBXUHGqDBII=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css" integrity="sha256-q0wZgzQ6Ru67x+pIe9IAztrnlHNHyZui3BMwqUYDnpI=" crossorigin="anonymous" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+<head>
+  <title>TheSite</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.css"
+    integrity="sha256-nJK+Jim06EmZazdCbGddx5ixnqfXA13Wlw3JizKK1GU=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.css"
+    integrity="sha256-QG5qcyovbK2zsUkGMWTVn0PZM1P7RVx0Z05QwB9dCeg=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.css"
+    integrity="sha256-UpqyFskjj8q6ioNCrwGzObqiE56OxEYuSBXUHGqDBII=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css"
+    integrity="sha256-q0wZgzQ6Ru67x+pIe9IAztrnlHNHyZui3BMwqUYDnpI=" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
 
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  <body>
+<body>
 
-    <nav class="navbar navbar-inverse navbar-static-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapsed" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar top-bar"></span>
-            <span class="icon-bar middle-bar""></span>
-            <span class="icon-bar bottom-bar"></span>
-          </button>
-          <%= link_to "TheSite", root_path, class: "navbar-brand" %>
-        </div>
-        <div class="collapse navbar-collapse" id="navbar-collapsed">
-        <% if student_signed_in? %>
-          <ul class="nav navbar-nav">
-            <li><%= link_to "Usuarios", users_path %></li>
-            <li><%= link_to "Suscripciones", suscriptions_path %></li>
-            <li><%= link_to "Reservas", reservations_path %></li>
-          </ul>
-        <% end %>
-        <ul class="nav navbar-nav navbar-right">
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container d-flex justify-content-between">
+
+      <%= link_to "TheSite", root_path, class: "navbar-brand" %>
+      <button class="navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
           <% if student_signed_in? %>
-          <li><%= link_to "Salir", destroy_student_session_path, method: :delete %></li>
+          <li class="nav-item"><%= link_to "Usuarios", users_path, class:"nav-link" %></li>
+          <li class="nav-item"><%= link_to "Suscripciones",suscriptions_path , class:"nav-link" %></li>
+          <li class="nav-item"><%= link_to "Reservas",reservations_path, class:"nav-link" %></li>
+          <% end %>
+
+        </ul>
+
+        <ul class="navbar-nav ml-0">
+          <% if student_signed_in? %>
+          <li class="nav-item"><%= link_to "Salir", destroy_student_session_path, method: :delete, class:"nav-link" %>
+          </li>
           <% else %>
-          <li><%= link_to "Ingresar", new_student_session_path %></li>
+          <li class="nav-item"><%= link_to "Ingresar", new_student_session_path, class:"nav-link" %></li>
           <% end %>
         </ul>
-        </div>
+
       </div>
-    </nav>
 
-    <% if flash[:notice] %>
-      <div class="alert alert-success text-center">
-        <%= flash[:notice] %>
-      </div>
-    <% end %>
+    </div>
 
-    <%= yield %>
+  </nav>
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<br>
+  <% if flash[:notice] %>
+  <div class=" col-md-4 mx-auto alert alert-success alert-dismissible fade show">
+    <%= flash[:notice] %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <% end %>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js" integrity="sha256-OLaRYiuHs2MI4UUBtEgS3h2/88KzBApHNvbxEbEylAo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.es.min.js" integrity="sha256-UcY40qE1889sxPkcQCp2rQ2VyMfG1lvz77zTHO9tV+U=" crossorigin="anonymous"></script>
+  <%= yield %>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"
-        integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.js"
-        integrity="sha256-F4ovzqUMsKm41TQVQO+dWHQA+sshyOUdmnDcTPMIHkM=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.js"
-        integrity="sha256-I1bdnmA3OtkQwlbwNbJQ2y+kH2fIXfnIjhAfYhxJqiY=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.js"
-        integrity="sha256-Q7vy6GHSfPnAFHnyM58AAI+jLJRBr3o7VHGlu+6mUlY=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/locales-all.js"
-        integrity="sha256-j8iQxZfxQSVcV2dj1WTX23PmeujqjfyYg122dWJ9zw8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.js"
-        integrity="sha256-MJ15XCTL71Z+hio+iodzZBMJFmxsuOCnozIN43XBJ5k=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.js"
+    integrity="sha256-OLaRYiuHs2MI4UUBtEgS3h2/88KzBApHNvbxEbEylAo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.es.min.js"
+    integrity="sha256-UcY40qE1889sxPkcQCp2rQ2VyMfG1lvz77zTHO9tV+U=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"
+    integrity="sha256-H9jAz//QLkDOy/nzE9G4aYijQtkLt9FvGmdUTwBk6gs=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/main.js"
+    integrity="sha256-F4ovzqUMsKm41TQVQO+dWHQA+sshyOUdmnDcTPMIHkM=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/daygrid/main.js"
+    integrity="sha256-I1bdnmA3OtkQwlbwNbJQ2y+kH2fIXfnIjhAfYhxJqiY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.js"
+    integrity="sha256-Q7vy6GHSfPnAFHnyM58AAI+jLJRBr3o7VHGlu+6mUlY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/core/locales-all.js"
+    integrity="sha256-j8iQxZfxQSVcV2dj1WTX23PmeujqjfyYg122dWJ9zw8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/interaction/main.js"
+    integrity="sha256-MJ15XCTL71Z+hio+iodzZBMJFmxsuOCnozIN43XBJ5k=" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+</body>
+
 </html>

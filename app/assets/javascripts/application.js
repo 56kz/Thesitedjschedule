@@ -12,8 +12,9 @@
 //
 //= require rails-ujs
 //= require activestorage
-//= require jquery
-//= require bootstrap-sprockets
+//= require jquery3
+//= require popper
+//= require bootstrap
 //= require turbolinks
 //= require_tree .
 
@@ -37,6 +38,7 @@ document.addEventListener("turbolinks:load", function () {
         defaultView: 'timeGridWeek',
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
+        eventTextColor:'rgb(255,255,255)',
         height: 820,
         minTime: '06:00:00', /* calendar start Timing */
         maxTime: '22:00:00',  /* calendar end Timing */
@@ -54,7 +56,7 @@ document.addEventListener("turbolinks:load", function () {
 
             if (rol=="admin" || rol=="instructor"){
                 var username=info.event.extendedProps.username
-                info.el.querySelector('.fc-title').innerHTML = "<i>" + info.event.title + "</i>"+"<br> <span class='label label-default'>"+username+"</span>";
+                info.el.querySelector('.fc-title').innerHTML = "<i class='text-white'>" + info.event.title + "</i>"+"<br> <span class='badge badge-pill badge-secondary'>"+username+"</span>";
             }
 
         }
