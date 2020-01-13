@@ -153,7 +153,8 @@ document.addEventListener("turbolinks:load", function () {
                             //Get all server events to avoid duplicate schedules
 
                             var all_events = calendar.getEvents();
-
+                            var for_save=0
+                            
                             for (i in all_events) {
                                 let title = all_events[i].title
                                 if (title.indexOf("(Nuevo)") !== -1) {
