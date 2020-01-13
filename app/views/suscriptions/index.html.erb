@@ -1,11 +1,17 @@
-<%= link_to "Crear Suscripcion", new_suscription_path, class: "btn btn-primary" %>
 
-<div class="container text-center general-info">
+<div class="container">
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-      <h1>Suscripciones</h1>
 
-      <table class="table">
+    <div class="col-md-8 ml-0">
+    <br>
+      <%= link_to "Crear Suscripcion", new_suscription_path, class: "btn btn-primary" %>
+    </div>
+
+    <div class="col-sm-12 mx-auto">
+
+      <h1 class="text-center">Suscripciones</h1><br>
+
+      <table class="table table table-striped table-bordered text-center">
         <tr>
           <th>Id</th>
           <th>Tipo</th>
@@ -14,7 +20,7 @@
           <th>Cabinas</th>
           <th>Observaciones</th>
           <th>Suscriptor</th>
-          <th></th>
+          <th>Opciones</th>
         </tr>
 
         <% @suscriptions.each do |s| %>
@@ -27,8 +33,10 @@
             <td><%= s.observations %></td>
             <td><%= s.user.name %></td>
             <td>
-              <%= link_to "Editar", edit_suscription_path(s) %>
-              <%= link_to "Eliminar", s, method: :delete, data: { confirm: "Seguro deseas eliminar la suscripción?" } %>
+            <div class="btn-group" role="group">
+              <%= link_to "Editar", edit_suscription_path(s), class:"btn btn-success"  %>
+              <%= link_to "Eliminar", s, method: :delete, data: { confirm: "Seguro deseas eliminar la suscripción?" }, class:"btn btn-secondary"  %>
+            </div>
             </td>
           </tr>
         <% end %>
