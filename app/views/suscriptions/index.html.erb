@@ -13,6 +13,7 @@
       <h2 class="text-center">Suscripciones</h2><br>
 
       <table class="table table table-striped table-bordered text-center">
+      <thead>
         <tr>
           <th>Id</th>
           <th>Tipo</th>
@@ -23,7 +24,8 @@
           <th>Suscriptor</th>
           <th>Opciones</th>
         </tr>
-
+      </thead>
+      </tbody>
         <% @suscriptions.each do |s| %>
           <tr>
             <td><%= s.id %></td>
@@ -41,6 +43,7 @@
             </td>
           </tr>
         <% end %>
+        </tbody>
       </table>
 
     </div>

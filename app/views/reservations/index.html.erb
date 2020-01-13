@@ -11,6 +11,7 @@
       <h2 class="text-center">Reservas</h2><br>
 
       <table class="table table table-striped table-bordered text-center">
+      <thead>
         <tr>
           <th>Día</th>
           <th>Hora</th>
@@ -18,7 +19,8 @@
           <th>Usuario</th>
           <th>Sala</th>
         </tr>
-
+      </thead>
+      <tbody>
         <% @reservations.each do |r| %>
         <tr>
           <td><%= r.schedule.day %></td>
@@ -28,7 +30,7 @@
           <td><%= r.schedule.room.name %></td>
         </tr>
         <% end %>
-
+      </tbody>
       </table>
 
     </div>
