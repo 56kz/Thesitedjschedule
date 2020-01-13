@@ -29,12 +29,36 @@ class SchedulesController < ApplicationController
 
   def new
     @reservation = Reservation.new(schedules_params)
+    @suscription=params[:suscription_id].to_i
+    @active_suscription = Suscription.find_by(id: @suscription, status: true)
+    @reservation_Hours= Reservation.where(suscription_id: @suscription).count*2
+    @suscrip_hours=0
+   
+    case @active_suscription.hours
+      when "Dos"
+        @suscrip_hours=2
+      when "Cuatro"
+        @suscrip_hours=4
+      when "Doce"
+        @suscrip_hours=12
+      when "Full"
+        @suscrip_hours=24
+    end
+
 
     if Reservation.exists?(start_hour: params[:start_hour], reserve_date:params[:reserve_date], room: params[:room])
         render :json => {:result => "Error, schedule already exist!", :status_code => "0"}
     else
-      if @reservation.save
-        render :json => {:result => "Data saved successfully!",:status_code => "1"}
+
+      if @suscrip_hours<(@reservation_Hours.to_i+2)
+        render :json => { :result => "Not hours available for this suscription!",
+                          :status_code => "2", 
+                          :available =>@suscrip_hours, 
+                          :used => @reservation_Hours}
+      else
+        if @reservation.save
+          render :json => {:result => "Data saved successfully!",:status_code => "1"}
+        end
       end
     end
 

@@ -148,14 +148,10 @@ document.addEventListener("turbolinks:load", function () {
                         if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
                             calendar.addEvent(event);
 
-
                             //start Saving Event
                             //Get all server events to avoid duplicate schedules
 
                             var all_events = calendar.getEvents();
-                            var completed = 0
-                            var for_save = 0
-                            var error_save = 0
 
                             for (i in all_events) {
                                 let title = all_events[i].title
@@ -187,33 +183,32 @@ document.addEventListener("turbolinks:load", function () {
                                         type: "GET",
                                         url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
                                         data: data
+                                    }).done(function(data) {
+                                        if (data.status_code == 0) {
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: '...',
+                                                text: 'No fue posible guardar la programación.',
+                                            })
+                                        } else if(data.status_code == 2){
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: '...',
+                                                text: 'No tienes horas disponibles.',
+                                            })
+                                        }else {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Bien hecho!',
+                                                text: 'Se guardó la programación.',
+                                                position: 'top-end',
+                                                timer: 1500,
+                                                showConfirmButton: false
+                                            })
+            
+                                        }
                                     });
                                 }
-                            }
-
-                            if (for_save == completed) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: '...',
-                                    text: 'No se encontraron clases por guardar.',
-                                })
-                            }
-                            if (error_save > 0) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: '...',
-                                    text: 'No fue posible guardar todos los eventos.',
-                                })
-                            } else {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '¡Bien hecho!',
-                                    text: 'Se guardó la programación.',
-                                    position: 'top-end',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                })
-
                             }
 
                             var eventos_local = calendar.getEvents();
