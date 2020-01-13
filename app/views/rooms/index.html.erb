@@ -1,17 +1,26 @@
 <div class="container text-center general-info">
   <div class="row">
-    <div class="col-sm-6 mx-auto">
-      <br>
-      <p>Bienvenido <%= @user_conected.name %></p>
-      <p>Estas Registrado en el programa <%= @active_suscription.name %></p>
+    <div class="col-sm-8 mx-auto">
 
+      <div class="card card-main" style="height:700px;">
+
+      <div class="card-body">
+
+      <br>
+      <h1 class="display-4">Bienvenido <strong><%= @user_conected.name %><strong></h1>
+      <h5>Estas Registrado en el programa <span class="badge badge-pill badge-dark"> <%= @active_suscription.name %></span></h5>
+      <br>
+      <hr><br>
       <h1>Cabina</h1><br>
 
-      <% @rooms.each do |r| %>
-      <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
-      <br>
-      <br>
-      <% end %>
+            <% @rooms.each do |r| %>
+            <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
+            <br>
+            <br>
+            <% end %>
+
+      </div>
+      </div>
     </div>
   </div>
 </div>
