@@ -22,6 +22,12 @@
 
 document.addEventListener("turbolinks:load", function () {
 
+    $(document).ready( function () {
+        $('.table').DataTable({
+            responsive: true
+        });
+    } );
+
     //turbolinks load wrapper
     moment.tz.setDefault("America/Bogota");
 
