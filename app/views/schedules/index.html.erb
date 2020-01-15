@@ -51,3 +51,23 @@
         </div>
     </div>
 </div>
+
+<script>
+
+$( document ).ready(function() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    if (urlParams.has('id')){
+        const suscription_id = urlParams.get('id')
+        var rol= $("#user_rol").val()
+        
+        if (rol=="admin" || rol=="instructor"){
+            $("#suscription_id").val(suscription_id)
+            console.log(suscription_id)
+        }
+    }
+    
+})
+
+</script>
