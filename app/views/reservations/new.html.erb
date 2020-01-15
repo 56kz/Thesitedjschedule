@@ -1,20 +1,91 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-6 mx-auto"><br>
+    <div class="col-sm-4 mx-auto"><br>
       <h1 class="text-center">Crear Reserva</h1><br>
 
-      <%= form_for @reservation do |r| %>
-      <div class="form-group">
-        <%= r.text_field :schedule_id, class: "form-control input-lg", placeholder: "Id de Horario" %>
-      </div>
-      <div class="form-group">
-        <%= r.text_field :suscription_id, class: "form-control input-lg", placeholder: "Id de Suscripción" %>
-      </div>
-      <div>
-        <%= r.submit "Crear Reserva", class: "btn btn-primary btn-lg btn-block" %>
-      </div>
-      <% end %>
+      <form class="form">
+
+        <div class="form-group">
+            <select placeholder="Ingrese un nombre..." id="js-data-name" style="width: 100%; float:left;"></select><br><br>
+        </div>
+
+        <div class="form-group">
+        <label for="room-select">Cabinas</label>
+            <select class="form-control" id="room-select">
+              <option value="0" selected="selected">Seleccione una opción</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" id="submit" value="Nueva Reserva" class="btn btn-primary btn-block">
+        </div>
+
+      </form>
 
     </div>
   </div>
 </div>
+
+<script>
+
+document.addEventListener("turbolinks:load", function () {
+
+    var base_url = window.location.origin;
+    var results = [""] 
+    
+    $.ajax({
+        type: "GET",
+        url: base_url + '/users.json',
+        success: function (data, textStatus, xhr) {
+            for (i in data) {
+                var obj = {
+                    "id": data[i].sucription_id,
+                    "text": data[i].name,
+                    "room": data[i].rooms
+                }
+                results.push(obj)
+            }
+
+          $('#js-data-name').select2({
+              data: results,
+              placeholder: "Seleccione un usuario..."
+          });
+
+        }
+    });
+
+    $( document ).ready(function() {
+            $("#js-data-name").on("select2:select", function (e) { 
+            var data = e.params.data;
+            var options = data.room.split(','); 
+
+            $('#room-select').empty()
+            $('#room-select').append("Seleccione una opción")
+
+            for(var i=0; i<options.length; i++){
+              var opt = options[i];
+              var el = document.createElement("option");
+              el.textContent = opt;
+              el.value = opt;
+              $('#room-select').append(el);
+            }
+
+        });
+    });
+
+});
+
+$( "#submit" ).click(function(e) {
+  e.preventDefault();
+  if ($('#room-select').val()=="0"){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'Necesitas una suscripción para hacer esto.'
+    })
+  }else{
+    window.location.href = window.location.origin+"/rooms/"+$('#room-select').val()+"/schedules?id="+$('#js-data-name').select2('data')[0].id;
+  }
+});
+
+</script>
