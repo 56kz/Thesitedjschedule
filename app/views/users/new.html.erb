@@ -1,8 +1,10 @@
 <div class="container text-center general-info">
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-6 mx-auto">
 
-      <h1>Crear Usuario</h1>
+    <br><br>
+
+      <h1>Crear Usuario</h1><br>
         <%= form_for @user do |u| %>
           <div class="form-group">
             <%= u.text_field :name, class: "form-control input-lg", placeholder: "Nombre" %>

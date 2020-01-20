@@ -3,6 +3,27 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all.reverse
+    @users_mod =  @users.as_json
+
+    @users.each_with_index  { |item, index|
+      @user_id = item.id
+
+      if !Suscription.where(user_id: @user_id, status: true).first.nil?
+        @suscription=Suscription.where(user_id: @user_id, status: true).first.id
+        @rooms=Suscription.where(user_id: @user_id, status: true).first.rooms
+      else
+        @suscription=0
+        @rooms="0"
+      end
+      @users_mod[index][:sucription_id]= @suscription
+      @users_mod[index][:rooms]= @rooms
+    }
+
+    respond_to do |format|
+      format.html {}
+      format.json { render json: @users_mod }
+    end
+
   end
 
   def new

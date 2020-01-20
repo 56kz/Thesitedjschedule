@@ -1,42 +1,72 @@
 <div class="container-fluid">
     <div class="row">
-        
-        <div id="external-events" class="col-sm-2 col-md-2 text-center side-bar">
-        <h1>Reservas</h1>
+
+        <div id="external-events" class="col-sm-2 col-md-2 mx-auto text-center">
+            <h1>Reservas</h1>
             <p>
                 <strong>Selección de Horarios</strong>
             </p>
 
             <div class="input-group col-md-12 col-sm-12">
-                <span class="input-group-addon" id="date-picker">Fecha</span>
+
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><span class="input-group-addon" id="date-picker">Fecha</span></div>
+                </div>
+                
                 <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es'
-                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off" readonly="readonly"/>
+                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off"
+                    readonly="readonly" />
                 <input type="hidden" id="roow_id" value=<%= @room_id %>>
                 <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
+                <input type="hidden" id="user_rol" value=<%= @user_conected.rol %>>
             </div><br>
 
             <div class="input-group col-md-12 col-sm-12">
-                <span class="input-group-addon" id="time-picker-label">Hora</span>
+
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><span class="input-group-addon" id="time-picker-label">Hora</span></div>
+                </div>
+
                 <input type='text' id="time-picker" class='form-control' data-language='es'
-                    aria-describedby="time-picker" autocomplete="off" readonly="readonly"/>
+                    aria-describedby="time-picker" autocomplete="off" readonly="readonly" />
             </div><br>
 
+        <div class="btn-container text-center">
+            <div class="btn btn-primary hour-btn">6:00 - 08:00 am</div>
+            <div class="btn btn-primary hour-btn">8:00 - 10:00 am</div>
+            <div class="btn btn-primary hour-btn">10:00 - 12:00 pm</div>
+            <div class="btn btn-primary hour-btn">12:00 - 02:00 pm</div>
+            <div class="btn btn-primary hour-btn">2:00 - 4:00 pm</div>
+            <div class="btn btn-primary hour-btn">4:00 - 6:00 pm</div>
+            <div class="btn btn-primary hour-btn">6:00 - 8:00 pm</div>
+            <div class="btn btn-primary hour-btn">8:00 - 10:00 pm</div>
 
-
-                <div class="btn btn-primary hour-btn">6:00 - 08:00 am</div> 
-                <div class="btn btn-primary hour-btn">8:00 - 10:00 am</div>
-                <div class="btn btn-primary hour-btn">10:00 - 12:00 pm</div>
-                <div class="btn btn-primary hour-btn">12:00 - 02:00 pm</div>
-                <div class="btn btn-primary hour-btn">2:00 - 4:00 pm</div>
-                <div class="btn btn-primary hour-btn">4:00 - 6:00 pm</div>
-                <div class="btn btn-primary hour-btn">6:00 - 8:00 pm</div>
-                <div class="btn btn-primary hour-btn">8:00 - 10:00 pm</div>
+        </div>
 
         </div>
         <br>
 
-        <div class="col-sm-8 col-md-8 col-sm-offset-1 col-md-offset-1">
+        <div class="col-sm-8 col-md-8 mx-auto"><br>
             <div id='calendar'></div>
         </div>
     </div>
 </div>
+
+<script>
+
+$( document ).ready(function() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    if (urlParams.has('id')){
+        const suscription_id = urlParams.get('id')
+        var rol= $("#user_rol").val()
+        
+        if (rol=="admin" || rol=="instructor"){
+            $("#suscription_id").val(suscription_id)
+        }
+    }
+    
+})
+
+</script>

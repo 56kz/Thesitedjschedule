@@ -12,10 +12,9 @@
 //
 //= require rails-ujs
 //= require activestorage
-//= require jquery
-//= require moment/moment
-//= require daterangepicker/daterangepicker
-//= require bootstrap-sprockets
+//= require jquery3
+//= require popper
+//= require bootstrap
 //= require turbolinks
 //= require_tree .
 
@@ -23,7 +22,14 @@
 
 document.addEventListener("turbolinks:load", function () {
 
+    $(document).ready( function () {
+        $('.table').DataTable({
+            responsive: true
+        });
+    } );
+
     //turbolinks load wrapper
+    moment.tz.setDefault("America/Bogota");
 
     var Calendar = FullCalendar.Calendar;
 
@@ -39,6 +45,7 @@ document.addEventListener("turbolinks:load", function () {
         defaultView: 'timeGridWeek',
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
+        eventTextColor:'rgb(255,255,255)',
         height: 820,
         minTime: '06:00:00', /* calendar start Timing */
         maxTime: '22:00:00',  /* calendar end Timing */
@@ -50,6 +57,17 @@ document.addEventListener("turbolinks:load", function () {
             center: '',
             right: 'dayGridMonth,timeGridWeek,prev,today,next'
         },
+        eventRender: function(info) {
+            
+            var rol= $("#user_rol").val()
+
+            if (rol=="admin" || rol=="instructor"){
+                var username=info.event.extendedProps.username
+                info.el.querySelector('.fc-title').innerHTML = "<i class='text-white'>" + info.event.title + "</i>"+"<br> <span class='badge badge-pill badge-secondary'>"+username+"</span>";
+            }
+
+        }
+        ,
         customButtons: {
             addEventButton: {
                 text: 'Programar',
@@ -59,6 +77,10 @@ document.addEventListener("turbolinks:load", function () {
                     time_range = $('#time-picker').val()
                     inicio = 0
                     fin = 0
+
+                    $.ajaxSetup({
+                        async: false
+                    });
 
                     var CurrentDate = moment(new Date()).startOf('day');
                     GivenDate = moment(dateStr);
@@ -133,15 +155,12 @@ document.addEventListener("turbolinks:load", function () {
                         if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
                             calendar.addEvent(event);
 
-
                             //start Saving Event
                             //Get all server events to avoid duplicate schedules
 
                             var all_events = calendar.getEvents();
-                            var completed = 0
-                            var for_save = 0
-                            var error_save = 0
-
+                            var for_save=0
+                            
                             for (i in all_events) {
                                 let title = all_events[i].title
                                 if (title.indexOf("(Nuevo)") !== -1) {
@@ -164,42 +183,40 @@ document.addEventListener("turbolinks:load", function () {
                                         + "&reserve_date=" + date_event
                                         + "&room=" + $('#roow_id').val()
 
+                                        $.ajaxSetup({
+                                            async: false
+                                        });
+
                                     $.ajax({
                                         type: "GET",
                                         url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
-                                        data: data,
-                                        success: function (data, textStatus, xhr) {
-                                            if (data.status_code == "0") {
-                                                error_save += 1
-                                            }
+                                        data: data
+                                    }).done(function(data) {
+                                        if (data.status_code == 0) {
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: '...',
+                                                text: 'No fue posible guardar la programación.',
+                                            })
+                                        } else if(data.status_code == 2){
+                                            Swal.fire({
+                                                icon: 'info',
+                                                title: '...',
+                                                text: 'No tienes horas disponibles.',
+                                            })
+                                        }else {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: '¡Bien hecho!',
+                                                text: 'Se guardó la programación.',
+                                                position: 'top-end',
+                                                timer: 1500,
+                                                showConfirmButton: false
+                                            })
+            
                                         }
                                     });
                                 }
-                            }
-
-                            if (for_save == completed) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: '...',
-                                    text: 'No se encontraron clases por guardar.',
-                                })
-                            }
-                            if (error_save > 0) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: '...',
-                                    text: 'No fue posible guardar todos los eventos.',
-                                })
-                            } else {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '¡Bien hecho!',
-                                    text: 'Se guardó la programación.',
-                                    position: 'top-end',
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                })
-
                             }
 
                             var eventos_local = calendar.getEvents();
@@ -270,7 +287,7 @@ document.addEventListener("turbolinks:load", function () {
                             type: "DELETE",
                             url: '/rooms/' + $('#roow_id').val() + '/schedules/' + event_id + '?suscription_id=' + suscription_id,
                             success: function (data, textStatus, xhr) {
-                                console.log(data.status_code)
+
                                 if (data.status_code == 1) {
                                     Swal.fire(
                                         'Deleted!',
@@ -350,6 +367,7 @@ document.addEventListener("turbolinks:load", function () {
                     var sucrip_id = data[i].suscription_id
                     var reservation_id = data[i].id
                     var suscription_id = data[i].suscription_id
+                    var usr_name=data[i].username
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -357,7 +375,7 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    if (sucrip_id != $('#suscription_id').val()) {
+                    if (sucrip_id != $('#suscription_id').val() && $("#user_rol").val()=="estudiante") {
                         var color = '#708090'
                         title = 'Cabina Ocupada'
                     } else {
@@ -373,7 +391,8 @@ document.addEventListener("turbolinks:load", function () {
                         backgroundColor: color,
                         borderColor: color,
                         reserv_id: reservation_id,
-                        suscrip_id: suscription_id
+                        suscrip_id: suscription_id,
+                        username: usr_name
                     }
 
                     if (!isOverlapping(event)) {
