@@ -1,44 +1,44 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
-@import "bootstrap-sprockets";
-@import "bootstrap";
-@import "daterangepicker/daterangepicker";
 
-.navbar-toggle {
-    border: none;
-    background: transparent !important;
-  }
-  .navbar-toggle:hover {
-    background: transparent !important;
-  }
-  .navbar-toggle .icon-bar {
-    width: 22px;
-    transition: all 0.2s;
-  }
-  .navbar-toggle .top-bar {
-    transform: rotate(45deg);
-    transform-origin: 10% 10%;
-  }
-  .navbar-toggle .middle-bar {
-    opacity: 0;
-  }
-  .navbar-toggle .bottom-bar {
-    transform: rotate(-45deg);
-    transform-origin: 10% 90%;
-  }
-  .navbar-toggle.collapsed .top-bar {
-    transform: rotate(0);
-  }
-  .navbar-toggle.collapsed .middle-bar {
-    opacity: 1;
-  }
-  .navbar-toggle.collapsed .bottom-bar {
-    transform: rotate(0);
-  }
+@import "bootstrap";
 
   .hour-btn{
-    width: 130px; margin: 3px;
+    width: 150px; margin: 3px;
   }
 
-  .side-bar{
-    padding:30px;
-  }
+.btn-hover {
+    width: 200px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    margin: 20px;
+    height: 55px;
+    text-align:center;
+    border: none;
+    background-size: 300% 100%;
+    border-radius: 50px;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn-hover:hover {
+    background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+.btn-hover:focus {
+    outline: none;
+}
+
+.btn-hover.color-9 {
+    background-image: linear-gradient(to right, #25aae1, #4481eb, #04befe, #3f86ed);
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+

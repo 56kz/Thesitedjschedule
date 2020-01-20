@@ -1,14 +1,32 @@
-<div class="container text-center">
+<div class="container">
   <div class="row">
-    <div class="col-xs-8 col-xs-offset-2 col-lg-4 col-lg-offset-4">
-      <h1>Crear Suscripción</h1>
+    <div class="col-sm-4 mx-auto"><br>
+      <h1 class="text-center">Crear Suscripción</h1>
       <br>
+
+        <div class="form-group">
+              <select placeholder="Ingrese un nombre..." id="js-data-name" style="width: 100%; float:left;"></select>
+        </div>
+        <div class="form-group">
+              <select id="room-select" name="states[]" multiple="multiple" style="width: 100%; float:left;">
+                  <option value="1">Cabina 1</option>
+                  <option value="2">Cabina 2</option>
+                  <option value="3">Cabina 3</option>
+                  <option value="4">Cabina 4</option>
+                  <option value="5">Cabina 5</option>
+                  <option value="6">Cabina 6</option>
+                  <option value="7">Cabina 7</option>
+                  <option value="8">Cabina 8</option>
+              </select>
+        </div>
+
         <%= form_for @suscription do |s| %>
+     
           <div class="form-group">
-            <%= s.text_field :user_id, class: "form-control input-sm", placeholder: "Id de Usuario" %>
+            <%= s.text_field :user_id, class: "form-control input-sm", type: "hidden", placeholder: "Id de Usuario" %>
           </div>
           <div class="form-group">
-            <%= s.text_field :rooms, class: "form-control input-sm", placeholder: "Cabinas" %>
+            <%= s.text_field :rooms, class: "form-control input-sm", type: "hidden", placeholder: "Cabinas" %>
           </div>
           <div class="form-group">
             <%= s.text_field :observations, class: "form-control input-sm", placeholder: "Observaciones" %>
@@ -21,7 +39,7 @@
             <%= s.label "Horas" %> <br />
             <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control input-sm"  %>
           </div>
-          <div class="form-group">
+          <div class="form-group text-center">
             <%= s.label "Activo" %> <br />
             <%= s.check_box :status %>
           </div>
@@ -32,3 +50,73 @@
     </div>
   </div>
 </div>
+
+<script>
+
+document.addEventListener("turbolinks:load", function () {
+
+    var base_url = window.location.origin;
+    var results = [""] 
+    
+    $.ajax({
+        type: "GET",
+        url: base_url + '/users.json',
+        success: function (data, textStatus, xhr) {
+            for (i in data) {
+                var obj = {
+                    "id": data[i].id,
+                    "text": data[i].name
+                }
+                results.push(obj)
+            }
+
+          $('#js-data-name').select2({
+              data: results,
+              placeholder: "Seleccione un usuario..."
+          });
+        }
+    });
+
+
+
+    $(document).ready(function() {
+        $('#room-select').select2({placeholder: "Seleccione una cabina..."});
+          
+      $('#js-data-name').on('select2:select', function (e) {
+        var data = e.params.data;
+        $("#suscription_user_id").val(data.id)
+      });
+
+      $('#room-select').on('select2:select', function (e) {
+        $("#suscription_rooms").val("")
+        data=$('#room-select').select2('data')
+        var ids=""
+
+        for (i in data){
+          ids+=data[i].id
+        }
+
+        ids=ids.split("")
+        $("#suscription_rooms").val(ids)
+
+      });
+
+      $('#room-select').on('select2:unselect', function (e) {
+        $("#suscription_rooms").val("")
+        data=$('#room-select').select2('data')
+        var ids=""
+
+        for (i in data){
+          ids+=data[i].id
+        }
+
+        ids=ids.split("")
+        $("#suscription_rooms").val(ids)
+  
+      });
+
+    });
+
+});
+
+</script>
