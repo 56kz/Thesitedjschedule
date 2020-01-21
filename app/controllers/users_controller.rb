@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_student!
 
   def index
+    @user_conected = User.find_by(email: current_student.email)
     @users = User.all.reverse
     @users_mod =  @users.as_json
 
@@ -27,6 +28,7 @@ class UsersController < ApplicationController
   end
 
   def new
+    @user_conected = User.find_by(email: current_student.email)
     @user = User.new
   end
 
@@ -41,6 +43,7 @@ class UsersController < ApplicationController
   end
 
   def edit
+    @user_conected = User.find_by(email: current_student.email)        
     @user = User.find(params[:id])
   end
 

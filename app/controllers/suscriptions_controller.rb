@@ -2,10 +2,12 @@ class SuscriptionsController < ApplicationController
   before_action :authenticate_student!
 
   def index
+    @user_conected = User.find_by(email: current_student.email)
     @suscriptions = Suscription.all
   end
 
   def new
+    @user_conected = User.find_by(email: current_student.email)
     @suscription = Suscription.new
   end
 
@@ -19,6 +21,7 @@ class SuscriptionsController < ApplicationController
   end
 
   def edit
+    @user_conected = User.find_by(email: current_student.email)    
     @suscription = Suscription.find(params[:id])
   end
 

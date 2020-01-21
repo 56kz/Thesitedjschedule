@@ -2,10 +2,12 @@ class ReservationsController < ApplicationController
   before_action :authenticate_student!
 
   def index
+    @user_conected = User.find_by(email: current_student.email)
     @reservations = Reservation.all
   end
 
   def new
+    @user_conected = User.find_by(email: current_student.email)
     @reservation = Reservation.new
   end
 
