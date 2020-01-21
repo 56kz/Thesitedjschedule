@@ -5,7 +5,7 @@
       <br>
 
         <div class="form-group">
-              <select placeholder="Ingrese un nombre..." id="js-data-name" style="width: 100%; float:left;"></select>
+          <select placeholder="Ingrese un nombre..." id="js-data-name" style="width: 100%; float:left;"></select>
         </div>
         <div class="form-group">
               <select id="room-select" name="states[]" multiple="multiple" style="width: 100%; float:left;">
@@ -21,7 +21,7 @@
         </div>
 
         <%= form_for @suscription do |s| %>
-     
+
           <div class="form-group">
             <%= s.text_field :user_id, class: "form-control input-sm", type: "hidden", placeholder: "Id de Usuario" %>
           </div>
@@ -56,8 +56,8 @@
 document.addEventListener("turbolinks:load", function () {
 
     var base_url = window.location.origin;
-    var results = [""] 
-    
+    var results = [""]
+
     $.ajax({
         type: "GET",
         url: base_url + '/users.json',
@@ -81,7 +81,7 @@ document.addEventListener("turbolinks:load", function () {
 
     $(document).ready(function() {
         $('#room-select').select2({placeholder: "Seleccione una cabina..."});
-          
+
       $('#js-data-name').on('select2:select', function (e) {
         var data = e.params.data;
         $("#suscription_user_id").val(data.id)
@@ -112,7 +112,7 @@ document.addEventListener("turbolinks:load", function () {
 
         ids=ids.split("")
         $("#suscription_rooms").val(ids)
-  
+
       });
 
     });

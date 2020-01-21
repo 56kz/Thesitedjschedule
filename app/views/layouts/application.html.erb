@@ -16,7 +16,7 @@
   <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.css"/>
- 
+
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <%= csrf_meta_tags %>
@@ -27,12 +27,8 @@
 </head>
 
 <body>
-
-
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
     <div class="container d-flex justify-content-between">
-
       <%= link_to "TheSite", root_path, class: "navbar-brand" %>
       <button class="navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,12 +37,13 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <% if student_signed_in? %>
+          <% if student_signed_in? && @user_conected.rol == "instructor" %>
           <li class="nav-item"><%= link_to "Usuarios", users_path, class:"nav-link" %></li>
           <li class="nav-item"><%= link_to "Suscripciones",suscriptions_path , class:"nav-link" %></li>
           <li class="nav-item"><%= link_to "Reservas",reservations_path, class:"nav-link" %></li>
           <% end %>
 
+  
         </ul>
 
         <ul class="navbar-nav ml-0">
@@ -57,21 +54,17 @@
           <li class="nav-item"><%= link_to "Ingresar", new_student_session_path, class:"nav-link" %></li>
           <% end %>
         </ul>
-
       </div>
-
     </div>
-
   </nav>
-
-<br>
+  <br>
   <% if flash[:notice] %>
-  <div class=" col-md-4 mx-auto alert alert-success alert-dismissible fade show">
-    <%= flash[:notice] %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+    <div class=" col-md-4 mx-auto alert alert-success alert-dismissible fade show">
+      <%= flash[:notice] %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   <% end %>
 
   <%= yield %>
@@ -99,8 +92,8 @@
     integrity="sha256-MJ15XCTL71Z+hio+iodzZBMJFmxsuOCnozIN43XBJ5k=" crossorigin="anonymous"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-10-year-range.js" 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-10-year-range.js"
   integrity="sha256-B5H5i4Ao6P71wxRcznLZ+K8akmWL89gz7eP3dtZe8aA=" crossorigin="anonymous"></script>
 
 
