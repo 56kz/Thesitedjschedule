@@ -64,7 +64,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "thesmfive_#{Rails.env}"
 
-  config.action_mailer.default_url_options = { :host => 'https://thawing-shore-32150.herokuapp.com' }
+  config.action_mailer.default_url_options = { :host => 'http://www.thesitedjacademy.com' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.gmail.com",
