@@ -58,7 +58,7 @@ document.addEventListener("turbolinks:load", function () {
             right: 'dayGridMonth,timeGridWeek,prev,today,next'
         },
         eventRender: function(info) {
-            
+
             var rol= $("#user_rol").val()
 
             if (rol=="admin" || rol=="instructor"){
@@ -160,7 +160,7 @@ document.addEventListener("turbolinks:load", function () {
 
                             var all_events = calendar.getEvents();
                             var for_save=0
-                            
+
                             for (i in all_events) {
                                 let title = all_events[i].title
                                 if (title.indexOf("(Nuevo)") !== -1) {
@@ -213,7 +213,7 @@ document.addEventListener("turbolinks:load", function () {
                                                 timer: 1500,
                                                 showConfirmButton: false
                                             })
-            
+
                                         }
                                     });
                                 }
@@ -271,7 +271,7 @@ document.addEventListener("turbolinks:load", function () {
                     var CurrentDate = moment(new Date()).startOf('day').format("DD-MM-YYYY");
                     GivenDate = moment(start_date).format("DD-MM-YYYY");
 
-                    if (GivenDate < CurrentDate) {
+                    if (moment(GivenDate).isBefore(CurrentDate)) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
