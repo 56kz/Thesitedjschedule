@@ -268,7 +268,7 @@ document.addEventListener("turbolinks:load", function () {
                     var start_date = event.event.start
                     var suscription_id = event.event.extendedProps.suscrip_id
 
-                    var CurrentDate = moment(new Date()).startOf('day').format("DD-MM-YYYY");
+                    var CurrentDate = moment(new Date()).startOf('day');
                     GivenDate = moment(start_date).format("DD-MM-YYYY");
 
                     if (moment(GivenDate).isBefore(CurrentDate)) {
