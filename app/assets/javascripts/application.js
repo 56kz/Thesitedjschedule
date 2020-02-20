@@ -269,7 +269,7 @@ document.addEventListener("turbolinks:load", function () {
                     var suscription_id = event.event.extendedProps.suscrip_id
 
                     var CurrentDate = moment(new Date()).startOf('day');
-                    GivenDate = moment(start_date).format("DD-MM-YYYY");
+                    GivenDate = moment(start_date);
 
                     if (moment(GivenDate).isBefore(CurrentDate)) {
                         Swal.fire({
