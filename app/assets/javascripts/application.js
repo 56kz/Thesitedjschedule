@@ -78,9 +78,6 @@ document.addEventListener("turbolinks:load", function () {
                     inicio = 0
                     fin = 0
 
-                    $.ajaxSetup({
-                        async: false
-                    });
 
                     var CurrentDate = moment(new Date()).startOf('day');
                     GivenDate = moment(dateStr);
@@ -183,9 +180,7 @@ document.addEventListener("turbolinks:load", function () {
                                         + "&reserve_date=" + date_event
                                         + "&room=" + $('#roow_id').val()
 
-                                        $.ajaxSetup({
-                                            async: false
-                                        });
+
 
                                     $.ajax({
                                         type: "GET",
@@ -279,9 +274,6 @@ document.addEventListener("turbolinks:load", function () {
                         })
                     } else {
 
-                        $.ajaxSetup({
-                            async: false
-                        });
 
                         $.ajax({
                             type: "DELETE",
@@ -355,10 +347,13 @@ document.addEventListener("turbolinks:load", function () {
 
     function load_server_events() {
 
+        $('#loading').addClass('spinner');
+
         $.ajax({
             type: "GET",
             url: '/rooms/' + $('#roow_id').val() + '/schedules.json',
             success: function (data, textStatus, xhr) {
+                
                 for (i in data) {
 
                     var s_date = data[i].reserve_date;
@@ -401,6 +396,8 @@ document.addEventListener("turbolinks:load", function () {
 
                 }
             }
+        }).done(function() {
+            $('#loading').removeClass('spinner');
         });
     }
 
