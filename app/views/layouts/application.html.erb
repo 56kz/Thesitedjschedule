@@ -52,6 +52,7 @@
 
         <ul class="navbar-nav ml-0">
           <% if student_signed_in? %>
+          <li class="nav-item"><%= link_to @user_conected.name, root_path, class:"nav-link" %></li>
           <li class="nav-item"><%= link_to "Salir", destroy_student_session_path, method: :delete, class:"nav-link" %></li>
           <% else %>
           <li class="nav-item"><%= link_to "Ingresar", new_student_session_path, class:"nav-link" %></li>
