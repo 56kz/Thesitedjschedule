@@ -1,6 +1,7 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 
 @import "bootstrap";
+@import "schedules";
 
   .hour-btn{
     width: 150px; margin: 3px;
