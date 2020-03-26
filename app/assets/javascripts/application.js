@@ -291,7 +291,7 @@ document.addEventListener("turbolinks:load", function () {
                                 if (data.status_code == 1) {
                                     Swal.fire(
                                         'Deleted!',
-                                        'Se borró la programación.',
+                                        'Avísale a tu profe que se borró la programación.',
                                         'success'
                                     )
                                 } else {
