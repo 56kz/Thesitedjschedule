@@ -46,7 +46,7 @@ document.addEventListener("turbolinks:load", function () {
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
         eventTextColor:'rgb(255,255,255)',
-        height: 820,
+        height: 980,
         minTime: '06:00:00', /* calendar start Timing */
         maxTime: '22:00:00',  /* calendar end Timing */
         timeFormat: 'h(:mm)a',
