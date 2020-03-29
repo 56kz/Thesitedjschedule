@@ -321,7 +321,7 @@ document.addEventListener("turbolinks:load", function () {
         $("#time-picker").val(val);
     });
 
-    var disabledDays = [0];
+    var disabledDays = [];
 
     $(document).ready(function () {
         $dd_picker = $('#date-pick');
