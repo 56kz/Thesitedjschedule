@@ -10,11 +10,10 @@
   <hr>
       <h2 class="text-center">Reservas</h2><br>
 
-      <table class="table table table-striped table-bordered text-center">
+      <table class="table table table-striped table-bordered compact text-center">
       <thead>
         <tr>
           <th>Día</th>
-          <th>Hora</th>
           <th>Suscripción</th>
           <th>Usuario</th>
           <th>Sala</th>
@@ -24,7 +23,6 @@
         <% @reservations.each do |r| %>
         <tr>
           <td><%= r.schedule.day %></td>
-          <td><%= r.schedule.hour %></td>
           <td><%= r.suscription.name %></td>
           <td><%= r.suscription.user.name %></td>
           <td><%= r.schedule.room.name %></td>
