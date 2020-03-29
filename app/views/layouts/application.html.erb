@@ -52,6 +52,7 @@
 
         <ul class="navbar-nav ml-0">
           <% if student_signed_in? %>
+          <li class="nav-item"><%= link_to @user_conected.name, root_path, class:"nav-link" %></li>
           <li class="nav-item"><%= link_to "Salir", destroy_student_session_path, method: :delete, class:"nav-link" %></li>
           <% else %>
           <li class="nav-item"><%= link_to "Ingresar", new_student_session_path, class:"nav-link" %></li>
@@ -71,6 +72,16 @@
   <% end %>
 
   <%= yield %>
+
+  <footer class="footer">
+
+    <!-- Copyright -->
+    <div class="text-center py-3">Powered by
+      <a href="https://56kz.github.io/#contact" target="_blank"> Verzion56</a>
+    </div>
+    <!-- Copyright -->
+
+  </footer>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
