@@ -52,10 +52,11 @@ document.addEventListener("turbolinks:load", function () {
         timeFormat: 'h(:mm)a',
         themeSystem: 'standalone',
         eventOverlap: false,
+        titleFormat:{month: 'long'},
         header: {
             left: 'addEventButton',
-            center: '',
-            right: 'dayGridMonth,timeGridWeek,prev,today,next'
+            center: 'title',
+            right: 'prev,today,next'
         },
         eventRender: function(info) {
 
@@ -134,7 +135,7 @@ document.addEventListener("turbolinks:load", function () {
                         const dow = date_m.day();
                         var sabado = false
 
-                        if (dow == 6 && (inicio == '08' || inicio == '18' || inicio == '06' || inicio == '20')) {
+                        if ((dow == 6 || dow == 0) && (inicio == '08' || inicio == '18' || inicio == '06' || inicio == '20')) {
                             sabado = true
                         }
 
@@ -295,18 +296,20 @@ document.addEventListener("turbolinks:load", function () {
                                 }
 
                             }
-                        });
+                        }).done(function() {
+                            
+                                var eventos_local = calendar.getEvents();
+
+                                for (i in eventos_local) {
+                                    calendar.getEventById(eventos_local[i].id).remove();
+                                }
+
+                                load_server_events();
+                          });
 
                     }
                 }
 
-                var eventos_local = calendar.getEvents();
-
-                for (i in eventos_local) {
-                    calendar.getEventById(eventos_local[i].id).remove();
-                }
-
-                load_server_events();
 
             })
         }
@@ -423,6 +426,9 @@ document.addEventListener("turbolinks:load", function () {
             case 6:
                 color = '#5F9EA0';
                 break;
+            case 0:
+                color = '#21c24c';
+                break;
         }
         return color
     }
@@ -450,19 +456,25 @@ document.addEventListener("turbolinks:load", function () {
         return false;
     }
 
-    $(window).resize(function () {
-        if ($(window).width() <= 500) {
-            calendar.changeView('timeGridDay');
-        } else {
-            calendar.changeView('timeGridWeek');
-        }
-    });
+
 
     if ($(window).width() <= 500) {
         calendar.changeView('timeGridDay');
     } else {
         calendar.changeView('timeGridWeek');
     }
+
+    $( "#FullCalendarMonth" ).click(function() {
+        calendar.changeView('dayGridMonth');
+    });
+
+    $( "#FullCalendarWeek" ).click(function() {
+        calendar.changeView('timeGridWeek');
+    });
+
+    $( "#FullCalendarDay" ).click(function() {
+        calendar.changeView('timeGridDay');
+    });
 
     //finish turbolinks load wrapper
 
