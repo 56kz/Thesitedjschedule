@@ -5,10 +5,11 @@ class SchedulesController < ApplicationController
   respond_to :html, :json
 
   def index
+    @date_limit=Date.today-60
     @room_id = params[:room_id]
     @user_conected = User.find_by(email: current_student.email)
     @active_suscription = Suscription.find_by(user_id: @user_conected.id, status: true)
-    @reservations = Reservation.where(room: @room_id)
+    @reservations = Reservation.where("room = ? and reserve_date >= ?", @room_id, @date_limit)
     @reservations_mod =  @reservations.as_json
     @users = User.all
 
