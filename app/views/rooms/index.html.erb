@@ -1,26 +1,41 @@
-<div class="container text-center general-info">
-  <div class="row">
+<div class="container container-fluid text-center">
+  <div class="row h-100 mb-4">
     <div class="col-sm-8 mx-auto">
-      <div class="card card-main" style="height:700px;">
+      <div class="card card-main">
         <div class="card-body">
 
           <br>
           <h1 class="display-4">Bienvenido <strong><%= @user_conected.name %><strong></h1>
-          <h5>Estas Registrado en el programa <span class="badge badge-pill badge-dark"> <%= @active_suscription.name %></span></h5>
+          <h5>Estas Registrado en el programa <span class="badge badge-pill badge-dark">
+              <%= @active_suscription.name %></span></h5>
           <br>
           <hr><br>
           <h1>Cabina</h1><br>
 
-            <% @rooms.each do |r| %>
-            <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
-            <br>
-            <br>
-            <% end %>
+          <% @rooms.each do |r| %>
+          <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
+          <br>
+          <br>
+          <% end %>
 
         </div>
+
       </div>
-      <br><br><br><br><br><br><br>
+
       <%= link_to "Cambia tu Contraseña", edit_student_registration_path %>
+
     </div>
+
   </div>
+
 </div>
+
+<footer class="">
+
+  <!-- Copyright -->
+  <div class="text-center col-md-12 py-3 mt-4">Powered by
+    <a href="https://56kz.github.io/#contact" target="_blank"> Verzion56</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>

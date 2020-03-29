@@ -15,7 +15,8 @@
     integrity="sha256-q0wZgzQ6Ru67x+pIe9IAztrnlHNHyZui3BMwqUYDnpI=" crossorigin="anonymous" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.css"/>
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.css" />
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,8 +31,9 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container d-flex justify-content-between">
       <%= link_to "TheSite", root_path, class: "navbar-brand" %>
-      <button class="navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler navbar-toggle" type="button" data-toggle="collapse"
+        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -53,7 +55,8 @@
         <ul class="navbar-nav ml-0">
           <% if student_signed_in? %>
           <li class="nav-item"><%= link_to @user_conected.name, root_path, class:"nav-link" %></li>
-          <li class="nav-item"><%= link_to "Salir", destroy_student_session_path, method: :delete, class:"nav-link" %></li>
+          <li class="nav-item"><%= link_to "Salir", destroy_student_session_path, method: :delete, class:"nav-link" %>
+          </li>
           <% else %>
           <li class="nav-item"><%= link_to "Ingresar", new_student_session_path, class:"nav-link" %></li>
           <% end %>
@@ -63,25 +66,20 @@
   </nav>
   <br>
   <% if flash[:notice] %>
-    <div class=" col-md-4 mx-auto alert alert-success alert-dismissible fade show">
-      <%= flash[:notice] %>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
+  <div class=" col-md-4 mx-auto alert alert-success alert-dismissible fade show">
+    <%= flash[:notice] %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   <% end %>
+
+
 
   <%= yield %>
 
-  <footer class="footer">
 
-    <!-- Copyright -->
-    <div class="text-center py-3">Powered by
-      <a href="https://56kz.github.io/#contact" target="_blank"> Verzion56</a>
-    </div>
-    <!-- Copyright -->
 
-  </footer>
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -108,10 +106,11 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.27/moment-timezone-with-data-10-year-range.js"
-  integrity="sha256-B5H5i4Ao6P71wxRcznLZ+K8akmWL89gz7eP3dtZe8aA=" crossorigin="anonymous"></script>
+    integrity="sha256-B5H5i4Ao6P71wxRcznLZ+K8akmWL89gz7eP3dtZe8aA=" crossorigin="anonymous"></script>
 
 
-<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.js"></script>
+  <script type="text/javascript"
+    src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.js"></script>
 
 
 </body>

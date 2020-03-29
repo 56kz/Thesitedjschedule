@@ -98,8 +98,10 @@
   from {transform: rotate(0deg);}
   to {transform: rotate(359deg);}
 }
+
 footer {
   background-color: rgb(35, 35, 35);
   color: white;
-  margin-top: 70px;
+  width: 100%;
+  font-weight: bold;
 }
