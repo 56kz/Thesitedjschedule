@@ -366,6 +366,7 @@ document.addEventListener("turbolinks:load", function () {
                     var reservation_id = data[i].id
                     var suscription_id = data[i].suscription_id
                     var usr_name=data[i].username
+                    var suscription_name=data[i].suscription
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -378,7 +379,7 @@ document.addEventListener("turbolinks:load", function () {
                         title = 'Cabina Ocupada'
                     } else {
                         var color = get_color(dow);
-                        title = 'Clase en Cabina ' + $('#roow_id').val()
+                        title = 'Suscripción ' + suscription_name
                     }
 
                     event = {

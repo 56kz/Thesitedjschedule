@@ -15,8 +15,10 @@ class SchedulesController < ApplicationController
 
     @reservations.each_with_index  { |item, index|
       @user_id = Suscription.find_by(id: item.suscription_id).user_id
+      @suscription_name=Suscription.find_by(id: item.suscription_id).name
       @user_name=@users.find_by(id: @user_id).name
       @reservations_mod[index][:username]= @user_name
+      @reservations_mod[index][:suscription]= @suscription_name
     }
 
 
