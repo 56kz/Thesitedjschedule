@@ -1,7 +1,7 @@
-<div class="container general-info">
-  <div class="row">
-    <div class="col-sm-4 mx-auto">
-    <br><br>
+<div class="container container-fluid">
+  <div class="row h-100">
+    <div class="col-sm-6 col-md-4 mx-auto p-4 mb-4">
+    <br><br><br>
       <h2 class="text-center">Ingresa</h2><br>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
@@ -31,7 +31,20 @@
       <div class="text-center">
         <%= render "devise/shared/links", class: "text-center" %>
       </div>
-
     </div>
   </div>
+
+  
+  <footer class="fixed-bottom">
+
+      <!-- Copyright -->
+      <div class="text-center col-md-12 py-3">Powered by
+        <a href="https://56kz.github.io/#contact" target="_blank"> Verzion56</a>
+      </div>
+      <!-- Copyright -->
+
+  </footer>
+
+
 </div>
+
