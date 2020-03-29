@@ -35,15 +35,16 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      @user.update(email: @user.email.downcase)
       @student = Student.create(email: @user.email, password: "12345678")
-      redirect_to new_suscription_path, notice: "El Usuario fue creado con id: #{@user.id}"
+      redirect_to new_suscription_path, notice: "#{@user.name} ingresó al sistema"
     else
       render :new
     end
   end
 
   def edit
-    @user_conected = User.find_by(email: current_student.email)        
+    @user_conected = User.find_by(email: current_student.email)
     @user = User.find(params[:id])
   end
 
@@ -59,7 +60,9 @@ class UsersController < ApplicationController
   def destroy
     @user = User.find(params[:id])
     @user.destroy
-    redirect_to users_path, notice: "El Usuario fue eliminado"
+    @student = Student.find(params[:id])
+    @student.destroy
+    redirect_to users_path, notice: "#{@user.name} salió del sistema"
   end
 
   private
