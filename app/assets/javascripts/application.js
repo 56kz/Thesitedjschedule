@@ -20,13 +20,13 @@
 
 
 
-document.addEventListener("turbolinks:load", function () {
+document.addEventListener("turbolinks:load", function() {
 
-    $(document).ready( function () {
+    $(document).ready(function() {
         $('.table').DataTable({
             responsive: true
         });
-    } );
+    });
 
     //turbolinks load wrapper
     moment.tz.setDefault("America/Bogota");
@@ -45,14 +45,16 @@ document.addEventListener("turbolinks:load", function () {
         defaultView: 'timeGridWeek',
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
-        eventTextColor:'rgb(255,255,255)',
+        eventTextColor: 'rgb(255,255,255)',
         height: 980,
-        minTime: '06:00:00', /* calendar start Timing */
-        maxTime: '22:00:00',  /* calendar end Timing */
+        minTime: '06:00:00',
+        /* calendar start Timing */
+        maxTime: '22:00:00',
+        /* calendar end Timing */
         timeFormat: 'h(:mm)a',
         themeSystem: 'standalone',
         eventOverlap: false,
-        titleFormat:{month: 'long'},
+        titleFormat: { month: 'long' },
         header: {
             left: 'addEventButton',
             center: 'title',
@@ -60,35 +62,32 @@ document.addEventListener("turbolinks:load", function () {
         },
         eventRender: function(info) {
 
-            var rol= $("#user_rol").val()
+            var rol = $("#user_rol").val()
 
-            if (rol=="admin" || rol=="instructor"){
-                var username=info.event.extendedProps.username
-                info.el.querySelector('.fc-title').innerHTML = "<i class='text-white'>" + info.event.title + "</i>"+"<br> <span class='badge badge-pill badge-secondary'>"+username+"</span>";
+            if (rol == "admin" || rol == "instructor") {
+                var username = info.event.extendedProps.username
+                info.el.querySelector('.fc-title').innerHTML = "<i class='text-white'>" + info.event.title + "</i>" + "<br> <span class='badge badge-pill badge-secondary'>" + username + "</span>";
             }
 
-        }
-        ,
+        },
         customButtons: {
             addEventButton: {
                 text: 'Programar',
-                click: function () {
+                click: function() {
 
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
                     inicio = 0
                     fin = 0
 
+                    if (dateStr == '' || time_range == '') {
 
-                    var CurrentDate = moment(new Date()).startOf('day');
-                    GivenDate = moment(dateStr);
-
-                    if (GivenDate < CurrentDate) {
                         Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'No puedes programar en una fecha pasada.'
+                            icon: 'info',
+                            title: '...',
+                            text: 'La fecha y hora no pueden estar vacias.',
                         })
+
                     } else {
 
                         switch (time_range) {
@@ -126,112 +125,101 @@ document.addEventListener("turbolinks:load", function () {
                                 break;
                         }
 
-                        var date = new Date(dateStr + 'T' + inicio + ':00:00'); // will be in local time
-                        var end = new Date(dateStr + 'T' + fin + ':00:00'); // will be in local time
 
+                        data = "suscription_id=" + $('#suscription_id').val() +
+                            "&schedule_id=1" +
+                            "&start_hour=" + inicio +
+                            "&reserve_date=" + dateStr +
+                            "&room=" + $('#roow_id').val()
 
-
-                        const date_m = moment(date);
-                        const dow = date_m.day();
-                        var sabado = false
-
-                        if ((dow == 6 || dow == 0) && (inicio == '08' || inicio == '18' || inicio == '06' || inicio == '20')) {
-                            sabado = true
-                        }
-
-                        var color = get_color(dow);
-
-                        event = {
-                            title: '(Nuevo) Clase en Cabina ' + $('#roow_id').val(),
-                            start: date,
-                            end: end,
-                            overlap: false,
-                            backgroundColor: color,
-                            borderColor: color
-                        }
-
-                        if (!isNaN(date.valueOf()) && !isOverlapping(event) && !sabado) { // valid?
-                            calendar.addEvent(event);
-
-                            //start Saving Event
-                            //Get all server events to avoid duplicate schedules
-
-                            var all_events = calendar.getEvents();
-                            var for_save=0
-
-                            for (i in all_events) {
-                                let title = all_events[i].title
-                                if (title.indexOf("(Nuevo)") !== -1) {
-                                    for_save += 1
-                                }
-                            }
-
-                            for (i in all_events) {
-
-                                let title = all_events[i].title
-
-                                if (title.indexOf("(Nuevo)") !== -1) {
-                                    let date_m = moment(all_events[i].start);
-                                    let date_event = date_m.format("DD/MM/YYYY")
-                                    let start = date_m.format("HH")
-
-                                    data = "suscription_id=" + $('#suscription_id').val()
-                                        + "&schedule_id=1"
-                                        + "&start_hour=" + start
-                                        + "&reserve_date=" + date_event
-                                        + "&room=" + $('#roow_id').val()
-
-
-
-                                    $.ajax({
-                                        type: "GET",
-                                        url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
-                                        data: data
-                                    }).done(function(data) {
-                                        if (data.status_code == 0) {
-                                            Swal.fire({
-                                                icon: 'info',
-                                                title: '...',
-                                                text: 'No fue posible guardar la programación.',
-                                            })
-                                        } else if(data.status_code == 2){
-                                            Swal.fire({
-                                                icon: 'info',
-                                                title: '...',
-                                                text: 'No tienes horas disponibles.',
-                                            })
-                                        }else {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: '¡Bien hecho!',
-                                                text: 'Se guardó la programación.',
-                                                position: 'top-end',
-                                                timer: 1500,
-                                                showConfirmButton: false
-                                            })
-
+                        $.ajax({
+                            type: "GET",
+                            url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
+                            data: data,
+                            error: function(xhr) {
+                                if (xhr.status == 401) {
+                                    Swal.fire({
+                                        icon: 'info',
+                                        title: '...',
+                                        text: 'La sesión ha finalizado.',
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            window.location.replace(window.location.origin + '/students/sign_in');
                                         }
-                                    });
+                                    })
                                 }
                             }
+                        }).done(function(data) {
+                            if (data.status_code == 0) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '...',
+                                    text: 'La fecha seleccionada no está disponible.',
+                                })
+                            } else if (data.status_code == 2) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '...',
+                                    text: 'No tienes horas disponibles.',
+                                })
+                            } else if (data.status_code == 3) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '...',
+                                    text: 'No puedes programar en una fecha pasada.',
+                                })
+                            } else if (data.status_code == 4) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '...',
+                                    html: '<p>No puedes programar fuera del horario <br> L - V 6 am a 7pm <br>S - D 8 am a 4 pm </p>',
+                                })
+                            } else {
 
-                            var eventos_local = calendar.getEvents();
+                                var s_date = data.reserve_date;
+                                var s_inicio = Right('0' + data.start_hour, 2);
+                                var s_fin = Right('0' + (data.start_hour + 2), 2);
+                                var reservation_id = data.id
+                                var suscription_id = data.suscription_id
+                                var usr_name = data.username
 
-                            for (i in eventos_local) {
-                                calendar.getEventById(eventos_local[i].id).remove();
+                                var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
+                                var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
+
+                                const date_m = moment(date);
+                                const dow = date_m.day();
+                                var color = get_color(dow);
+
+                                event = {
+                                    id: reservation_id,
+                                    title: 'Suscripción ' + data.suscription,
+                                    start: date,
+                                    end: end,
+                                    overlap: false,
+                                    backgroundColor: color,
+                                    borderColor: color,
+                                    reserv_id: reservation_id,
+                                    suscrip_id: suscription_id,
+                                    username: usr_name
+                                }
+
+                                calendar.addEvent(event);
+                                calendar.gotoDate(date);
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Bien hecho!',
+                                    text: 'Se guardó la programación.',
+                                    position: 'top-end',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                })
+
                             }
+                        });
 
-                            load_server_events();
-                            calendar.gotoDate(date);
+                        //Aquí termina petición ajax
 
-
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Fecha invalida o no está disponible.'
-                            })
-                        }
                     }
 
 
@@ -243,10 +231,10 @@ document.addEventListener("turbolinks:load", function () {
         editable: false,
         droppable: false, // this allows things to be dropped onto the calendar
 
-        drop: function (info) {
+        drop: function(info) {
             //info.draggedEl.parentNode.removeChild(info.draggedEl);
         },
-        eventClick: function (event, element) {
+        eventClick: function(event, element) {
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -260,54 +248,74 @@ document.addEventListener("turbolinks:load", function () {
             }).then((result) => {
                 if (result.value) {
 
+
                     var event_id = event.event.extendedProps.reserv_id
-                    var start_date = event.event.start
                     var suscription_id = event.event.extendedProps.suscrip_id
 
-                    var CurrentDate = moment(new Date()).startOf('day');
-                    GivenDate = moment(start_date);
+                    $.ajax({
+                        type: "DELETE",
+                        url: '/rooms/' + $('#roow_id').val() + '/schedules/' + event_id + '?suscription_id=' + suscription_id,
+                        success: function(data, textStatus, xhr) {
 
-                    if (moment(GivenDate).isBefore(CurrentDate)) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'No puedes borrar una programación pasada.'
-                        })
-                    } else {
-
-
-                        $.ajax({
-                            type: "DELETE",
-                            url: '/rooms/' + $('#roow_id').val() + '/schedules/' + event_id + '?suscription_id=' + suscription_id,
-                            success: function (data, textStatus, xhr) {
-
-                                if (data.status_code == 1) {
-                                    Swal.fire(
-                                        'Deleted!',
-                                        'Avísale a tu profe que se borró la programación.',
-                                        'success'
-                                    )
-                                } else {
-                                    Swal.fire(
-                                        'Oops',
-                                        'No puedes borrar esta programación.',
-                                        'error'
-                                    )
-                                }
-
+                        },
+                        error: function(xhr) {
+                            if (xhr.status == 401) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: '...',
+                                    text: 'La sesión ha finalizado.',
+                                }).then((result) => {
+                                    if (result.value) {
+                                        window.location.replace(window.location.origin + '/students/sign_in');
+                                    }
+                                })
                             }
-                        }).done(function() {
-                            
-                                var eventos_local = calendar.getEvents();
+                        }
 
-                                for (i in eventos_local) {
-                                    calendar.getEventById(eventos_local[i].id).remove();
+                    }).done(function(data, textStatus, jqXHR) {
+
+                        if (data.status_code == 1) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Avísale a tu profe que se borró la programación.',
+                                'success'
+                            ).then((result) => {
+                                if (result.value) {
+                                    calendar.getEventById(event_id).remove();
                                 }
+                            })
+                        } else if (data.status_code == 2) {
+                            Swal.fire(
+                                'Oops',
+                                'No puedes borrar una programación pasada.',
+                                'error'
+                            )
 
-                                load_server_events();
-                          });
+                        } else if (data.status_code == 3) {
+                            Swal.fire(
+                                'Oops',
+                                'No puedes cancelar con menos de 1 hora de antelación.',
+                                'error'
+                            )
 
-                    }
+                        } else if (data.status_code == 4) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: '...',
+                                html: '<p>No puedes programar fuera del horario <br> L - V 6 am a 7pm <br>S - D 8 am a 4 pm </p>',
+                            })
+                        } else {
+                            Swal.fire(
+                                'Oops',
+                                'No puedes borrar esta programación.',
+                                'error'
+                            )
+                        }
+
+
+                    });
+
+
                 }
 
 
@@ -319,21 +327,21 @@ document.addEventListener("turbolinks:load", function () {
 
     $('.fc-addEventButton-button').addClass("btn-success");
 
-    $(".hour-btn").click(function () {
+    $(".hour-btn").click(function() {
         val = $(this).text();
         $("#time-picker").val(val);
     });
 
     var disabledDays = [];
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $dd_picker = $('#date-pick');
 
         $dd_picker.datepicker({
-            onSelect: function (formattedDate, date, inst) {
+            onSelect: function(formattedDate, date, inst) {
                 inst.hide();
             },
-            onRenderCell: function (date, cellType) {
+            onRenderCell: function(date, cellType) {
                 if (cellType == 'day') {
                     var day = date.getDay(),
                         isDisabled = disabledDays.indexOf(day) != -1;
@@ -350,13 +358,13 @@ document.addEventListener("turbolinks:load", function () {
 
     function load_server_events() {
 
-        $('#loading').addClass('spinner');
+        modalLoading.init(true);
 
         $.ajax({
             type: "GET",
             url: '/rooms/' + $('#roow_id').val() + '/schedules.json',
-            success: function (data, textStatus, xhr) {
-                
+            success: function(data, textStatus, xhr) {
+
                 for (i in data) {
 
                     var s_date = data[i].reserve_date;
@@ -365,8 +373,8 @@ document.addEventListener("turbolinks:load", function () {
                     var sucrip_id = data[i].suscription_id
                     var reservation_id = data[i].id
                     var suscription_id = data[i].suscription_id
-                    var usr_name=data[i].username
-                    var suscription_name=data[i].suscription
+                    var usr_name = data[i].username
+                    var suscription_name = data[i].suscription
 
                     var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
                     var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
@@ -374,7 +382,7 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    if (sucrip_id != $('#suscription_id').val() && $("#user_rol").val()=="estudiante") {
+                    if (sucrip_id != $('#suscription_id').val() && $("#user_rol").val() == "estudiante") {
                         var color = '#708090'
                         title = 'Cabina Ocupada'
                     } else {
@@ -383,6 +391,7 @@ document.addEventListener("turbolinks:load", function () {
                     }
 
                     event = {
+                        id: reservation_id,
                         title: title,
                         start: date,
                         end: end,
@@ -401,7 +410,7 @@ document.addEventListener("turbolinks:load", function () {
                 }
             }
         }).done(function() {
-            $('#loading').removeClass('spinner');
+            $("#openModalLoading").remove();
         });
     }
 
@@ -465,15 +474,15 @@ document.addEventListener("turbolinks:load", function () {
         calendar.changeView('timeGridWeek');
     }
 
-    $( "#FullCalendarMonth" ).click(function() {
+    $("#FullCalendarMonth").click(function() {
         calendar.changeView('dayGridMonth');
     });
 
-    $( "#FullCalendarWeek" ).click(function() {
+    $("#FullCalendarWeek").click(function() {
         calendar.changeView('timeGridWeek');
     });
 
-    $( "#FullCalendarDay" ).click(function() {
+    $("#FullCalendarDay").click(function() {
         calendar.changeView('timeGridDay');
     });
 
