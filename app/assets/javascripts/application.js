@@ -172,7 +172,7 @@ document.addEventListener("turbolinks:load", function() {
                                 Swal.fire({
                                     icon: 'info',
                                     title: '...',
-                                    html: '<p>No puedes programar fuera del horario <br> L - V 6 am a 7pm <br>S - D 8 am a 4 pm </p>',
+                                    html: '<p>A esta hora no puedes reservar, intenta después en horarios de oficina.</p>',
                                 })
                             } else {
 
@@ -302,7 +302,7 @@ document.addEventListener("turbolinks:load", function() {
                             Swal.fire({
                                 icon: 'info',
                                 title: '...',
-                                html: '<p>No puedes programar fuera del horario <br> L - V 6 am a 7pm <br>S - D 8 am a 4 pm </p>',
+                                html: '<p>A esta hora no puedes reservar, intenta después en horarios de oficina.</p>',
                             })
                         } else {
                             Swal.fire(
