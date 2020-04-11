@@ -4,6 +4,8 @@
  * modalLoadin.js This script allows you to include any project loading screen modal.
  *
  */
+
+/*
 var modalLoading = {
 
     init: function(start) {
@@ -48,3 +50,5 @@ var modalLoading = {
 };
 
 modalLoading.init(true);
+
+*/
