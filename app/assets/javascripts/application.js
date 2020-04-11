@@ -358,7 +358,7 @@ document.addEventListener("turbolinks:load", function() {
 
     function load_server_events() {
 
-        modalLoading.init(true);
+        //modalLoading.init(true);
 
         $.ajax({
             type: "GET",
@@ -410,7 +410,7 @@ document.addEventListener("turbolinks:load", function() {
                 }
             }
         }).done(function() {
-            $("#openModalLoading").remove();
+            //$("#openModalLoading").remove();
         });
     }
 
