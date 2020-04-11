@@ -1,11 +1,10 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
-
 @import "bootstrap";
 @import "schedules";
-
-  .hour-btn{
-    width: 150px; margin: 3px;
-  }
+.hour-btn {
+    width: 150px;
+    margin: 3px;
+}
 
 .btn-hover {
     width: 200px;
@@ -15,7 +14,7 @@
     cursor: pointer;
     margin: 20px;
     height: 55px;
-    text-align:center;
+    text-align: center;
     border: none;
     background-size: 300% 100%;
     border-radius: 50px;
@@ -42,66 +41,9 @@
     box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
 }
 
-.spinner {
-  position: absolute !important;
-  left: 60%;
-  top: 50%;
-  height:100px;
-  width:100px;
-  margin:0px auto;
-  z-index:1000;
-  -webkit-animation: rotation .6s infinite linear;
-  -moz-animation: rotation .6s infinite linear;
-  -o-animation: rotation .6s infinite linear;
-  animation: rotation .6s infinite linear;
-  border-left:6px solid rgba(0,174,239,.15);
-  border-right:6px solid rgba(0,174,239,.15);
-  border-bottom:6px solid rgba(0,174,239,.15);
-  border-top:6px solid rgba(0,174,239,.8);
-  border-radius:100%;
-}
-
-@media only screen and (max-width: 600px) {
-  .spinner {
-    position: absolute !important;
-    left: 5%;
-    top: 10%;
-    height:70px;
-    width:70px;
-    margin:0px auto;
-    z-index:1000;
-    -webkit-animation: rotation .6s infinite linear;
-    -moz-animation: rotation .6s infinite linear;
-    -o-animation: rotation .6s infinite linear;
-    animation: rotation .6s infinite linear;
-    border-left:6px solid rgba(0,174,239,.15);
-    border-right:6px solid rgba(0,174,239,.15);
-    border-bottom:6px solid rgba(0,174,239,.15);
-    border-top:6px solid rgba(0,174,239,.8);
-    border-radius:100%;
-  }
-}
-
-@-webkit-keyframes rotation {
-  from {-webkit-transform: rotate(0deg);}
-  to {-webkit-transform: rotate(359deg);}
-}
-@-moz-keyframes rotation {
-  from {-moz-transform: rotate(0deg);}
-  to {-moz-transform: rotate(359deg);}
-}
-@-o-keyframes rotation {
-  from {-o-transform: rotate(0deg);}
-  to {-o-transform: rotate(359deg);}
-}
-@keyframes rotation {
-  from {transform: rotate(0deg);}
-  to {transform: rotate(359deg);}
-}
-
 footer {
-  background-color: rgb(35, 35, 35);
-  color: white;
-  width: 100%;
-  font-weight: bold;
+    background-color: rgb(35, 35, 35);
+    color: white;
+    width: 100%;
+    font-weight: bold;
 }
