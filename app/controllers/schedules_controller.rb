@@ -59,7 +59,7 @@ class SchedulesController < ApplicationController
 
           else
 
-          if @suscrip_hours<0#(@reservation_Hours.to_i+2)
+          if @suscrip_hours<(@reservation_Hours.to_i+2)
             render :json => { :result => "Not hours available for this suscription!",
                               :status_code => "2", 
                               :available =>@suscrip_hours, 
