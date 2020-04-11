@@ -29,11 +29,13 @@ class SchedulesController < ApplicationController
   end
 
   def new
+    @user_conected = User.find_by(email: current_student.email)
     @reservation = Reservation.new(schedules_params)
     @suscription=params[:suscription_id].to_i
     @active_suscription = Suscription.find_by(id: @suscription, status: true)
     @reservation_Hours= Reservation.where(suscription_id: @suscription).count*2
     @suscrip_hours=0
+    
    
     case @active_suscription.hours
       when "Dos"
@@ -101,9 +103,9 @@ class SchedulesController < ApplicationController
             end
 
 
-            if !@finde
+            if !@finde or @user_conected.rol!="estudiante"
 
-              if !@out_of
+              if !@out_of or @user_conected.rol!="estudiante"
 
                   if @reservation.save
                     @users = User.all
@@ -200,7 +202,7 @@ class SchedulesController < ApplicationController
         #Cancelar con 1 hora de antelación
           if @remaining>60 or @user_conected.rol!="estudiante"
 
-              if !@out_of
+              if !@out_of or @user_conected.rol!="estudiante"
                   Reservation.where(id: params[:id]).destroy_all
                   render :json => {
                     :result => "Data deleted successfully!",
