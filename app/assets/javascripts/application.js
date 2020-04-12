@@ -154,13 +154,13 @@ document.addEventListener("turbolinks:load", function() {
                                 Swal.fire({
                                     icon: 'info',
                                     title: '...',
-                                    text: 'La fecha seleccionada no está disponible.',
+                                    text: 'La fecha seleccionada no está disponible. :(',
                                 })
                             } else if (data.status_code == 2) {
                                 Swal.fire({
                                     icon: 'info',
                                     title: '...',
-                                    text: 'No tienes horas disponibles.',
+                                    text: 'No tienes horas disponibles. :(',
                                 })
                             } else if (data.status_code == 3) {
                                 Swal.fire({
@@ -172,7 +172,7 @@ document.addEventListener("turbolinks:load", function() {
                                 Swal.fire({
                                     icon: 'info',
                                     title: '...',
-                                    html: '<p>A esta hora no puedes reservar, intenta después en horarios de oficina.</p>',
+                                    html: '<p>A esta hora no puedes reservar, comunícate con tu profe!</p>',
                                 })
                             } else {
 
