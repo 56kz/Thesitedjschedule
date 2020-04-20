@@ -41,6 +41,7 @@ document.addEventListener("turbolinks:load", function() {
     // initialize the calendar
     // -----------------------------------------------------------------
     var calendar = new Calendar(calendarEl, {
+        timeZone: 'America/Bogota',
         plugins: ['interaction', 'dayGrid', 'timeGrid'],
         defaultView: 'timeGridWeek',
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
@@ -376,8 +377,8 @@ document.addEventListener("turbolinks:load", function() {
                     var usr_name = data[i].username
                     var suscription_name = data[i].suscription
 
-                    var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
-                    var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
+                    var date = new Date(s_date + 'T' + s_inicio + ':00:00Z'); // will be in local time
+                    var end = new Date(s_date + 'T' + s_fin + ':00:00Z'); // will be in local time
 
                     const date_m = moment(date);
                     const dow = date_m.day();
