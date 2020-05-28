@@ -216,7 +216,7 @@ class SchedulesController < ApplicationController
               end
 
             else
-              render :json => {:result => "Error, can't delete!", :status_code => "3"}
+              render :json => {:result => "Error, can't delete!", :status_code => "3", :reserve_hour => @schedule_time & " " & @current_time}
             end
       
       else
