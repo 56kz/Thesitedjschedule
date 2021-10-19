@@ -22,7 +22,7 @@
       <tbody>
         <% @reservations.each do |r| %>
         <tr>
-          <td><%= r.schedule.day %></td>
+          <td><%= r.reserve_date %></td>
           <td><%= r.suscription.name %></td>
           <td><%= r.suscription.user.name %></td>
           <td><%= r.schedule.room.name %></td>
