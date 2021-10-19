@@ -48,6 +48,8 @@ class SchedulesController < ApplicationController
         @suscrip_hours=24
     end
 
+
+    
     if Reservation.exists?(start_hour: params[:start_hour], reserve_date:params[:reserve_date], room: params[:room])
         render :json => {:result => "Error, schedule already exist!", :status_code => "0"}
     else
@@ -77,6 +79,9 @@ class SchedulesController < ApplicationController
             @current_date=Date.current
             @current_time= Time.current
 
+            #reserve date with hour
+            @schedule_hour=Time.new(params[:reserve_date].to_date.year,params[:reserve_date].to_date.month,params[:reserve_date].to_date.day, params[:start_hour],0,0)
+
             @schedule_ini_semana=Time.new(@current_date.year,@current_date.month,@current_date.day, 6,0,0)
             @schedule_fin_semana=Time.new(@current_date.year,@current_date.month,@current_date.day, 19,0,0)
 
@@ -89,18 +94,29 @@ class SchedulesController < ApplicationController
 
             # Validar que la programación se da en el horario habilitado.
             if @finde
-              if (@current_time-@schedule_ini_finde)>0 and (@schedule_fin_finde-@current_time)>0
+              if (@current_time-@schedule_ini_finde)>0 and (@schedule_fin_finde-@current_time)>0 and (@schedule_hour-@current_time)>3600
                 @out_of=false
               else
                 @out_of=true
               end 
             else
-              if (@current_time-@schedule_ini_semana)>0 and (@schedule_fin_semana-@current_time)>0
+              if (@current_time-@schedule_ini_semana)>0 and (@schedule_fin_semana-@current_time)>0 and (@schedule_hour-@current_time)>3600
                 @out_of=false
               else
                 @out_of=true
               end 
             end
+
+            puts "---------------------------------------------"
+
+            puts "Data validation"
+            puts @out_of
+            puts @current_time
+            puts @schedule_hour
+            puts @schedule_hour-@current_time
+            puts @user_conected.rol
+
+            puts "---------------------------------------------"
 
 
             if !@finde or @user_conected.rol!="estudiante"
