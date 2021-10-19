@@ -184,10 +184,10 @@ document.addEventListener("turbolinks:load", function() {
                                 var suscription_id = data.suscription_id
                                 var usr_name = data.username
 
-                                var date = new Date(s_date + 'T' + s_inicio + ':00:00'); // will be in local time
-                                var end = new Date(s_date + 'T' + s_fin + ':00:00'); // will be in local time
+                                var date = new Date(s_date + 'T' + s_inicio + ':00:00Z'); // will be in local time
+                                var end = new Date(s_date + 'T' + s_fin + ':00:00Z'); // will be in local time
 
-                                const date_m = moment(date);
+                                const date_m = new moment(date);
                                 const dow = date_m.day();
                                 var color = get_color(dow);
 
