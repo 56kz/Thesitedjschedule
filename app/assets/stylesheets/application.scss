@@ -51,3 +51,27 @@ footer {
 .fc-toolbar {
     text-transform: capitalize;
 }
+
+.card-footer:last-child {
+  border-radius: 0!important;
+}
+
+.card-footer {
+  padding: 0!important;
+  background-color: unset!important;
+  border-top: unset!important;
+}
+
+.card-img-overlay {
+  display: flex;
+  backdrop-filter: blur(0px); 
+  background:rgba(150,150,150,0.3);
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;   
+}
+
+.card-img-overlay a{
+  text-decoration: none;
+  color: #fff;
+}
