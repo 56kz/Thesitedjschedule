@@ -1,6 +1,6 @@
 <div class="container container-fluid text-center">
   <div class="row h-100 mb-4">
-    <div class="col-sm-8 mx-auto">
+    <div class="col-md-12 mx-auto">
       <div class="card card-main">
         <div class="card-body">
 
@@ -9,33 +9,52 @@
           <h5>Estas Registrado en el programa <span class="badge badge-pill badge-dark">
               <%= @active_suscription.name %></span></h5>
           <br>
-          <hr><br>
-          <h1>Cabina</h1><br>
-
-          <% @rooms.each do |r| %>
-          <%= link_to r.name, room_schedules_path(r), class: "btn btn-primary" %>
-          <br>
-          <br>
-          <% end %>
-
+          
         </div>
 
       </div>
-
-      <%= link_to "Cambia tu Contraseña", edit_student_registration_path %>
 
     </div>
 
   </div>
 
-</div>
-  <br><br><br><br><br><br><br><br><br><br><br><br>
-<footer class="">
+  <div class="row mb-2">
 
+          <% @rooms.each_with_index do |r, index| %>
+
+            <div class="col-md-3">
+
+              <div class="card mb-4 rounded">
+
+                <%= image_tag "dj-cabin.jpg", :class => "card-img-top" %>
+
+                <div class="card-img-overlay rounded">
+                    <h1 class="display-4 text-white"><%= link_to index+1, room_schedules_path(r) %></h1>
+                    <%= link_to r.name, room_schedules_path(r) %>
+                </div>
+
+     
+              </div>
+
+            </div>
+          
+          <% end %>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 mx-auto text-center">
+      <%= link_to "Cambia tu Contraseña", edit_student_password_path, class:"btn btn-primary" %>
+    </div>
+  </div>
+
+</div>
+
+<br><br>
+<footer class="">
 <!-- Copyright -->
 <div class="text-center col-md-12 py-3">Powered by
   <a href="https://56kz.github.io/#contact" target="_blank"> Verzion56</a>
 </div>
 <!-- Copyright -->
-
 </footer>

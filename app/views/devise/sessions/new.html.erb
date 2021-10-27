@@ -1,8 +1,23 @@
-<div class="container container-fluid">
-  <div class="row h-100">
-    <div class="col-sm-6 col-md-4 mx-auto p-4 mb-4">
-    <br><br><br>
-      <h2 class="text-center">Ingresa</h2><br>
+<style>
+  .bg-login{
+    background: url('<%= image_url("login_wall ") %>') no-repeat center center fixed; /* https://unsplash.com/photos/YrtFlrLo2DQ */
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+</style>
+
+<div class="container container-fluid text-white">
+  <div class="row h-80">
+
+    <div class="col-sm-6 col-md-4 mx-auto pl-4 pr-4 pt-4 mb-0 rounded shadow-sm" style="backdrop-filter: blur(10px); background:rgba(150,150,150,0.3);">
+
+    <div class="col-md-10 col-sm-10 offset-md-1 offset-sm-1 text-center">
+      <%= image_tag "logo_thesite_wt.png", :style => "width: 80%;" %>
+    </div>
+
+      <h2 class="text-center">Ingresa</h2>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="field form-group">
@@ -35,7 +50,7 @@
   </div>
 
   
-  <footer class="fixed-bottom">
+  <footer class="fixed-bottom" style="backdrop-filter: blur(10px); background:rgba(150,150,150,0.3);">
 
       <!-- Copyright -->
       <div class="text-center col-md-12 py-3">Powered by
