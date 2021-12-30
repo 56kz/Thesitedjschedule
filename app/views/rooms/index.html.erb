@@ -2,7 +2,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@600&display=swap');
     .big-number{
       font-family: 'Advent Pro', sans-serif;
-      font-size: 4em;
+      font-size: 2.5em;
     }
 
 </style>
@@ -38,8 +38,8 @@
                 <%= image_tag "dj-cabin.jpg", :class => "card-img-top" %>
 
                 <div class="card-img-overlay rounded">
-                    <h1 class="text-white big-number"><%= link_to index+1, room_schedules_path(r) %></h1>
-                    <%= link_to r.name, room_schedules_path(r) %>
+                    <h4 class="text-white big-number"><%= link_to r.name, room_schedules_path(r) %></h4>
+                    
                 </div>
 
      
