@@ -21,5 +21,11 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: mysql
+  database: my_db
+  hostname: 127.0.0.1
+  username: usr_cnxthesitedj
+  password: th3SITEdjpa$$
+  socket: /tmp/mysql.sock
+  pool: 5
+  timeout: 5000
