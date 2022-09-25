@@ -22,7 +22,7 @@ test:
 
 production:
   adapter: mysql
-  database: my_db
+  database: db_thesitedj
   hostname: 127.0.0.1
   username: usr_cnxthesitedj
   password: th3SITEdjpa$$
