@@ -7,7 +7,7 @@ ruby '>=3.0.4'
 gem 'rails', '~> 7.0.4'
 
 #use passenger as webserver
-gem "passenger"
+gem "passenger", ">= 5.3.2", require: "phusion_passenger/rack_handler"
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
