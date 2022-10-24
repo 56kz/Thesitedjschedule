@@ -18,7 +18,7 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'execjs'
 
-gem 'therubyracer'
+#gem 'therubyracer'
 
 # Use CoffeeScript for .coffee assets rand views
 gem 'coffee-rails', '~> 4.2'
