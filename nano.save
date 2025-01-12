@@ -1,0 +1,15 @@
+ame www.thesitedjacademy.com
+
+    # Tell Apache and Passenger where your app's 'public' directory is
+    DocumentRoot /var/www/thesite_app/code/public
+
+    PassengerRuby /usr/local/rvm/gems/ruby-3.0.4/wrappers/ruby
+
+    # Relax Apache security settings
+    <Directory /var/www/thesite_app/code/public>
+      Allow from all
+      Options -MultiViews
+      # Uncomment this if you're on Apache >= 2.4:
+      Require all granted
+    </Directory>
+</VirtualHost>
