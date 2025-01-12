@@ -33,3 +33,6 @@
 # Ignore application configuration
 /config/application.yml
 app/assets/javascripts/application._js
+shared/log/unicorn.stdout.log
+shared/log/*.log
+
