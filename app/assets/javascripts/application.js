@@ -24,7 +24,8 @@ document.addEventListener("turbolinks:load", function() {
 
     $(document).ready(function() {
         $('.table').DataTable({
-            responsive: true
+            responsive: true,
+            order: [[7, 'desc']]
         });
     });
 

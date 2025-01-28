@@ -1,2 +1,4 @@
-require ::File.expand_path('../config/environments', __FILE__)
+# This file is used by Rack-based servers to start the application.
+require_relative 'config/environment'
+
 run Rails.application
