@@ -1,6 +1,6 @@
 class SchedulesController < ApplicationController
   before_action :authenticate_student!
-  skip_before_action :verify_authenticity_token
+  #skip_before_action :verify_authenticity_token
 
   respond_to :html, :json
 
@@ -42,6 +42,8 @@ class SchedulesController < ApplicationController
         @suscrip_hours=2
       when "Cuatro"
         @suscrip_hours=4
+      when "Diez"
+        @suscrip_hours=10
       when "Doce"
         @suscrip_hours=12
       when "Full"

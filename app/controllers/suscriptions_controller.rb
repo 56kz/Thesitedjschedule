@@ -42,6 +42,6 @@ class SuscriptionsController < ApplicationController
 
   private
    def suscription_params
-     params.require(:suscription).permit(:name, :status, :user_id, :hours, :rooms, :observations)
+     params.require(:suscription).permit(:name, :status, :user_id, :hours, :rooms, :observations, :invoice_number)
    end
 end

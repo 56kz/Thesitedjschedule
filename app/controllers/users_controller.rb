@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def index
     @user_conected = User.find_by(email: current_student.email)
-    @users = User.all.reverse
+    @users = User.order(created_at: :desc).limit(1000)
     @users_mod =  @users.as_json
 
     @users.each_with_index  { |item, index|
