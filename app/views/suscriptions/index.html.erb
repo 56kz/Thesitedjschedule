@@ -1,53 +1,54 @@
-
 <div class="container">
   <div class="row">
-
-    <div class="col-md-8 ml-0">
-    <br>
-      <%= link_to "Crear Suscripcion", new_suscription_path, class: "btn btn-primary" %>
+    <div class="col-md-12 ml-0">
+      <br>
+      <%= link_to "Crear Suscripción", new_suscription_path, class: "btn btn-primary" %>
     </div>
 
     <div class="col-sm-12 mx-auto">
-
-      <hr>
-      <h2 class="text-center">Suscripciones</h2><br>
-
-      <table class="table table table-striped table-bordered text-center">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Tipo</th>
-          <th>Estado</th>
-          <th>Horas</th>
-          <th>Cabinas</th>
-          <th>Observaciones</th>
-          <th>Suscriptor</th>
-          <th>Fecha</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      </tbody>
-        <% @suscriptions.each do |s| %>
-          <tr>
-            <td><%= s.id %></td>
-            <td><%= s.name %></td>
-            <td><%= s.status %></td>
-            <td><%= s.hours %></td>
-            <td><%= s.rooms %></td>
-            <td><%= s.observations %></td>
-            <td><%= s.user.name %></td>
-            <td><%= s.created_at %></td>
-            <td>
-            <div class="btn-group" role="group">
-              <%= link_to "Editar", edit_suscription_path(s), class:"btn btn-success"  %>
-              <%= link_to "Eliminar", s, method: :delete, data: { confirm: "Seguro deseas eliminar la suscripción?" }, class:"btn btn-secondary"  %>
-            </div>
-            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-
+      <div class="card">
+        <div class="card-header text-center">
+          <h2>Suscripciones</h2>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped table-bordered text-center">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Horas</th>
+                <th>Cabinas</th>
+                <th>Factura</th>
+                <th>Suscriptor</th>
+                <th>Observaciones</th>
+                <th>Fecha</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @suscriptions.each do |s| %>
+                <tr>
+                  <td><%= s.name %></td>
+                  <td><%= s.status ? "Activo" : "Inactivo" %></td>
+                  <td><%= s.hours %></td>
+                  <td><%= s.rooms %></td>
+                  <td><%= s.invoice_number %></td>
+                  <td><%= s.user.name %></td>
+                  <td><%= s.observations %></td>
+                  <td><%= s.created_at.in_time_zone.strftime("%d-%m-%Y %I:%M %p") %></td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <%= link_to "Editar", edit_suscription_path(s), class:"btn btn-success" %>
+                      <%= link_to "Eliminar", s, method: :delete, data: { confirm: "¿Seguro deseas eliminar la suscripción?" }, class:"btn btn-secondary" %>
+                    </div>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
+  <div style="height: 50px;"></div>
 </div>
