@@ -3,7 +3,7 @@ class ReservationsController < ApplicationController
 
   def index
     @user_conected = User.find_by(email: current_student.email)
-    @reservations = Reservation.all
+    @reservations = Reservation.order(created_at: :desc).limit(1000)
   end
 
   def new
