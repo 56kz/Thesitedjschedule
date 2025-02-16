@@ -32,6 +32,9 @@
             <%= s.text_field :observations, class: "form-control input-sm", placeholder: "Observaciones" %>
           </div>
           <div class="form-group">
+            <%= s.text_field :invoice_number, class: "form-control input-sm", placeholder: "Número de factura" %>
+          </div>
+          <div class="form-group">
             <%= s.label "Tipo" %> <br />
             <%= s.select :name, Suscription.names.keys, {}, class: "form-control input-sm"  %>
           </div>

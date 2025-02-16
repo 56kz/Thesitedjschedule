@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_28_020235) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
   create_table "reservations", force: :cascade do |t|
     t.integer "schedule_id"
     t.integer "suscription_id"
@@ -59,6 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_28_020235) do
     t.integer "user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.text "invoice_number"
     t.index ["user_id"], name: "index_suscriptions_on_user_id"
   end
 

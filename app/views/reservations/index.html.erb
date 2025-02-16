@@ -1,38 +1,47 @@
 <div class="container">
   <div class="row">
-
-    <div class="col-md-8 ml-0">
-    <br>
+    <div class="col-md-10 ml-0">
+      <br>
       <%= link_to "Crear Reserva", new_reservation_path, class: "btn btn-primary" %>
     </div>
 
-    <div class="col-sm-10 mx-auto">
-  <hr>
-      <h2 class="text-center">Reservas</h2><br>
+    <div class="col-sm-12 mx-auto">
+      <div class="card">
+        <div class="card-header text-center">
+          <h2>Reservas</h2>
+        </div>
+        <div class="card-body">
+          <table class="table table  table-striped table-bordered text-center">
+            <thead>
+              <tr>
+                <th>Día Reserva</th>
+                <th>Hora Inicio</th>
+                <th>Suscripción</th>
+                <th>Usuario</th>
+                <th>Sala</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @reservations.each do |r| %>
+                <tr>
+                  <td><%= r.reserve_date %></td>
+                  <td><%= r.start_hour %></td>
+                  <td><%= r.suscription.name %></td>
+                  <td><%= r.suscription.user.name %></td>
+                  <td>Cabina&nbsp;<%= r.room %></td>
+                </tr>
+              <% end %>
 
-      <table class="table table table-striped table-bordered compact text-center">
-      <thead>
-        <tr>
-          <th>Día Reserva</th>
-          <th>Hora Inicio</th>
-          <th>Suscripción</th>
-          <th>Usuario</th>
-          <th>Sala</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @reservations.each do |r| %>
-        <tr>
-          <td><%= r.reserve_date  %></td>
-          <td><%= r.start_hour %></td>
-          <td><%= r.suscription.name %></td>
-          <td><%= r.suscription.user.name %></td>
-          <td>Cabina&nbsp;<%= r.room %></td>
-        </tr>
-        <% end %>
-      </tbody>
-      </table>
 
+
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
+
+  <tr>
+    <td colspan="5" style="height: 50px;"></td>
+  </tr>
 </div>

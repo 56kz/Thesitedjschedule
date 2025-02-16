@@ -20,11 +20,30 @@
 
 
 
-document.addEventListener("turbolinks:load", function() {
+document.addEventListener("turbolinks:load", function () {
 
-    $(document).ready(function() {
+    let sort_col=0;
+
+    if (window.location.pathname =='/suscriptions'){
+        sort_col = 7;
+    }else if(window.location.pathname =='/reservations'){
+        sort_col = 0;
+    }
+
+    $(document).ready(function () {
         $('.table').DataTable({
-            responsive: true
+            responsive: false,
+            order: [[sort_col, 'desc']],
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+            },
+            dom: 'lfrtipQ'
+        });
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-Token": $('meta[name="csrf-token"]').attr("content")
+            }
         });
     });
 
@@ -61,7 +80,7 @@ document.addEventListener("turbolinks:load", function() {
             center: 'title',
             right: 'prev,today,next'
         },
-        eventRender: function(info) {
+        eventRender: function (info) {
 
             var rol = $("#user_rol").val()
 
@@ -74,7 +93,7 @@ document.addEventListener("turbolinks:load", function() {
         customButtons: {
             addEventButton: {
                 text: 'Programar',
-                click: function() {
+                click: function () {
 
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
@@ -137,7 +156,7 @@ document.addEventListener("turbolinks:load", function() {
                             type: "GET",
                             url: '/rooms/' + $('#roow_id').val() + '/schedules/new',
                             data: data,
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 if (xhr.status == 401) {
                                     Swal.fire({
                                         icon: 'info',
@@ -150,7 +169,7 @@ document.addEventListener("turbolinks:load", function() {
                                     })
                                 }
                             }
-                        }).done(function(data) {
+                        }).done(function (data) {
                             if (data.status_code == 0) {
                                 Swal.fire({
                                     icon: 'info',
@@ -232,10 +251,10 @@ document.addEventListener("turbolinks:load", function() {
         editable: false,
         droppable: false, // this allows things to be dropped onto the calendar
 
-        drop: function(info) {
+        drop: function (info) {
             //info.draggedEl.parentNode.removeChild(info.draggedEl);
         },
-        eventClick: function(event, element) {
+        eventClick: function (event, element) {
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -256,10 +275,10 @@ document.addEventListener("turbolinks:load", function() {
                     $.ajax({
                         type: "DELETE",
                         url: '/rooms/' + $('#roow_id').val() + '/schedules/' + event_id + '?suscription_id=' + suscription_id,
-                        success: function(data, textStatus, xhr) {
+                        success: function (data, textStatus, xhr) {
 
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             if (xhr.status == 401) {
                                 Swal.fire({
                                     icon: 'info',
@@ -273,7 +292,7 @@ document.addEventListener("turbolinks:load", function() {
                             }
                         }
 
-                    }).done(function(data, textStatus, jqXHR) {
+                    }).done(function (data, textStatus, jqXHR) {
 
                         if (data.status_code == 1) {
                             Swal.fire(
@@ -328,21 +347,21 @@ document.addEventListener("turbolinks:load", function() {
 
     $('.fc-addEventButton-button').addClass("btn-success");
 
-    $(".hour-btn").click(function() {
+    $(".hour-btn").click(function () {
         val = $(this).text();
         $("#time-picker").val(val);
     });
 
     var disabledDays = [];
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $dd_picker = $('#date-pick');
 
         $dd_picker.datepicker({
-            onSelect: function(formattedDate, date, inst) {
+            onSelect: function (formattedDate, date, inst) {
                 inst.hide();
             },
-            onRenderCell: function(date, cellType) {
+            onRenderCell: function (date, cellType) {
                 if (cellType == 'day') {
                     var day = date.getDay(),
                         isDisabled = disabledDays.indexOf(day) != -1;
@@ -364,7 +383,7 @@ document.addEventListener("turbolinks:load", function() {
         $.ajax({
             type: "GET",
             url: '/rooms/' + $('#roow_id').val() + '/schedules.json',
-            success: function(data, textStatus, xhr) {
+            success: function (data, textStatus, xhr) {
 
                 for (i in data) {
 
@@ -410,7 +429,7 @@ document.addEventListener("turbolinks:load", function() {
 
                 }
             }
-        }).done(function() {
+        }).done(function () {
             //$("#openModalLoading").remove();
         });
     }
@@ -475,15 +494,15 @@ document.addEventListener("turbolinks:load", function() {
         calendar.changeView('timeGridWeek');
     }
 
-    $("#FullCalendarMonth").click(function() {
+    $("#FullCalendarMonth").click(function () {
         calendar.changeView('dayGridMonth');
     });
 
-    $("#FullCalendarWeek").click(function() {
+    $("#FullCalendarWeek").click(function () {
         calendar.changeView('timeGridWeek');
     });
 
-    $("#FullCalendarDay").click(function() {
+    $("#FullCalendarDay").click(function () {
         calendar.changeView('timeGridDay');
     });
 
