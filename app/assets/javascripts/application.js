@@ -25,46 +25,67 @@ document.addEventListener("turbolinks:load", function () {
 
     $(document).ready(function () {
 
-        let sort_col=0;
+        let sort_col = 0;
 
-        if (window.location.pathname =='/suscriptions'){
+        if (window.location.pathname == '/suscriptions') {
             sort_col = 7;
-        }else if(window.location.pathname =='/reservations'){
+        } else if (window.location.pathname == '/reservations') {
             sort_col = 0;
         }
 
+        // Function to parse the original date string into a Date object (GMT-5)
         function parseCustomDate(dateString) {
-            // Extract date components from format "DD/MM/YYYY hh:mm:ss a"
             const [datePart, timePart, meridian] = dateString.split(/[\s:]+/);
             const [day, month, year] = datePart.split('/').map(Number);
             let [hours, minutes, seconds] = timePart ? timePart.split(':').map(Number) : [0, 0, 0];
-    
+
             // Convert 12-hour format to 24-hour format
             if (meridian?.toUpperCase() === "PM" && hours !== 12) {
                 hours += 12;
             } else if (meridian?.toUpperCase() === "AM" && hours === 12) {
                 hours = 0;
             }
-    
-            // Create Date object (GMT-5)
+
+            // Create Date object in GMT-5
             return new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
         }
 
-        // Define custom sorting function for DataTables
+        // Custom sorting function: Convert the date string to a timestamp
         jQuery.fn.dataTable.ext.type.order['custom-date-pre'] = function (dateStr) {
-            return parseCustomDate(dateStr).getTime() || 0; // Convert to timestamp
+            return parseCustomDate(dateStr).getTime() || 0; // Sorting based on timestamp
         };
 
-        // Initialize DataTable with custom sorting
+        // Function to format date as "DD/MM/YYYY hh:mm:ss AM/PM"
+        function formatDateDisplay(dateStr) {
+            const date = parseCustomDate(dateStr);
+
+            // Use Intl.DateTimeFormat to format the display output
+            return new Intl.DateTimeFormat('es-CO', {
+                timeZone: 'America/Bogota',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true // Ensures AM/PM format
+            }).format(date);
+        }
+
+        // Initialize DataTable with custom rendering for "Fecha" column
         $('.table').DataTable({
             responsive: false,
-            order: [[sort_col, 'desc']],
+            order: [[sort_col, 'desc']], // Sort based on timestamp
             columnDefs: [
                 {
                     targets: function (idx, data, node) {
-                        return $(node).text().trim().toLowerCase() === 'fecha'; // Identify "Fecha" column
+                        return $(node).text().trim().toLowerCase() === 'fecha';
                     },
-                    type: 'custom-date'
+                    type: 'custom-date',
+                    render: function (data, type, row) {
+                        // Apply custom formatting only for display (not for sorting)
+                        return type === 'display' ? formatDateDisplay(data) : data;
+                    }
                 }
             ],
             language: {
