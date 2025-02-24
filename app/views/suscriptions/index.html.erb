@@ -35,7 +35,7 @@
                   <td><%= s.invoice_number %></td>
                   <td><%= s.user.name %></td>
                   <td><%= s.observations %></td>
-                  <td><%= s.created_at.in_time_zone.strftime("%d-%m-%Y %I:%M %p") %></td>
+                  <td><%= s.created_at.in_time_zone %></td>
                   <td>
                     <div class="btn-group" role="group">
                       <%= link_to "Editar", edit_suscription_path(s), class:"btn btn-success" %>
