@@ -40,7 +40,12 @@
           </div>
           <div class="form-group">
             <%= s.label "Horas" %> <br />
-            <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control input-sm"  %>
+            <select class="form-control input-sm" name="suscription[hours]" id="suscription_hours" "form-control input-sm">
+              <option value="Dos">Dos</option>
+              <option value="Cuatro">Cuatro</option>
+              <option value="Diez">Diez</option>
+              <option value="Full">Full</option>
+            </select>
           </div>
           <div class="form-group text-center">
             <%= s.label "Activo" %> <br />
