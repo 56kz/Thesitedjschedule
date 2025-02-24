@@ -22,34 +22,49 @@
 
 document.addEventListener("turbolinks:load", function () {
 
-    let sort_col=0;
-
-    if (window.location.pathname =='/suscriptions'){
-        sort_col = 7;
-    }else if(window.location.pathname =='/reservations'){
-        sort_col = 0;
-    }
 
     $(document).ready(function () {
 
-        // Initialize DataTable
+        let sort_col=0;
+
+        if (window.location.pathname =='/suscriptions'){
+            sort_col = 7;
+        }else if(window.location.pathname =='/reservations'){
+            sort_col = 0;
+        }
+
+        function parseCustomDate(dateString) {
+            // Extract date components from format "DD/MM/YYYY hh:mm:ss a"
+            const [datePart, timePart, meridian] = dateString.split(/[\s:]+/);
+            const [day, month, year] = datePart.split('/').map(Number);
+            let [hours, minutes, seconds] = timePart ? timePart.split(':').map(Number) : [0, 0, 0];
+    
+            // Convert 12-hour format to 24-hour format
+            if (meridian?.toUpperCase() === "PM" && hours !== 12) {
+                hours += 12;
+            } else if (meridian?.toUpperCase() === "AM" && hours === 12) {
+                hours = 0;
+            }
+    
+            // Create Date object (GMT-5)
+            return new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
+        }
+
+        // Define custom sorting function for DataTables
+        jQuery.fn.dataTable.ext.type.order['custom-date-pre'] = function (dateStr) {
+            return parseCustomDate(dateStr).getTime() || 0; // Convert to timestamp
+        };
+
+        // Initialize DataTable with custom sorting
         $('.table').DataTable({
             responsive: false,
             order: [[sort_col, 'desc']],
             columnDefs: [
                 {
-                    render: (data, type, row) => {
-                        //Formato fechas
-                        return new Intl.DateTimeFormat('es-CO', { 
-                            timeZone: 'America/Bogota', 
-                            year: 'numeric', 
-                            month: '2-digit', 
-                            day: '2-digit',
-                            hour12: true
-                        }).format(new Date(data));
-                        
+                    targets: function (idx, data, node) {
+                        return $(node).text().trim().toLowerCase() === 'fecha'; // Identify "Fecha" column
                     },
-                    targets: [sort_col]
+                    type: 'custom-date'
                 }
             ],
             language: {
@@ -57,8 +72,6 @@ document.addEventListener("turbolinks:load", function () {
             },
             dom: 'lfrtipQ'
         });
-
-
 
 
         $.ajaxSetup({
