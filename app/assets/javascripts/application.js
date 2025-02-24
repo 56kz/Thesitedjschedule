@@ -41,7 +41,7 @@ document.addEventListener("turbolinks:load", function () {
                     render: (data, type, row) => {
                         //Formato fechas
                         return new Intl.DateTimeFormat('es-CO', { 
-                            timeZone: 'UTC', 
+                            timeZone: 'America/Bogota', 
                             year: 'numeric', 
                             month: '2-digit', 
                             day: '2-digit',
