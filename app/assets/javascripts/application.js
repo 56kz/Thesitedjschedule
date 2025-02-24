@@ -31,14 +31,48 @@ document.addEventListener("turbolinks:load", function () {
     }
 
     $(document).ready(function () {
+
+        // Function to parse date in the format "DD-MM-YYYY hh:mm A"
+        function parseCustomDate(dateString) {
+            // Extract date components
+            const [datePart, timePart, meridian] = dateString.split(/[\s:]+/);
+            const [day, month, year] = datePart.split('-').map(Number);
+            let [hours, minutes] = timePart.split(':').map(Number);
+
+            // Convert to 24-hour format if needed
+            if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                hours += 12;
+            } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                hours = 0;
+            }
+
+            // Return a Date object
+            return new Date(year, month - 1, day, hours, minutes);
+        }
+
+        // Initialize DataTable
         $('.table').DataTable({
             responsive: false,
             order: [[sort_col, 'desc']],
+            columnDefs: [
+                {
+                    targets: function (idx, data, node) {
+                        return $(node).text().trim().toLowerCase() === 'fecha';
+                    },
+                    type: 'custom-date'
+                }
+            ],
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
             },
             dom: 'lfrtipQ'
         });
+
+        // Define custom sorting function for DataTables
+        jQuery.fn.dataTable.ext.type.order['custom-date-pre'] = function (dateStr) {
+            return parseCustomDate(dateStr).getTime() || 0; // Convert to timestamp for sorting
+        };
+
 
         $.ajaxSetup({
             headers: {
