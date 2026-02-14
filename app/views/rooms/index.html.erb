@@ -1,65 +1,35 @@
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@600&display=swap');
-    .big-number{
-      font-family: 'Advent Pro', sans-serif;
-      font-size: 2.5em;
-    }
-
+  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@600&display=swap');
+  .big-number {
+    font-family: 'Advent Pro', sans-serif;
+    font-size: 2.5em;
+  }
 </style>
 
-<div class="container container-fluid text-center">
-  <div class="row h-100 mb-4">
-    <div class="col-md-12 mx-auto">
-      <div class="card card-main">
-        <div class="card-body">
-
-          <br>
-          <h1 class="display-4">Bienvenido <strong><%= @user_conected.name %><strong></h1>
-          <h5>Estas Registrado en el programa <span class="badge badge-pill badge-dark">
-              <%= @active_suscription.name %></span></h5>
-          <br>
-          
-        </div>
-
-      </div>
-
+<div class="container-fluid py-3">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body text-center py-4">
+      <h1 class="display-4">Bienvenido <strong><%= @user_conected&.name || "Usuario" %></strong></h1>
+      <% if @active_suscription.present? %>
+        <h5 class="mb-0">Estás registrado en el programa <span class="badge badge-pill badge-dark"><%= @active_suscription.name %></span></h5>
+      <% end %>
     </div>
-
   </div>
 
-  <div class="row mb-2">
-
-          <% @rooms.each_with_index do |r, index| %>
-
-            <div class="col-md-3 col-sm-6">
-
-              <div class="card mb-4 rounded">
-
-                <%= image_tag "dj-cabin.jpg", :class => "card-img-top" %>
-
-                <div class="card-img-overlay rounded">
-                    <h4 class="text-white big-number"><%= link_to r.name, room_schedules_path(r) %></h4>
-                    
-                </div>
-
-     
-              </div>
-
-            </div>
-          
-          <% end %>
-
+  <div class="row">
+    <% @rooms.each_with_index do |r, index| %>
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card shadow-sm rounded overflow-hidden">
+          <%= image_tag "dj-cabin.jpg", class: "card-img-top" %>
+          <div class="card-img-overlay rounded d-flex align-items-center justify-content-center">
+            <h4 class="text-white big-number mb-0"><%= link_to r.name, room_schedules_path(r), class: "text-white" %></h4>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
-
-
-
 </div>
 
-<br><br>
-<footer class="fixed-bottom">
-<!-- Copyright -->
-<div class="text-center col-md-12 py-2">Powered by 
-  <a href="https://56kz.github.io/#contact" target="_blank">Verzion56</a>
-</div>
-<!-- Copyright -->
+<footer class="fixed-bottom py-3 bg-dark text-center">
+  <span class="text-muted small">Powered by <a href="https://56kz.github.io/#contact" target="_blank" class="text-muted">Verzion56</a></span>
 </footer>

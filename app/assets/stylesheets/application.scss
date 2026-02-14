@@ -1,6 +1,25 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 @import "bootstrap";
 @import "schedules";
+
+// Padding para tablas dentro de cards (lados e inferior)
+.table-card-body {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px !important;
+}
+
+// Indicador activo en navbar (refuerzo sobre Bootstrap)
+.navbar-dark .navbar-nav .nav-link.active {
+  color: #fff !important;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+// Footer fijo solo en página de inicio (evitar contenido oculto)
+body.rooms-index {
+  padding-bottom: 60px;
+}
 .hour-btn {
     width: 150px;
     margin: 3px;

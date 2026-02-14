@@ -1,27 +1,31 @@
-
-
-<div class="container text-center general-info">
-  <div class="row">
-    <div class="col-sm-6 mx-auto"><br><br>
-
-      <h1>Editar Usuario</h1><br>
-      <%= form_for @user do |u| %>
-      <div class="form-group">
-        <%= u.text_field :name, class: "form-control input-lg", placeholder: "Nombre" %>
-      </div>
-      <div class="form-group">
-        <%= u.email_field :email, class: "form-control input-lg", placeholder: "Email" %>
-      </div>
-      <div class="form-group">
-        <%= u.text_field :phone, class: "form-control input-lg", placeholder: "Celular" %>
-      </div>
-      <div class="form-group">
-        <%= u.select :rol, User.rols.keys, {}, {class: "form-control input-lg"} %>
-      </div>
-      <div>
-        <%= u.submit "Editar Usuario", class: "btn btn-primary btn-lg btn-block" %>
-      </div>
+<div class="container-fluid py-3">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-pencil-square mr-2"></i>Editar usuario</h5>
+      <%= link_to users_path, class: "btn btn-outline-secondary btn-sm", data: { toggle: "tooltip" }, title: "Volver a usuarios" do %>
+        <i class="bi bi-arrow-left"></i> Volver
       <% end %>
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
+          <%= form_for @user do |u| %>
+            <div class="form-group">
+              <%= u.text_field :name, class: "form-control form-control-lg", placeholder: "Nombre" %>
+            </div>
+            <div class="form-group">
+              <%= u.email_field :email, class: "form-control form-control-lg", placeholder: "Email" %>
+            </div>
+            <div class="form-group">
+              <%= u.text_field :phone, class: "form-control form-control-lg", placeholder: "Celular" %>
+            </div>
+            <div class="form-group">
+              <%= u.select :rol, User.rols.keys, {}, class: "form-control form-control-lg" %>
+            </div>
+            <%= u.submit "Guardar cambios", class: "btn btn-primary btn-lg btn-block" %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

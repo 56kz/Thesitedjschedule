@@ -1,47 +1,38 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-10 ml-0">
-      <br>
-      <%= link_to "Crear Reserva", new_reservation_path, class: "btn btn-primary" %>
+<div class="container-fluid py-3">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-calendar-check mr-2"></i>Reservas</h5>
+      <div class="btn-group">
+        <%= link_to new_reservation_path, class: "btn btn-primary btn-sm", data: { toggle: "tooltip" }, title: "Crear reserva" do %>
+          <i class="bi bi-plus-lg"></i> Crear reserva
+        <% end %>
+      </div>
     </div>
-
-    <div class="col-sm-12 mx-auto">
-      <div class="card">
-        <div class="card-header text-center">
-          <h2>Reservas</h2>
-        </div>
-        <div class="card-body">
-          <table class="table table  table-striped table-bordered text-center">
-            <thead>
+    <div class="card-body table-card-body">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered mb-0 text-center">
+          <thead class="thead-light">
+            <tr>
+              <th>Fecha</th>
+              <th>Hora Inicio</th>
+              <th>Suscripción</th>
+              <th>Usuario</th>
+              <th>Sala</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @reservations.each do |r| %>
               <tr>
-                <th>Fecha</th>
-                <th>Hora Inicio</th>
-                <th>Suscripción</th>
-                <th>Usuario</th>
-                <th>Sala</th>
+                <td><%= r.reserve_date %></td>
+                <td><%= r.start_hour %></td>
+                <td><%= r.suscription.name %></td>
+                <td><%= r.suscription.user.name %></td>
+                <td>Cabina&nbsp;<%= r.room %></td>
               </tr>
-            </thead>
-            <tbody>
-              <% @reservations.each do |r| %>
-                <tr>
-                  <td><%= r.reserve_date %></td>
-                  <td><%= r.start_hour %></td>
-                  <td><%= r.suscription.name %></td>
-                  <td><%= r.suscription.user.name %></td>
-                  <td>Cabina&nbsp;<%= r.room %></td>
-                </tr>
-              <% end %>
-
-
-
-            </tbody>
-          </table>
-        </div>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
-
-  <tr>
-    <td colspan="5" style="height: 50px;"></td>
-  </tr>
 </div>

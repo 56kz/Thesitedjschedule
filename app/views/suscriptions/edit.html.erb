@@ -1,37 +1,45 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4 mx-auto"><br>
-      <h1 class="text-center">Editar Suscripción</h1>
-      <br>
-        <%= form_for @suscription do |s| %>
-          <div class="form-group">
-            <%= s.text_field :user_id, class: "form-control input-sm", placeholder: "Id de Usuario" %>
-          </div>
-          <div class="form-group">
-            <%= s.text_field :rooms, class: "form-control input-sm", placeholder: "Cabinas" %>
-          </div>
-          <div class="form-group">
-            <%= s.text_field :observations, class: "form-control input-sm", placeholder: "Observaciones" %>
-          </div>
-          <div class="form-group">
-            <%= s.text_field :invoice_number, class: "form-control input-sm", placeholder: "Número de factura" %>
-          </div>
-          <div class="form-group">
-            <%= s.label "Tipo" %> <br />
-            <%= s.select :name, Suscription.names.keys, {}, class: "form-control input-sm" %>
-          </div>
-          <div class="form-group">
-            <%= s.label "Horas" %> <br />
-            <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control input-sm" %>
-          </div>
-          <div class="form-group text-center">
-            <%= s.label "Activo" %> <br />
-            <%= s.check_box :status %>
-          </div>
-          <div>
+<div class="container-fluid py-3">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-credit-card mr-2"></i>Editar suscripción</h5>
+      <%= link_to suscriptions_path, class: "btn btn-outline-secondary btn-sm", data: { toggle: "tooltip" }, title: "Volver a suscripciones" do %>
+        <i class="bi bi-arrow-left"></i> Volver
+      <% end %>
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
+          <%= form_for @suscription do |s| %>
+            <div class="form-group">
+              <%= s.text_field :user_id, class: "form-control", placeholder: "Id de Usuario" %>
+            </div>
+            <div class="form-group">
+              <%= s.text_field :rooms, class: "form-control", placeholder: "Cabinas" %>
+            </div>
+            <div class="form-group">
+              <%= s.text_field :observations, class: "form-control", placeholder: "Observaciones" %>
+            </div>
+            <div class="form-group">
+              <%= s.text_field :invoice_number, class: "form-control", placeholder: "Número de factura" %>
+            </div>
+            <div class="form-group">
+              <%= s.label "Tipo" %>
+              <%= s.select :name, Suscription.names.keys, {}, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <%= s.label "Horas" %>
+              <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <div class="custom-control custom-checkbox">
+                <%= s.check_box :status, id: "suscription_status", class: "custom-control-input" %>
+                <label class="custom-control-label" for="suscription_status">Activo</label>
+              </div>
+            </div>
             <%= s.submit "Actualizar", class: "btn btn-primary btn-block" %>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

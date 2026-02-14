@@ -17,7 +17,7 @@
 
   <link rel="stylesheet" type="text/css"
     href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.css" />
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" crossorigin="anonymous">
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <%= csrf_meta_tags %>
@@ -27,7 +27,7 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </head>
 
-<body class="bg-login">
+<body class="bg-login <%= controller_name %>-<%= action_name %>">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container d-flex justify-content-between">
 
@@ -46,9 +46,9 @@
 
 
           <% if @user_conected.present? && @user_conected.rol.in?(%w[instructor admin]) %>
-          <li class="nav-item"><%= link_to "Usuarios", users_path, class:"nav-link" %></li>
-          <li class="nav-item"><%= link_to "Suscripciones", suscriptions_path, class:"nav-link" %></li>
-          <li class="nav-item"><%= link_to "Reservas", reservations_path, class:"nav-link" %></li>
+          <li class="nav-item <%= 'active' if current_page?(users_path) %>"><%= link_to "Usuarios", users_path, class: "nav-link" %></li>
+          <li class="nav-item <%= 'active' if current_page?(suscriptions_path) %>"><%= link_to "Suscripciones", suscriptions_path, class: "nav-link" %></li>
+          <li class="nav-item <%= 'active' if current_page?(reservations_path) %>"><%= link_to "Reservas", reservations_path, class: "nav-link" %></li>
           <% end %>
         </ul>
 
@@ -113,7 +113,11 @@
 
   <script type="text/javascript"
     src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/b-colvis-1.6.1/cr-1.5.2/r-2.2.3/datatables.min.js"></script>
-
+  <script>
+    document.addEventListener("turbolinks:load", function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
 
 </body>
 

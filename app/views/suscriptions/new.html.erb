@@ -1,9 +1,14 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4 mx-auto"><br>
-      <h1 class="text-center">Crear Suscripción</h1>
-      <br>
-
+<div class="container-fluid py-3">
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-credit-card mr-2"></i>Crear suscripción</h5>
+      <%= link_to suscriptions_path, class: "btn btn-outline-secondary btn-sm", data: { toggle: "tooltip" }, title: "Volver a suscripciones" do %>
+        <i class="bi bi-arrow-left"></i> Volver
+      <% end %>
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-6">
         <div class="form-group">
           <select placeholder="Ingrese un nombre..." id="js-data-name" style="width: 100%; float:left;"></select>
         </div>
@@ -55,6 +60,8 @@
             <%= s.submit "Crear", class: "btn btn-primary btn-block" %>
           </div>
         <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
