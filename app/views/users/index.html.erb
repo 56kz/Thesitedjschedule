@@ -33,7 +33,9 @@
                   <td>
                     <div class="btn-group" role="group">
                       <%= link_to "Editar", edit_user_path(u), class:"btn btn-success" %>
-                      <%= link_to "Eliminar", u, method: :delete, data: { confirm: "¿Seguro deseas eliminar el usuario?" }, class:"btn btn-secondary" %>
+                      <%= link_to "Cambiar contraseña", edit_password_user_path(u), class:"btn btn-info" %>
+                      <%= button_to "Enviar instrucciones", send_reset_password_instructions_user_path(u), method: :post, class:"btn btn-secondary" %>
+                      <%= link_to "Eliminar", u, method: :delete, data: { confirm: "¿Seguro deseas eliminar el usuario?" }, class:"btn btn-danger" %>
                     </div>
                   </td>
                 </tr>

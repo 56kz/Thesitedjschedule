@@ -1,5 +1,6 @@
 class SuscriptionsController < ApplicationController
   before_action :authenticate_student!
+  before_action :require_instructor_or_admin
 
   def index
     @user_conected = User.find_by(email: current_student.email)

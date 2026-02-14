@@ -12,8 +12,8 @@
 
 ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
   create_table "reservations", force: :cascade do |t|
-    t.integer "schedule_id"
-    t.integer "suscription_id"
+    t.bigint "schedule_id"
+    t.bigint "suscription_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "start_hour"
@@ -32,7 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
   create_table "schedules", force: :cascade do |t|
     t.date "day"
     t.integer "hour"
-    t.integer "room_id"
+    t.bigint "room_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["room_id"], name: "index_schedules_on_room_id"
@@ -56,7 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
     t.integer "hours"
     t.string "observations"
     t.string "rooms"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "invoice_number"

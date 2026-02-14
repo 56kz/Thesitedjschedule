@@ -1,0 +1,13 @@
+.git
+.cursor
+log/*
+tmp/*
+storage/*
+node_modules
+.env
+.env.*
+*.sql
+.byebug_history
+nano.save
+*.md
+!README.md

@@ -1,5 +1,6 @@
 class SchedulesController < ApplicationController
   before_action :authenticate_student!
+  before_action :require_instructor_or_admin
   #skip_before_action :verify_authenticity_token
 
   respond_to :html, :json

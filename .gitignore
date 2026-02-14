@@ -32,4 +32,7 @@
 
 # Ignore application configuration
 /config/application.yml
+.env
+.env.local
+.env.*.local
 app/assets/javascripts/application._js

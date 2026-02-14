@@ -25,10 +25,16 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  config.assume_ssl = true
+  # En local/Docker sin HTTPS usar DISABLE_SSL=1 o FORCE_SSL=false en .env
+  config.assume_ssl = ENV["FORCE_SSL"] != "false" && ENV["DISABLE_SSL"] != "1"
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  config.force_ssl = ENV["FORCE_SSL"] != "false" && ENV["DISABLE_SSL"] != "1"
+
+  # Sin SSL (local/Docker): cookies de sesión no secure para que el login por HTTP no falle con "change rejected" (CSRF/session)
+  if ENV["FORCE_SSL"] == "false" || ENV["DISABLE_SSL"] == "1"
+    config.session_store :cookie_store, key: "_thesitedjschedule_session", secure: false, same_site: :lax
+  end
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -56,8 +62,8 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # Set host to be used by links generated in mailer templates (e.g. password reset links).
+  config.action_mailer.default_url_options = { host: ENV.fetch("MAILER_HOST", "example.com"), protocol: ENV["FORCE_SSL"] == "false" ? "http" : "https" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   # config.action_mailer.smtp_settings = {

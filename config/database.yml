@@ -22,10 +22,10 @@ test:
 
 production:
   adapter: mysql2
-  database: db_thesitedj
-  hostname: 127.0.0.1
-  username: usr_cnxthesitedj
-  password: th3SITEdjpa$$
-  socket: /tmp/mysql.sock
-  pool: 5
+  host: <%= ENV.fetch("MYSQL_HOST", "127.0.0.1") %>
+  port: <%= ENV.fetch("MYSQL_PORT", "3306") %>
+  username: <%= ENV.fetch("MYSQL_USER", "rails") %>
+  password: <%= ENV.fetch("MYSQL_PASSWORD", "") %>
+  database: <%= ENV.fetch("MYSQL_DATABASE", "db_thesitedj") %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   timeout: 5000

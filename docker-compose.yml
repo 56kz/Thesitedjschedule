@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-db_thesitedj}
+      MYSQL_USER: ${MYSQL_USER:-rails}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-railssecret}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\"$$MYSQL_ROOT_PASSWORD\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-production}
+      PORT: 3000
+      MYSQL_HOST: db
+      MYSQL_USER: ${MYSQL_USER:-rails}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-railssecret}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-db_thesitedj}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      RAILS_LOG_TO_STDOUT: "1"
+      FORCE_SSL: ${FORCE_SSL:-false}
+      DISABLE_SSL: ${DISABLE_SSL:-1}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - storage_data:/app/storage
+    # Evitar que el volumen monte sobre archivos precompilados u otros
+    tmpfs:
+      - /app/tmp
+
+volumes:
+  mysql_data:
+  storage_data:

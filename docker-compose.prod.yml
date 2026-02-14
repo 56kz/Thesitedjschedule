@@ -1,0 +1,7 @@
+# Override para producción en VPS. Uso: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Expone la app solo en localhost para que solo Nginx (en el host) pueda acceder.
+
+services:
+  web:
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"

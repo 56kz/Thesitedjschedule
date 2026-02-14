@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4 mx-auto text-center">
+      <h2>Cambiar mi contraseña</h2><br><br>
+
+      <%= form_for(current_student, url: edit_my_password_path, html: { method: :patch }) do |f| %>
+        <%= render "devise/shared/error_messages", resource: current_student %>
+
+        <div class="field form-group">
+          <%= f.label :current_password, "Contraseña actual" %><br />
+          <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :password, "Nueva contraseña" %><br />
+          <% if @minimum_password_length %>
+            <em>(<%= @minimum_password_length %> caracteres mínimo)</em><br />
+          <% end %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control" %>
+        </div>
+
+        <div class="field form-group">
+          <%= f.label :password_confirmation, "Confirmar nueva contraseña" %><br />
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Actualizar contraseña", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

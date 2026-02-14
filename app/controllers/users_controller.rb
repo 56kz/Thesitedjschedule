@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_student!
+  before_action :require_instructor_or_admin
 
   def index
     @user_conected = User.find_by(email: current_student.email)
@@ -36,7 +37,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       @user.update(email: @user.email.downcase)
-      @student = Student.create(email: @user.email, password: "12345678")
+      default_password = ENV.fetch("DEFAULT_STUDENT_PASSWORD", "12345678")
+      @student = Student.create(email: @user.email, password: default_password)
       redirect_to new_suscription_path, notice: "#{@user.name} ingresó al sistema"
     else
       render :new
@@ -59,14 +61,44 @@ class UsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
+    @student = Student.find_by(email: @user.email)
     @user.destroy
-    @student = Student.find(params[:id])
-    @student.destroy
+    @student&.destroy
     redirect_to users_path, notice: "#{@user.name} salió del sistema"
   end
 
+  def edit_password
+    @user = User.find(params[:id])
+  end
+
+  def update_password
+    @user = User.find(params[:id])
+    @student = Student.find_by(email: @user.email)
+    unless @student
+      redirect_to users_path, alert: "No existe cuenta de estudiante para este usuario."
+      return
+    end
+    if @student.update(password: params[:password], password_confirmation: params[:password_confirmation])
+      redirect_to users_path, notice: "Contraseña de #{@user.name} actualizada."
+    else
+      render :edit_password, status: :unprocessable_entity
+    end
+  end
+
+  def send_reset_password_instructions
+    @user = User.find(params[:id])
+    @student = Student.find_by(email: @user.email)
+    unless @student
+      redirect_to users_path, alert: "No existe cuenta de estudiante para este usuario."
+      return
+    end
+    @student.send_reset_password_instructions
+    redirect_to users_path, notice: "Se enviaron las instrucciones al correo de #{@user.email}."
+  end
+
   private
-   def user_params
-     params.require(:user).permit(:name, :email, :phone, :rol)
-   end
+
+  def user_params
+    params.require(:user).permit(:name, :email, :phone, :rol)
+  end
 end
