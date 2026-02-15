@@ -1,0 +1,17 @@
+<p>Hola <%= @user.name %>,</p>
+
+<p>Bienvenido a <strong>The Site DeeJay Academy</strong>. Tu cuenta ha sido creada correctamente.</p>
+
+<p>Para iniciar sesión y programar tus clases, entra a la siguiente página:</p>
+
+<p style="margin: 24px 0;">
+  <a href="<%= @login_url %>" style="background:#0d6efd;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block;">Ir a inicio de sesión</a>
+</p>
+
+<p><%= @login_url %></p>
+
+<p>Utiliza tu correo (<strong><%= @user.email %></strong>) y la contraseña que te proporcionaron para acceder.</p>
+
+<p>Si necesitas restablecer tu contraseña, puedes usar la opción "¿Olvidaste tu contraseña?" en la página de inicio de sesión.</p>
+
+<p>Saludos,<br>The Site DeeJay Academy</p>

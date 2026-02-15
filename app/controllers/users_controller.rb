@@ -39,6 +39,7 @@ class UsersController < ApplicationController
       @user.update(email: @user.email.downcase)
       default_password = ENV.fetch("DEFAULT_STUDENT_PASSWORD", "12345678")
       @student = Student.create(email: @user.email, password: default_password)
+      UserMailer.welcome_email(@user).deliver_later
       redirect_to new_suscription_path, notice: "#{@user.name} ingresó al sistema"
     else
       render :new
