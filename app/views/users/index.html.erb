@@ -24,7 +24,7 @@
           <tbody>
             <% @users.each do |u| %>
               <tr>
-                <td><%= u.id %></td>
+                <td data-order="<%= u.id.to_i %>"><%= u.id %></td>
                 <td><%= u.name %></td>
                 <td><%= u.phone %></td>
                 <td><%= u.email %></td>

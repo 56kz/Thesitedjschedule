@@ -55,6 +55,13 @@ document.addEventListener("turbolinks:load", function () {
             return parseCustomDate(dateStr).getTime() || 0; // Sorting based on timestamp
         };
 
+        // Orden numérico usando data-order (entero)
+        jQuery.fn.dataTable.ext.type.order['num-id-pre'] = function (data, node) {
+            var order = $(node).attr('data-order');
+            var num = order !== undefined && order !== '' ? parseInt(order, 10) : parseInt(String(data).replace(/[^\d-]/g, ''), 10);
+            return isNaN(num) ? 0 : num;
+        };
+
         // Function to format date as "DD/MM/YYYY hh:mm:ss AM/PM"
         function formatDateDisplay(dateStr) {
             const date = parseCustomDate(dateStr);
@@ -72,11 +79,13 @@ document.addEventListener("turbolinks:load", function () {
             }).format(date);
         }
 
-        // Initialize DataTable with custom rendering for "Fecha" column
-        $('.table').DataTable({
-            responsive: false,
-            order: [[sort_col, 'desc']], // Sort based on timestamp
-            columnDefs: [
+        var columnDefs = [
+                {
+                    targets: function (idx, data, node) {
+                        return $(node).text().trim().toLowerCase() === 'id';
+                    },
+                    type: 'num-id'
+                },
                 {
                     targets: function (idx, data, node) {
                         return $(node).text().trim().toLowerCase() === 'fecha';
@@ -87,7 +96,14 @@ document.addEventListener("turbolinks:load", function () {
                         return type === 'display' ? formatDateDisplay(data) : data;
                     }
                 }
-            ],
+            ];
+        if (window.location.pathname === '/users') {
+            columnDefs.push({ targets: 0, type: 'num-id' });
+        }
+        $('.table').DataTable({
+            responsive: false,
+            order: [[sort_col, 'desc']],
+            columnDefs: columnDefs,
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
             },
