@@ -62,22 +62,25 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  # Set host to be used by links generated in mailer templates (e.g. password reset links).
+  # --- Correo desactivado (evita errores si no hay SMTP) ---
+  # config.action_mailer.default_url_options = { host: ENV.fetch("MAILER_HOST", "example.com"), protocol: ENV["FORCE_SSL"] == "false" ? "http" : "https" }
+  # if ENV["SMTP_ADDRESS"].present?
+  #   smtp_port = ENV.fetch("SMTP_PORT", "587").to_i
+  #   config.action_mailer.delivery_method = :smtp
+  #   config.action_mailer.raise_delivery_errors = true
+  #   config.action_mailer.smtp_settings = {
+  #     address:              ENV.fetch("SMTP_ADDRESS"),
+  #     port:                  smtp_port,
+  #     domain:                ENV.fetch("SMTP_DOMAIN", ENV["MAILER_HOST"]),
+  #     user_name:             ENV["SMTP_USER_NAME"],
+  #     password:              ENV["SMTP_PASSWORD"],
+  #     authentication:        (ENV["SMTP_AUTHENTICATION"] || "plain").to_sym,
+  #     enable_starttls_auto:  smtp_port == 465 ? false : (ENV["SMTP_ENABLE_STARTTLS"] != "false"),
+  #     ssl:                   smtp_port == 465
+  #   }
+  # end
+  config.action_mailer.delivery_method = :test
   config.action_mailer.default_url_options = { host: ENV.fetch("MAILER_HOST", "example.com"), protocol: ENV["FORCE_SSL"] == "false" ? "http" : "https" }
-
-  if ENV["SMTP_ADDRESS"].present?
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.raise_delivery_errors = true
-    config.action_mailer.smtp_settings = {
-      address:              ENV.fetch("SMTP_ADDRESS"),
-      port:                  ENV.fetch("SMTP_PORT", "587").to_i,
-      domain:                ENV.fetch("SMTP_DOMAIN", ENV["MAILER_HOST"]),
-      user_name:             ENV["SMTP_USER_NAME"],
-      password:              ENV["SMTP_PASSWORD"],
-      authentication:        (ENV["SMTP_AUTHENTICATION"] || "plain").to_sym,
-      enable_starttls_auto:  ENV["SMTP_ENABLE_STARTTLS"] != "false"
-    }
-  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

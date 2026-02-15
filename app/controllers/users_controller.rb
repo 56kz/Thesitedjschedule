@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       @user.update(email: @user.email.downcase)
       default_password = ENV.fetch("DEFAULT_STUDENT_PASSWORD", "12345678")
       @student = Student.create(email: @user.email, password: default_password)
-      UserMailer.welcome_email(@user).deliver_later
+      # UserMailer.welcome_email(@user).deliver_later  # Correo desactivado
       redirect_to new_suscription_path, notice: "#{@user.name} ingresó al sistema"
     else
       render :new
@@ -86,16 +86,16 @@ class UsersController < ApplicationController
     end
   end
 
-  def send_reset_password_instructions
-    @user = User.find(params[:id])
-    @student = Student.find_by(email: @user.email)
-    unless @student
-      redirect_to users_path, alert: "No existe cuenta de estudiante para este usuario."
-      return
-    end
-    @student.send_reset_password_instructions
-    redirect_to users_path, notice: "Se enviaron las instrucciones al correo de #{@user.email}."
-  end
+  # def send_reset_password_instructions  # Correo desactivado
+  #   @user = User.find(params[:id])
+  #   @student = Student.find_by(email: @user.email)
+  #   unless @student
+  #     redirect_to users_path, alert: "No existe cuenta de estudiante para este usuario."
+  #     return
+  #   end
+  #   @student.send_reset_password_instructions
+  #   redirect_to users_path, notice: "Se enviaron las instrucciones al correo de #{@user.email}."
+  # end
 
   private
 

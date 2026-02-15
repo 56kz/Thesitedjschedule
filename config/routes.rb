@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     member do
       get :edit_password
       patch :update_password
-      post :send_reset_password_instructions
+      # post :send_reset_password_instructions  # Correo desactivado
     end
   end
 end

@@ -31,28 +31,27 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-
-  # Make template changes take effect immediately.
-  config.action_mailer.perform_caching = false
-
-  # Set localhost to be used by links generated in mailer templates.
+  # --- Correo desactivado (evita errores si no hay SMTP) ---
+  # config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.perform_caching = false
+  # config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  # if ENV["SMTP_ADDRESS"].present?
+  #   smtp_port = ENV.fetch("SMTP_PORT", "587").to_i
+  #   config.action_mailer.delivery_method = :smtp
+  #   config.action_mailer.raise_delivery_errors = true
+  #   config.action_mailer.smtp_settings = {
+  #     address:              ENV.fetch("SMTP_ADDRESS"),
+  #     port:                  smtp_port,
+  #     domain:                ENV.fetch("SMTP_DOMAIN", "localhost"),
+  #     user_name:             ENV["SMTP_USER_NAME"],
+  #     password:              ENV["SMTP_PASSWORD"],
+  #     authentication:        (ENV["SMTP_AUTHENTICATION"] || "plain").to_sym,
+  #     enable_starttls_auto:  smtp_port == 465 ? false : (ENV["SMTP_ENABLE_STARTTLS"] != "false"),
+  #     ssl:                   smtp_port == 465
+  #   }
+  # end
+  config.action_mailer.delivery_method = :test
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-
-  if ENV["SMTP_ADDRESS"].present?
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.raise_delivery_errors = true
-    config.action_mailer.smtp_settings = {
-      address:              ENV.fetch("SMTP_ADDRESS"),
-      port:                  ENV.fetch("SMTP_PORT", "587").to_i,
-      domain:                ENV.fetch("SMTP_DOMAIN", "localhost"),
-      user_name:             ENV["SMTP_USER_NAME"],
-      password:              ENV["SMTP_PASSWORD"],
-      authentication:        (ENV["SMTP_AUTHENTICATION"] || "plain").to_sym,
-      enable_starttls_auto:  ENV["SMTP_ENABLE_STARTTLS"] != "false"
-    }
-  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

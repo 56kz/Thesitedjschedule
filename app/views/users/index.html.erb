@@ -37,11 +37,6 @@
                     <%= link_to edit_password_user_path(u), class: "btn btn-outline-info", data: { toggle: "tooltip" }, title: "Cambiar contraseña" do %>
                       <i class="bi bi-key"></i>
                     <% end %>
-                    <span data-toggle="tooltip" title="Enviar instrucciones para cambiar contraseña">
-                      <%= button_to send_reset_password_instructions_user_path(u), method: :post, class: "btn btn-outline-secondary", form: { class: "d-inline" } do %>
-                        <i class="bi bi-envelope"></i>
-                      <% end %>
-                    </span>
                     <%= link_to u, method: :delete, data: { confirm: "¿Seguro deseas eliminar el usuario?", toggle: "tooltip" }, title: "Eliminar", class: "btn btn-outline-danger" do %>
                       <i class="bi bi-trash"></i>
                     <% end %>
