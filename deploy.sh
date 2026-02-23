@@ -29,7 +29,7 @@ rsync -avz --delete "${RSYNC_EXCLUDE[@]}" \
   "${SCRIPT_DIR}/" \
   "${DEPLOY_TARGET}:${DEPLOY_PATH}/"
 
-echo "==> Ejecutando docker compose en el VPS (con override de producción)"
-ssh "${DEPLOY_TARGET}" "cd ${DEPLOY_PATH} && docker compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache && docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d"
+echo "==> Ejecutando nerdctl compose en el VPS (con override de producción)"
+ssh "${DEPLOY_TARGET}" "cd ${DEPLOY_PATH} && nerdctl compose -f docker-compose.yml -f docker-compose.prod.yml build --no-cache && nerdctl compose -f docker-compose.yml -f docker-compose.prod.yml up -d"
 
-echo "==> Despliegue terminado. Comprueba: ssh ${DEPLOY_TARGET} 'cd ${DEPLOY_PATH} && docker compose -f docker-compose.yml -f docker-compose.prod.yml ps'"
+echo "==> Despliegue terminado. Comprueba: ssh ${DEPLOY_TARGET} 'cd ${DEPLOY_PATH} && nerdctl compose -f docker-compose.yml -f docker-compose.prod.yml ps'"
