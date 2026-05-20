@@ -1,93 +1,640 @@
-<div class="container-fluid py-3">
-  <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-calendar3 mr-2"></i>Reservas - Selección de horarios</h5>
-      <%= link_to root_path, class: "btn btn-outline-secondary btn-sm", data: { toggle: "tooltip" }, title: "Volver al inicio" do %>
-        <i class="bi bi-arrow-left"></i> Volver
-      <% end %>
-    </div>
-    <div class="card-body">
-    <div class="row">
-        <div id="loading"></div>
+<style>
+  body.schedules-index {
+    background: #111827 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Hide the <br> after navbar so sidebar is flush */
+  body.schedules-index > br { display: none; }
 
-        <div id="external-events" class="col-sm-10 col-md-4 col-lg-3 mx-auto text-center">
-            <p>
-                <strong>Selección de Horarios</strong>
-            </p>
+  /* ── Full-page layout ─────────────────────────────── */
+  .sched-wrap {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
 
-            <div class="input-group col-md-12 col-sm-12">
+  /* ── Left sidebar ─────────────────────────────────── */
+  .sched-sidebar {
+    width: 284px;
+    min-width: 284px;
+    background: #0d1b2a;
+    border-right: 1px solid #1f2937;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width .25s ease, min-width .25s ease;
+  }
+  .sched-sidebar.collapsed { width: 0; min-width: 0; }
 
-                <div class="input-group-prepend">
-                    <div class="input-group-text"><span class="input-group-addon" id="date-picker">Fecha</span></div>
-                </div>
+  .sched-sidebar-inner {
+    min-width: 284px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
 
-                <input type='text' id="date-pick" class='datepicker-here form-control' data-language='es'
-                    data-date-format='yyyy-mm-dd' aria-describedby="date-picker" autocomplete="off"
-                    readonly="readonly" />
-                <input type="hidden" id="roow_id" value=<%= @room_id %>>
-                <input type="hidden" id="suscription_id" value=<%= @active_suscription.id %>>
-                <input type="hidden" id="user_rol" value=<%= @user_conected.rol %>>
-            </div><br>
+  /* Static top section */
+  .sb-top { flex-shrink: 0; padding: 1.25rem 1rem 0; }
 
-            <div class="input-group col-md-12 col-sm-12">
+  /* Scrollable slots section */
+  .sb-slots-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 1rem .5rem;
+  }
+  .sb-slots-scroll::-webkit-scrollbar { width: 3px; }
+  .sb-slots-scroll::-webkit-scrollbar-track { background: transparent; }
+  .sb-slots-scroll::-webkit-scrollbar-thumb { background: #1f3a50; border-radius: 2px; }
 
-                <div class="input-group-prepend">
-                    <div class="input-group-text"><span class="input-group-addon" id="time-picker-label">Hora</span>
-                    </div>
-                </div>
+  /* Pinned confirm footer */
+  .sb-confirm-footer { flex-shrink: 0; padding: .75rem 1rem 1rem; }
 
-                <input type='text' id="time-picker" class='form-control' data-language='es'
-                    aria-describedby="time-picker" autocomplete="off" readonly="readonly" />
-            </div><br>
+  /* ── Toggle strip ─────────────────────────────────── */
+  .sched-toggle-strip {
+    width: 18px;
+    flex-shrink: 0;
+    background: #0d1b2a;
+    border-right: 1px solid #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #4b5563;
+    font-size: .95rem;
+    transition: background .2s, color .2s;
+    user-select: none;
+  }
+  .sched-toggle-strip:hover { background: #1c2e40; color: #9ca3af; }
 
-            <div class="btn-container text-center">
-                <div class="btn btn-primary hour-btn">6:00 - 08:00 am</div>
-                <div class="btn btn-primary hour-btn">8:00 - 10:00 am</div>
-                <div class="btn btn-primary hour-btn">10:00 - 12:00 pm</div>
-                <div class="btn btn-primary hour-btn">12:00 - 02:00 pm</div>
-                <div class="btn btn-primary hour-btn">2:00 - 4:00 pm</div>
-                <div class="btn btn-primary hour-btn">4:00 - 6:00 pm</div>
-                <div class="btn btn-primary hour-btn">6:00 - 8:00 pm</div>
-                <div class="btn btn-primary hour-btn">8:00 - 10:00 pm</div>
+  /* ── Calendar area ────────────────────────────────── */
+  .sched-calendar-area {
+    flex: 1;
+    background: #111827;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: .75rem 1rem;
+  }
 
-            </div>
+  .sched-cal-topbar {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .5rem;
+    flex-wrap: wrap;
+  }
 
-            <p>
-                <strong><br>Cambiar Vista Calendario</strong>
-            </p>
-            <div class="btn-group " role="group">
-                <div class="btn btn-success" id="FullCalendarMonth"><strong>Mes</strong></div>
-                <div class="btn btn-success" id="FullCalendarWeek"><strong>Semana</strong></div>
-                <div class="btn btn-success" id="FullCalendarDay"><strong>Dia</strong></div>
-            </div>
+  .sched-legend {
+    display: flex;
+    gap: 1rem;
+    font-size: .78rem;
+    color: #6b7280;
+    align-items: center;
+  }
+  .sched-legend span { display: flex; align-items: center; gap: .35rem; }
+  .sched-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
 
+  .sched-view-btns { display: flex; gap: .35rem; }
+  .sched-view-btn {
+    padding: .28rem .75rem;
+    border-radius: 6px;
+    border: 1px solid #1f2937;
+    background: #1c2e40;
+    color: #6b7280;
+    font-size: .75rem;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .sched-view-btn:hover, .sched-view-btn.active { background: #374151; color: #e5e7eb; border-color: #374151; }
 
+  /* ── Sidebar inner elements ───────────────────────── */
+  .sb-back {
+    display: flex; align-items: center; gap: .4rem;
+    color: #6b7280; text-decoration: none; font-size: .8rem;
+    margin-bottom: 1.25rem;
+  }
+  .sb-back:hover { color: #e5e7eb; }
+
+  .sb-label {
+    font-size: .6rem; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; color: #374151; margin-bottom: .7rem;
+  }
+
+  .sb-field { margin-bottom: .85rem; }
+  .sb-field > label {
+    display: block; font-size: .7rem; font-weight: 600;
+    color: #4b5563; margin-bottom: .3rem;
+  }
+
+  .sb-box {
+    display: flex; align-items: center; gap: .5rem;
+    background: #1c2e40; border: 1px solid #1f3a50;
+    border-radius: 10px; padding: .52rem .8rem;
+    font-size: .85rem; color: #e5e7eb;
+  }
+  .sb-box i { color: #4b5563; font-size: .9rem; flex-shrink: 0; }
+  .sb-box input, .sb-box select {
+    background: transparent; border: none; color: #e5e7eb;
+    font-size: .85rem; width: 100%; outline: none;
+  }
+  .sb-box input::placeholder { color: #374151; }
+  .sb-box select option { background: #1c2e40; }
+
+  #date-pick {
+    background: transparent !important; border: none !important;
+    color: #e5e7eb !important; font-size: .85rem !important;
+    width: 100%; outline: none; cursor: pointer;
+  }
+
+  /* Duration toggle */
+  .sb-dur-group { display: flex; gap: .4rem; }
+  .sb-dur-btn {
+    flex: 1; padding: .48rem .5rem; border-radius: 10px;
+    border: 1px solid #1f3a50; background: #1c2e40;
+    color: #4b5563; font-size: .8rem; font-weight: 600;
+    cursor: pointer; text-align: center; transition: all .18s;
+  }
+  .sb-dur-btn.active {
+    background: rgba(16,185,129,.12); border-color: #10b981; color: #10b981;
+  }
+
+  /* Block mode (admin) */
+  .sb-dur-btn.block-btn { border-color: #4b1a1a; color: #6b2a2a; }
+  .sb-dur-btn.block-btn.active { background: rgba(239,68,68,.12); border-color: #ef4444; color: #ef4444; }
+
+  /* Divider */
+  .sb-divider { border: none; border-top: 1px solid #1a2a3a; margin: .9rem 0; }
+
+  /* Hour slots */
+  .sb-slot {
+    display: flex; align-items: center; gap: .55rem;
+    padding: .58rem .8rem; border-radius: 10px;
+    border: 1px solid #1f3a50; background: #1c2e40;
+    color: #6b7280; font-size: .82rem; cursor: pointer;
+    margin-bottom: .38rem; transition: all .15s;
+    white-space: nowrap;
+  }
+  .sb-slot i { font-size: .78rem; flex-shrink: 0; }
+  .sb-slot:hover { border-color: #2a4a60; color: #d1d5db; }
+  .sb-slot.active {
+    background: rgba(16,185,129,.13); border-color: #10b981;
+    color: #10b981; font-weight: 600;
+  }
+  .sb-slot.active i::before { content: "\F26B"; } /* bi-check-circle-fill */
+
+  /* Confirm button */
+  .sb-confirm {
+    display: flex; align-items: center; justify-content: center; gap: .5rem;
+    width: 100%; padding: .8rem; border-radius: 12px;
+    background: #10b981; border: none; color: #fff;
+    font-size: .9rem; font-weight: 700; cursor: pointer;
+    transition: background .18s;
+  }
+  .sb-confirm:hover { background: #059669; }
+  .sb-confirm:disabled { background: #1f2937; color: #374151; cursor: default; }
+
+  .sb-summary {
+    text-align: center; font-size: .72rem; color: #374151;
+    margin-top: .45rem; min-height: 1em;
+  }
+
+  /* ── Theme toggle button ───────────────────────────── */
+  .sched-theme-btn {
+    background: #1c2e40;
+    border: 1px solid #1f3a50;
+    border-radius: 8px;
+    color: #6b7280;
+    padding: .28rem .6rem;
+    font-size: .9rem;
+    cursor: pointer;
+    transition: all .15s;
+    line-height: 1;
+  }
+  .sched-theme-btn:hover { color: #e5e7eb; }
+
+  /* ── Light theme ───────────────────────────────────── */
+  body.sched-light.schedules-index { background: #f0ede8 !important; }
+
+  body.sched-light .sched-sidebar { background: #fff; border-right-color: #e5e7eb; }
+  body.sched-light .sched-toggle-strip { background: #fff; border-right-color: #e5e7eb; color: #d1d5db; }
+  body.sched-light .sched-toggle-strip:hover { background: #f9fafb; color: #9ca3af; }
+  body.sched-light .sched-calendar-area { background: #f0ede8; }
+
+  body.sched-light .sb-back { color: #9ca3af; }
+  body.sched-light .sb-back:hover { color: #111827; }
+  body.sched-light .sb-label { color: #c4c9d4; }
+  body.sched-light .sb-field > label { color: #6b7280; }
+  body.sched-light .sb-box { background: #f9fafb; border-color: #e5e7eb; }
+  body.sched-light .sb-box i { color: #9ca3af; }
+  body.sched-light .sb-box input,
+  body.sched-light .sb-box select { color: #111827; }
+  body.sched-light .sb-box select option { background: #fff; }
+  body.sched-light #date-pick { color: #111827 !important; }
+  body.sched-light .sb-dur-btn { background: #f9fafb; border-color: #e5e7eb; color: #374151; }
+  body.sched-light .sb-dur-btn.active { background: rgba(16,185,129,.1); border-color: #10b981; color: #059669; }
+  body.sched-light .sb-divider { border-top-color: #e5e7eb; }
+  body.sched-light .sb-slot { background: #f9fafb; border-color: #e5e7eb; color: #374151; }
+  body.sched-light .sb-slot:hover { border-color: #d1d5db; color: #111827; }
+  body.sched-light .sb-slot.active { background: rgba(16,185,129,.1); border-color: #10b981; color: #059669; }
+  body.sched-light .sb-confirm:disabled { background: #e5e7eb; color: #9ca3af; }
+  body.sched-light .sb-summary { color: #9ca3af; }
+  body.sched-light .sb-slots-scroll::-webkit-scrollbar-thumb { background: #d1d5db; }
+
+  body.sched-light .sched-legend { color: #9ca3af; }
+  body.sched-light .sched-view-btn { background: #fff; border-color: #e5e7eb; color: #374151; }
+  body.sched-light .sched-view-btn:hover,
+  body.sched-light .sched-view-btn.active { background: #1f2937; color: #fff; border-color: #1f2937; }
+  body.sched-light .sched-theme-btn { background: #fff; border-color: #e5e7eb; color: #374151; }
+
+  /* FullCalendar light overrides */
+  body.sched-light .fc-view-container { background: #fff; }
+  body.sched-light .fc th { color: #9ca3af !important; border-color: #e5e7eb !important; background: #f9fafb !important; }
+  body.sched-light .fc td { border-color: #e5e7eb !important; }
+  body.sched-light .fc-today { background: rgba(16,185,129,.05) !important; }
+  body.sched-light .fc-day-header.fc-today span { color: #059669 !important; }
+  body.sched-light .fc-time-grid .fc-slats td { border-color: #e5e7eb !important; }
+  body.sched-light .fc-axis { color: #9ca3af !important; }
+  body.sched-light .fc-toolbar h2 { color: #111827 !important; }
+  body.sched-light .fc-button { background: #fff !important; border-color: #e5e7eb !important; color: #374151 !important; }
+  body.sched-light .fc-button:hover { background: #f3f4f6 !important; color: #111827 !important; }
+  body.sched-light .fc-button.fc-button-active,
+  body.sched-light .fc-button-primary:not(:disabled).fc-button-active { background: #1f2937 !important; color: #fff !important; }
+  body.sched-light .fc-widget-header,
+  body.sched-light .fc-widget-content { border-color: #e5e7eb !important; }
+  body.sched-light .fc-unthemed .fc-divider { background: #e5e7eb; border-color: #e5e7eb; }
+  body.sched-light .fc-time-grid .fc-now-indicator-line { border-color: #059669; }
+
+  /* ── FullCalendar dark overrides ──────────────────── */
+  .fc-view-container { background: #111827; }
+  .fc th { color: #4b5563 !important; border-color: #1f2937 !important; background: #0d1b2a !important; }
+  .fc td { border-color: #1a2a3a !important; }
+  .fc-today { background: rgba(255,255,255,.04) !important; }
+  .fc-day-header.fc-today span { color: #10b981 !important; font-weight: 700; }
+  /* Taller rows so 1-hour events can show 3 lines of text */
+  .fc-time-grid .fc-slats tr { height: 2em; }
+  .fc-time-grid .fc-slats td { border-color: #1a2a3a !important; }
+  .fc-axis { color: #374151 !important; font-size: .72rem !important; }
+  /* Compact event text so content fits in short blocks */
+  .fc-time-grid-event .fc-content { font-size: .72rem !important; line-height: 1.3 !important; }
+  .fc-time-grid-event .fc-time  { font-size: .7rem !important; opacity: .85; }
+  .fc-toolbar h2 { color: #f9fafb !important; font-size: 1rem !important; }
+  .fc-button-group .fc-button,
+  .fc-button { background: #1c2e40 !important; border-color: #1f3a50 !important; color: #6b7280 !important; font-size: .75rem !important; }
+  .fc-button:hover { background: #2a3a50 !important; color: #e5e7eb !important; }
+  .fc-button.fc-button-active,
+  .fc-button-primary:not(:disabled).fc-button-active { background: #374151 !important; color: #fff !important; }
+  .fc-widget-header, .fc-widget-content { border-color: #1a2a3a !important; }
+  .fc-unthemed .fc-divider { background: #1a2a3a; border-color: #1a2a3a; }
+  .fc-time-grid .fc-now-indicator-line { border-color: #10b981; }
+  .fc-addEventButton-button { display: none !important; }
+
+  /* ── Mobile overlay sidebar ───────────────────────── */
+  @media (max-width: 768px) {
+    /* Sidebar floats over the calendar instead of pushing it */
+    .sched-wrap { position: relative; }
+
+    .sched-sidebar {
+      position: absolute;
+      left: 0; top: 0;
+      height: 100%;
+      z-index: 100;
+      width: 284px !important;
+      min-width: 284px !important;
+      transform: translateX(0);
+      transition: transform .25s ease;
+      box-shadow: 4px 0 24px rgba(0,0,0,.5);
+    }
+    .sched-sidebar.collapsed {
+      /* slide sidebar + toggle strip (18px) fully off screen */
+      transform: translateX(-302px);
+      width: 284px !important;
+      min-width: 284px !important;
+    }
+
+    /* Toggle strip becomes an absolute tab anchored to the sidebar's right edge */
+    .sched-toggle-strip {
+      position: absolute;
+      left: 284px;
+      top: 0;
+      height: 100%;
+      z-index: 101;
+      border-radius: 0 6px 6px 0;
+      border-right: none;
+      width: 18px;
+      transition: left .25s ease;
+    }
+    /* When sidebar collapses, strip moves to left edge so user can reopen */
+    .sched-sidebar.collapsed + .sched-toggle-strip {
+      left: 0;
+    }
+
+    /* Calendar always fills full width — sidebar is out of flex flow */
+    .sched-calendar-area { width: 100%; }
+  }
+</style>
+
+<div class="sched-wrap">
+
+  <%# ── Left sidebar ── %>
+  <div class="sched-sidebar" id="sched-sidebar">
+    <div class="sched-sidebar-inner">
+
+      <%# Static top: fields + horarios label %>
+      <div class="sb-top">
+
+        <%= link_to root_path, class: "sb-back" do %>
+          <i class="bi bi-arrow-left"></i> Volver al inicio
+        <% end %>
+
+        <%# — SELECCIÓN — %>
+        <div class="sb-label">Selección</div>
+
+        <div class="sb-field">
+          <label>Cabina</label>
+          <div class="sb-box">
+            <i class="bi bi-broadcast text-success"></i>
+            <span><%= @room&.name || "Cabina #{@room_id}" %></span>
+          </div>
         </div>
-        <br>
 
-        <div class="col-sm-8 col-md-8 mx-auto"><br>
-            <div id='calendar'></div>
+        <% if @user_conected.rol == "estudiante" %>
+          <div class="sb-field">
+            <label>Suscripción</label>
+            <div class="sb-box">
+              <i class="bi bi-credit-card"></i>
+              <select id="suscription_id">
+                <% @active_suscriptions.each do |s| %>
+                  <option value="<%= s.id %>"><%= s.name %> — <%= s.hours_remaining %>h</option>
+                <% end %>
+              </select>
+            </div>
+          </div>
+        <% else %>
+          <input type="hidden" id="suscription_id" value="">
+        <% end %>
+
+        <div class="sb-field">
+          <label>Fecha</label>
+          <div class="sb-box">
+            <i class="bi bi-calendar3"></i>
+            <input type="text" id="date-pick" class="datepicker-here"
+                   data-language="es" data-date-format="yyyy-mm-dd"
+                   autocomplete="off" readonly="readonly" placeholder="Seleccionar...">
+          </div>
         </div>
-    </div>
+
+        <div class="sb-field">
+          <label>Duración</label>
+          <div class="sb-dur-group">
+            <button type="button" class="sb-dur-btn duration-btn active" data-duration="2">2 horas</button>
+            <button type="button" class="sb-dur-btn duration-btn" data-duration="1">1 hora</button>
+          </div>
+          <input type="hidden" id="duration_hours" value="2">
+          <input type="hidden" id="selected_hour" value="">
+        </div>
+
+        <% if @user_conected.rol.in?(%w[instructor admin]) %>
+          <div class="sb-field">
+            <label>Modo</label>
+            <div class="sb-dur-group">
+              <button type="button" class="sb-dur-btn active" id="btn-mode-reserve">Reservar</button>
+              <button type="button" class="sb-dur-btn block-btn" id="btn-mode-block">Bloquear</button>
+            </div>
+            <input type="hidden" id="calendar_mode" value="reserve">
+          </div>
+        <% end %>
+
+        <hr class="sb-divider">
+
+        <%# — HORARIOS — %>
+        <div class="sb-label">Horarios libres</div>
+
+      </div><%# /sb-top %>
+
+      <%# Scrollable hour slots — stays scrollable while confirm button stays pinned %>
+      <div class="sb-slots-scroll">
+
+        <div id="hour-btns-2h">
+          <div class="sb-slot hour-btn" data-hour="06"><i class="bi bi-clock"></i>6:00 – 8:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="08"><i class="bi bi-clock"></i>8:00 – 10:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="10"><i class="bi bi-clock"></i>10:00 – 12:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="12"><i class="bi bi-clock"></i>12:00 – 2:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="14"><i class="bi bi-clock"></i>2:00 – 4:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="16"><i class="bi bi-clock"></i>4:00 – 6:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="18"><i class="bi bi-clock"></i>6:00 – 8:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="20"><i class="bi bi-clock"></i>8:00 – 10:00 pm</div>
+        </div>
+
+        <div id="hour-btns-1h" style="display:none;">
+          <div class="sb-slot hour-btn" data-hour="06"><i class="bi bi-clock"></i>6:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="07"><i class="bi bi-clock"></i>7:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="08"><i class="bi bi-clock"></i>8:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="09"><i class="bi bi-clock"></i>9:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="10"><i class="bi bi-clock"></i>10:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="11"><i class="bi bi-clock"></i>11:00 am</div>
+          <div class="sb-slot hour-btn" data-hour="12"><i class="bi bi-clock"></i>12:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="13"><i class="bi bi-clock"></i>1:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="14"><i class="bi bi-clock"></i>2:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="15"><i class="bi bi-clock"></i>3:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="16"><i class="bi bi-clock"></i>4:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="17"><i class="bi bi-clock"></i>5:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="18"><i class="bi bi-clock"></i>6:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="19"><i class="bi bi-clock"></i>7:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="20"><i class="bi bi-clock"></i>8:00 pm</div>
+          <div class="sb-slot hour-btn" data-hour="21"><i class="bi bi-clock"></i>9:00 pm</div>
+        </div>
+
+      </div><%# /sb-slots-scroll %>
+
+      <%# Pinned confirm footer — always visible regardless of slot count %>
+      <div class="sb-confirm-footer">
+        <button id="btn-confirmar" class="sb-confirm" disabled>
+          <i class="bi bi-calendar-check"></i> Confirmar reserva
+        </button>
+        <div class="sb-summary" id="sb-summary"></div>
+      </div>
+
     </div>
   </div>
+
+  <%# ── Collapse toggle strip ── %>
+  <div class="sched-toggle-strip" id="sched-toggle" title="Minimizar / expandir panel">
+    <i class="bi bi-chevron-left" id="sched-toggle-icon"></i>
+  </div>
+
+  <%# ── Calendar area ── %>
+  <div class="sched-calendar-area">
+
+    <div class="sched-cal-topbar">
+      <div class="sched-legend">
+        <span><span class="sched-dot" style="background:#10b981;"></span>Mi reserva</span>
+        <span><span class="sched-dot" style="background:#708090;"></span>Ocupado</span>
+        <span><span class="sched-dot" style="background:#b22222;"></span>Bloqueado</span>
+      </div>
+      <div class="ml-auto d-flex align-items-center" style="gap:.5rem;">
+        <button id="sched-theme-btn" class="sched-theme-btn" title="Cambiar tema">
+          <i class="bi bi-moon"></i>
+        </button>
+        <div class="sched-view-btns">
+          <button class="sched-view-btn active" id="vbtn-week">Semana</button>
+          <button class="sched-view-btn" id="vbtn-day">Día</button>
+          <button class="sched-view-btn" id="vbtn-month">Mes</button>
+        </div>
+      </div>
+    </div>
+
+    <%# Hidden inputs consumed by application.js %>
+    <input type="hidden" id="roow_id"              value="<%= @room_id %>">
+    <input type="hidden" id="user_rol"             value="<%= @user_conected.rol %>">
+    <input type="hidden" id="user_suscription_ids" value="<%= @active_suscriptions.map(&:id).join(',') %>">
+    <input type="hidden" id="time-picker"          value="">
+
+    <%# Legacy view-toggle targets (wired in application.js) %>
+    <div id="FullCalendarMonth" style="display:none;"></div>
+    <div id="FullCalendarWeek"  style="display:none;"></div>
+    <div id="FullCalendarDay"   style="display:none;"></div>
+
+    <div id="calendar" style="flex:1;"></div>
+  </div>
+
 </div>
 
+
 <script>
+$(document).ready(function () {
 
-    $(document).ready(function () {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
+  /* ── Theme toggle ── */
+  if (localStorage.getItem('sched-theme') === 'light') {
+    document.body.classList.add('sched-light');
+    $('#sched-theme-btn i').removeClass('bi-moon').addClass('bi-sun');
+  }
+  $('#sched-theme-btn').click(function () {
+    var isLight = document.body.classList.toggle('sched-light');
+    localStorage.setItem('sched-theme', isLight ? 'light' : 'dark');
+    $('#sched-theme-btn i').toggleClass('bi-sun', isLight).toggleClass('bi-moon', !isLight);
+  });
 
-        if (urlParams.has('id')) {
-            const suscription_id = urlParams.get('id')
-            var rol = $("#user_rol").val()
+  /* ── Admin: URL param suscription_id for instructor booking on behalf ── */
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('id')) {
+    var rol = $('#user_rol').val();
+    if (rol === 'admin' || rol === 'instructor') {
+      $('#suscription_id').val(urlParams.get('id'));
+    }
+  }
 
-            if (rol == "admin" || rol == "instructor") {
-                $("#suscription_id").val(suscription_id)
-            }
-        }
+  /* ── Duration toggle ── */
+  $('.duration-btn').click(function () {
+    $('.duration-btn').removeClass('active');
+    $(this).addClass('active');
+    var dur = $(this).data('duration');
+    $('#duration_hours').val(dur);
+    $('#selected_hour').val('');
+    $('#time-picker').val('');
+    $('.hour-btn').removeClass('active');
+    updateSummary();
+    if (dur == 1) { $('#hour-btns-2h').hide(); $('#hour-btns-1h').show(); }
+    else          { $('#hour-btns-1h').hide(); $('#hour-btns-2h').show(); }
+  });
 
-    })
+  /* ── Block mode (admin) ── */
+  $('#btn-mode-reserve').click(function () {
+    $('#calendar_mode').val('reserve');
+    $(this).addClass('active');
+    $('#btn-mode-block').removeClass('active');
+  });
+  $('#btn-mode-block').click(function () {
+    $('#calendar_mode').val('block');
+    $(this).addClass('active');
+    $('#btn-mode-reserve').removeClass('active');
+  });
 
+  /* ── Summary text ── */
+  var roomName = '<%= @room&.name || "Cabina #{@room_id}" %>';
+
+  function updateSummary() {
+    var d = $('#date-pick').val();
+    var h = $('#selected_hour').val();
+    var dur = $('#duration_hours').val() || '2';
+    if (!d || !h) {
+      $('#sb-summary').text('');
+      $('#btn-confirmar').prop('disabled', true);
+      return;
+    }
+    var hInt = parseInt(h, 10);
+    var endH  = hInt + parseInt(dur, 10);
+    var startLabel = hInt + ':00 ' + (hInt < 12 ? 'am' : 'pm');
+    var endLabel   = endH  + ':00 ' + (endH  < 12 ? 'am' : 'pm');
+    var parts = d.split('-');
+    var dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    var dias = ['dom','lun','mar','mié','jue','vie','sáb'];
+    var label = dias[dateObj.getDay()] + ' ' + dateObj.getDate() + '/' + (dateObj.getMonth() + 1);
+    $('#sb-summary').text(label + ' · ' + startLabel + ' – ' + endLabel + ' · ' + roomName);
+    $('#btn-confirmar').prop('disabled', false);
+  }
+
+  /* Update summary when date changes */
+  $('#date-pick').on('change', updateSummary);
+  /* AirDatepicker v2 fires onSelect before input change event */
+  $(document).on('click', '#date-pick', function() {
+    setTimeout(updateSummary, 100);
+  });
+
+  /* ── Confirmar reserva → trigger hidden FC button ── */
+  $('#btn-confirmar').click(function () {
+    $('.fc-addEventButton-button').trigger('click');
+  });
+
+  /* ── View toggle buttons ── */
+  $('#vbtn-week').click(function () {
+    $('.sched-view-btn').removeClass('active'); $(this).addClass('active');
+    $('#FullCalendarWeek').trigger('click');
+  });
+  $('#vbtn-day').click(function () {
+    $('.sched-view-btn').removeClass('active'); $(this).addClass('active');
+    $('#FullCalendarDay').trigger('click');
+  });
+  $('#vbtn-month').click(function () {
+    $('.sched-view-btn').removeClass('active'); $(this).addClass('active');
+    $('#FullCalendarMonth').trigger('click');
+  });
+
+  /* ── Sidebar collapse ── */
+  var collapsed = false;
+
+  /* On mobile, start collapsed so the calendar is visible immediately */
+  if (window.innerWidth <= 768) {
+    collapsed = true;
+    $('#sched-sidebar').addClass('collapsed');
+    $('#sched-toggle-icon').removeClass('bi-chevron-left').addClass('bi-chevron-right');
+  }
+
+  $('#sched-toggle').click(function () {
+    collapsed = !collapsed;
+    if (collapsed) {
+      $('#sched-sidebar').addClass('collapsed');
+      $('#sched-toggle-icon').removeClass('bi-chevron-left').addClass('bi-chevron-right');
+    } else {
+      $('#sched-sidebar').removeClass('collapsed');
+      $('#sched-toggle-icon').removeClass('bi-chevron-right').addClass('bi-chevron-left');
+    }
+    /* Let FC recalculate its width */
+    setTimeout(function () { window.dispatchEvent(new Event('resize')); }, 280);
+  });
+
+  /* ── Hour btn: also update summary ── */
+  $(document).on('click', '.hour-btn', function () {
+    setTimeout(updateSummary, 50);
+  });
+
+});
 </script>

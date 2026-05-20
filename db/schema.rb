@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_19_100002) do
+  create_table "blocked_slots", force: :cascade do |t|
+    t.bigint  "room_id",        null: false
+    t.integer "start_hour",     null: false
+    t.integer "duration_hours", default: 2, null: false
+    t.date    "block_date",     null: false
+    t.bigint  "user_id",        null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["room_id", "block_date", "start_hour"], name: "index_blocked_slots_on_room_block_hour", unique: true
+    t.index ["room_id"], name: "index_blocked_slots_on_room_id"
+    t.index ["user_id"], name: "index_blocked_slots_on_user_id"
+  end
+
   create_table "reservations", force: :cascade do |t|
     t.bigint "schedule_id"
     t.bigint "suscription_id"
@@ -19,6 +32,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
     t.integer "start_hour"
     t.date "reserve_date"
     t.string "room"
+    t.integer "duration_hours", default: 2, null: false
     t.index ["schedule_id"], name: "index_reservations_on_schedule_id"
     t.index ["suscription_id"], name: "index_reservations_on_suscription_id"
   end
@@ -60,6 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "invoice_number"
+    t.date "expires_at"
     t.index ["user_id"], name: "index_suscriptions_on_user_id"
   end
 
@@ -72,6 +87,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_29_023202) do
     t.datetime "updated_at", precision: nil, null: false
   end
 
+  add_foreign_key "blocked_slots", "rooms"
+  add_foreign_key "blocked_slots", "users"
   add_foreign_key "reservations", "schedules"
   add_foreign_key "reservations", "suscriptions"
   add_foreign_key "schedules", "rooms"

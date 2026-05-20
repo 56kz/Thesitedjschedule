@@ -1,34 +1,104 @@
-<div class="container-fluid py-3">
-  <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-people mr-2"></i>Usuarios</h5>
-      <div class="btn-group">
-        <%= link_to new_user_path, class: "btn btn-primary btn-sm", data: { toggle: "tooltip" }, title: "Crear usuario" do %>
-          <i class="bi bi-plus-lg"></i> Crear usuario
+<style>
+  body.users-index { background: #f0ede8 !important; }
+
+  .admin-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .admin-card-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .admin-card-title { font-size: 1rem; font-weight: 700; color: #111827; margin: 0; }
+
+  /* Override DataTables + Bootstrap table styles */
+  table.dataTable.admin-table,
+  table.dataTable.admin-table.no-footer { border-bottom: none !important; }
+
+  table.dataTable.admin-table thead th,
+  table.dataTable.admin-table thead td {
+    font-size: .65rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+    color: #9ca3af !important;
+    border-top: none !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+    padding: 1rem 1.5rem !important;
+    background: #fff !important;
+  }
+
+  table.dataTable.admin-table tbody tr.odd,
+  table.dataTable.admin-table tbody tr.even,
+  table.dataTable.admin-table tbody tr { background-color: #fff !important; }
+
+  table.dataTable.admin-table tbody td {
+    padding: 1.1rem 1.5rem !important;
+    border-top: 1px solid #f9fafb !important;
+    border-left: none !important;
+    border-right: none !important;
+    vertical-align: middle !important;
+    font-size: .88rem !important;
+    color: #374151 !important;
+  }
+
+  table.dataTable.admin-table tbody tr:last-child td { border-bottom: none !important; }
+
+  .badge-rol {
+    background: #f3f4f6; color: #374151;
+    border-radius: 6px; padding: .2rem .55rem;
+    font-size: .72rem; font-weight: 600;
+  }
+  .badge-admin { background: #1f2937; color: #fff; }
+  .badge-instructor { background: #dbeafe; color: #1d4ed8; }
+</style>
+
+<div class="container-fluid py-4" style="max-width: 1100px; padding-bottom: 80px;">
+  <div class="admin-card">
+    <div class="admin-card-header">
+      <div class="d-flex align-items-center">
+        <%= link_to root_path, class: "btn btn-sm btn-light mr-3", style: "border-radius:8px;" do %>
+          <i class="bi bi-arrow-left"></i>
         <% end %>
+        <h5 class="admin-card-title">
+          <i class="bi bi-people mr-2 text-primary"></i>Usuarios
+        </h5>
       </div>
+      <%= link_to new_user_path, class: "btn btn-sm btn-primary", style: "border-radius:8px;" do %>
+        <i class="bi bi-plus-lg"></i> Crear usuario
+      <% end %>
     </div>
-    <div class="card-body table-card-body">
+
+    <div class="p-3">
       <div class="table-responsive">
-        <table class="table table-hover table-striped table-bordered mb-0 text-center">
-          <thead class="thead-light">
+        <table class="table admin-table mb-0">
+          <thead>
             <tr>
-              <th>Id</th>
+              <th>ID</th>
               <th>Nombre</th>
               <th>Teléfono</th>
               <th>Email</th>
               <th>Rol</th>
-              <th class="text-nowrap">Opciones</th>
+              <th>Opciones</th>
             </tr>
           </thead>
           <tbody>
             <% @users.each do |u| %>
               <tr>
                 <td data-order="<%= u.id.to_i %>"><%= u.id %></td>
-                <td><%= u.name %></td>
+                <td><strong><%= u.name %></strong></td>
                 <td><%= u.phone %></td>
-                <td><%= u.email %></td>
-                <td><%= u.rol %></td>
+                <td style="color:#6b7280;"><%= u.email %></td>
+                <td>
+                  <span class="badge-rol <%= 'badge-admin' if u.rol == 'admin' %><%= 'badge-instructor' if u.rol == 'instructor' %>">
+                    <%= u.rol %>
+                  </span>
+                </td>
                 <td>
                   <div class="btn-group btn-group-sm" role="group">
                     <%= link_to edit_user_path(u), class: "btn btn-outline-success", data: { toggle: "tooltip" }, title: "Editar" do %>
@@ -50,3 +120,7 @@
     </div>
   </div>
 </div>
+
+<footer class="fixed-bottom py-2 bg-dark text-center">
+  <span class="text-muted small">Powered by <a href="https://56kz.github.io/#contact" target="_blank" class="text-muted">Verzion56</a></span>
+</footer>

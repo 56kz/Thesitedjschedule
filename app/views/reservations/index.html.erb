@@ -1,38 +1,142 @@
-<div class="container-fluid py-3">
-  <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-calendar-check mr-2"></i>Reservas</h5>
-      <div class="btn-group">
-        <%= link_to new_reservation_path, class: "btn btn-primary btn-sm", data: { toggle: "tooltip" }, title: "Crear reserva" do %>
+<style>
+  .res-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+    overflow: hidden;
+  }
+  .res-header {
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .res-title { font-size: 1rem; font-weight: 700; color: #111827; margin: 0; }
+
+  /* Tabla */
+  .res-table th {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    border-top: none;
+    border-bottom: 1px solid #f3f4f6 !important;
+    padding: 1rem 1.5rem;
+    background: #fff;
+  }
+  .res-table td {
+    padding: 1.1rem 1.5rem;
+    border-top: 1px solid #f9fafb;
+    vertical-align: middle;
+    font-size: .88rem;
+    color: #374151;
+  }
+  .res-table tr:last-child td { border-bottom: none; }
+  .res-table tr.past td { color: #9ca3af; }
+
+  .badge-sala {
+    background: #f3f4f6; color: #374151;
+    border-radius: 6px; padding: .2rem .55rem;
+    font-size: .72rem; font-weight: 600;
+  }
+  .badge-suscrip {
+    background: #1f2937; color: #fff;
+    border-radius: 6px; padding: .2rem .55rem;
+    font-size: .72rem; font-weight: 600;
+  }
+  .badge-pasada {
+    background: #f3f4f6; color: #9ca3af;
+    border-radius: 6px; padding: .15rem .5rem;
+    font-size: .65rem;
+  }
+  .badge-futura {
+    background: #dcfce7; color: #16a34a;
+    border-radius: 6px; padding: .15rem .5rem;
+    font-size: .65rem; font-weight: 600;
+  }
+  .hour-cell { font-weight: 600; color: #111827; }
+</style>
+
+<div class="container-fluid py-4" style="max-width: 1100px; padding-bottom: 80px;">
+  <div class="res-card">
+    <div class="res-header">
+      <div class="d-flex align-items-center">
+        <%= link_to root_path, class: "btn btn-sm btn-light mr-3", style: "border-radius:8px;" do %>
+          <i class="bi bi-arrow-left"></i>
+        <% end %>
+        <h5 class="res-title">
+          <i class="bi bi-calendar-check mr-2 text-success"></i>
+          <%= @user_conected&.rol == "estudiante" ? "Mis reservas" : "Todas las reservas" %>
+        </h5>
+      </div>
+      <% if @user_conected&.rol.in?(%w[instructor admin]) %>
+        <%= link_to new_reservation_path, class: "btn btn-sm btn-primary", style: "border-radius:8px;" do %>
           <i class="bi bi-plus-lg"></i> Crear reserva
         <% end %>
-      </div>
+      <% end %>
     </div>
-    <div class="card-body table-card-body">
-      <div class="table-responsive">
-        <table class="table table-hover table-striped table-bordered mb-0 text-center">
-          <thead class="thead-light">
+
+    <div class="p-3">
+    <div class="table-responsive">
+      <table class="table res-table mb-0">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Horario</th>
+            <th>Sala</th>
+            <th>Suscripción</th>
+            <th>Duración</th>
+            <% if @user_conected&.rol.in?(%w[instructor admin]) %>
+              <th>Estudiante</th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @reservations.empty? %>
             <tr>
-              <th>Fecha</th>
-              <th>Hora Inicio</th>
-              <th>Suscripción</th>
-              <th>Usuario</th>
-              <th>Sala</th>
+              <td colspan="<%= @user_conected&.rol.in?(%w[instructor admin]) ? 7 : 6 %>" class="text-center py-5 text-muted">
+                <i class="bi bi-calendar-x" style="font-size:2rem;"></i>
+                <p class="mt-2 mb-0">Sin reservas registradas</p>
+              </td>
             </tr>
-          </thead>
-          <tbody>
+          <% else %>
             <% @reservations.each do |r| %>
-              <tr>
-                <td><%= r.reserve_date %></td>
-                <td><%= r.start_hour %></td>
-                <td><%= r.suscription.name %></td>
-                <td><%= r.suscription.user.name %></td>
-                <td>Cabina&nbsp;<%= r.room %></td>
+              <%
+                is_past = r.reserve_date < Date.current ||
+                          (r.reserve_date == Date.current && r.start_hour < Time.current.hour)
+                start_str = r.start_hour.to_s.rjust(2,'0') + ":00"
+                end_str   = (r.start_hour + (r.duration_hours || 2)).to_s.rjust(2,'0') + ":00"
+                room_name = Room.find_by(id: r.room)&.name || "Cabina #{r.room}"
+              %>
+              <tr class="<%= is_past ? 'past' : '' %>">
+                <td>
+                  <% if is_past %>
+                    <span class="badge-pasada">Pasada</span>
+                  <% else %>
+                    <span class="badge-futura">Próxima</span>
+                  <% end %>
+                </td>
+                <td><%= r.reserve_date.strftime("%d/%m/%Y") %></td>
+                <td class="hour-cell"><%= start_str %> – <%= end_str %></td>
+                <td><span class="badge-sala"><%= room_name %></span></td>
+                <td><span class="badge-suscrip"><%= r.suscription.name %></span></td>
+                <td><%= r.duration_hours || 2 %>h</td>
+                <% if @user_conected&.rol.in?(%w[instructor admin]) %>
+                  <td><%= r.suscription.user.name %></td>
+                <% end %>
               </tr>
             <% end %>
-          </tbody>
-        </table>
-      </div>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
     </div>
   </div>
 </div>
+
+<footer class="fixed-bottom py-2 bg-dark text-center">
+  <span class="text-muted small">Powered by <a href="https://56kz.github.io/#contact" target="_blank" class="text-muted">Verzion56</a></span>
+</footer>

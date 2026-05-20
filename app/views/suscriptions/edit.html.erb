@@ -1,45 +1,55 @@
-<div class="container-fluid py-3">
-  <div class="card shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-      <h5 class="mb-0 font-weight-bold text-dark"><i class="bi bi-credit-card mr-2"></i>Editar suscripción</h5>
-      <%= link_to suscriptions_path, class: "btn btn-outline-secondary btn-sm", data: { toggle: "tooltip" }, title: "Volver a suscripciones" do %>
-        <i class="bi bi-arrow-left"></i> Volver
-      <% end %>
-    </div>
-    <div class="card-body">
-      <div class="row justify-content-center">
-        <div class="col-sm-12 col-md-6">
-          <%= form_for @suscription do |s| %>
-            <div class="form-group">
-              <%= s.text_field :user_id, class: "form-control", placeholder: "Id de Usuario" %>
-            </div>
-            <div class="form-group">
-              <%= s.text_field :rooms, class: "form-control", placeholder: "Cabinas" %>
-            </div>
-            <div class="form-group">
-              <%= s.text_field :observations, class: "form-control", placeholder: "Observaciones" %>
-            </div>
-            <div class="form-group">
-              <%= s.text_field :invoice_number, class: "form-control", placeholder: "Número de factura" %>
-            </div>
-            <div class="form-group">
-              <%= s.label "Tipo" %>
-              <%= s.select :name, Suscription.names.keys, {}, class: "form-control" %>
-            </div>
-            <div class="form-group">
-              <%= s.label "Horas" %>
-              <%= s.select :hours, Suscription.hours.keys, {}, class: "form-control" %>
-            </div>
-            <div class="form-group">
-              <div class="custom-control custom-checkbox">
-                <%= s.check_box :status, id: "suscription_status", class: "custom-control-input" %>
-                <label class="custom-control-label" for="suscription_status">Activo</label>
-              </div>
-            </div>
-            <%= s.submit "Actualizar", class: "btn btn-primary btn-block" %>
-          <% end %>
-        </div>
+<div class="container-fluid py-4" style="max-width: 700px; padding-bottom: 80px;">
+  <div class="admin-card">
+    <div class="admin-card-header">
+      <div class="d-flex align-items-center">
+        <%= link_to suscriptions_path, class: "btn btn-sm btn-light mr-3 admin-btn-back" do %>
+          <i class="bi bi-arrow-left"></i>
+        <% end %>
+        <h5 class="admin-card-title">
+          <i class="bi bi-credit-card mr-2 text-success"></i>Editar suscripción
+        </h5>
       </div>
+    </div>
+
+    <div class="admin-form">
+      <%= form_for @suscription do |s| %>
+        <div class="form-group">
+          <%= s.label :user_id, "Usuario ID" %>
+          <%= s.text_field :user_id, class: "form-control", placeholder: "Id de Usuario" %>
+        </div>
+        <div class="form-group">
+          <%= s.label :rooms, "Cabinas (IDs separados por coma)" %>
+          <%= s.text_field :rooms, class: "form-control", placeholder: "Ej: 1,2,3" %>
+        </div>
+        <div class="form-group">
+          <%= s.label :observations, "Observaciones" %>
+          <%= s.text_field :observations, class: "form-control", placeholder: "Observaciones (opcional)" %>
+        </div>
+        <div class="form-group">
+          <%= s.label :invoice_number, "Número de factura" %>
+          <%= s.text_field :invoice_number, class: "form-control", placeholder: "Número de factura" %>
+        </div>
+        <div class="form-group">
+          <%= s.label :name, "Tipo de suscripción" %>
+          <%= s.select :name, Suscription.names.keys, {}, class: "form-control" %>
+        </div>
+        <div class="form-group">
+          <%= s.label :hours, "Horas" %>
+          <%= s.select :hours, hours_options_for_select, {}, class: "form-control" %>
+        </div>
+        <%= render "expires_at_field", s: s %>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <%= s.check_box :status, id: "suscription_status", class: "custom-control-input" %>
+            <label class="custom-control-label" for="suscription_status" style="font-size:.88rem;font-weight:400;text-transform:none;letter-spacing:0;color:#374151;">Activo</label>
+          </div>
+        </div>
+        <%= s.submit "Actualizar", class: "btn btn-primary btn-block mt-3", style: "border-radius:8px;" %>
+      <% end %>
     </div>
   </div>
 </div>
+
+<footer class="fixed-bottom py-2 bg-dark text-center">
+  <span class="text-muted small">Powered by <a href="https://56kz.github.io/#contact" target="_blank" class="text-muted">Verzion56</a></span>
+</footer>

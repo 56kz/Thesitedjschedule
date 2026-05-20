@@ -1,35 +1,435 @@
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Advent+Pro:wght@600&display=swap');
-  .big-number {
-    font-family: 'Advent Pro', sans-serif;
-    font-size: 2.5em;
+  body.rooms-index { background: #f0ede8 !important; }
+
+  /* ── Utility ── */
+  .dash-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+    height: 100%;
   }
+  .eyebrow {
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #9ca3af;
+    margin-bottom: .6rem;
+  }
+
+  /* ── Welcome card ── */
+  .welcome-name { font-size: 1.9rem; font-weight: 700; line-height: 1.15; margin: .2rem 0 .9rem; }
+  .sub-pill {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: #1f2937; color: #fff;
+    border-radius: 99px; padding: .22rem .8rem;
+    font-size: .75rem; font-weight: 600;
+  }
+  .sub-pill-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; }
+  .expiry-text { font-size: .82rem; color: #6b7280; }
+
+  /* ── Hours card ── */
+  .hours-big { font-size: 2.6rem; font-weight: 700; color: #16a34a; line-height: 1; }
+  .hours-label { font-size: .95rem; color: #374151; }
+  .hours-bar { height: 6px; background: #e5e7eb; border-radius: 99px; margin: .7rem 0 .4rem; }
+  .hours-bar-inner { height: 100%; border-radius: 99px; background: #22c55e; }
+  .hours-bar-inner.warn { background: #f59e0b; }
+  .hours-bar-inner.danger { background: #ef4444; }
+
+  /* ── Next reservation card ── */
+  .next-date { font-size: 1rem; font-weight: 600; color: #111827; margin-bottom: .2rem; }
+  .next-time { font-size: 2rem; font-weight: 700; color: #16a34a; line-height: 1.1; }
+  .chip {
+    display: inline-flex; align-items: center; gap: .3rem;
+    border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: .22rem .7rem; font-size: .75rem; color: #374151; font-weight: 500;
+  }
+
+  /* ── Rooms section ── */
+  .rooms-section { background: #fff; border-radius: 16px; padding: 1.4rem 1.6rem; box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04); }
+
+  .room-dark-card {
+    background: #0d1b2a;
+    border-radius: 12px;
+    padding: 1.1rem;
+    height: 152px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    text-decoration: none;
+    transition: transform .14s ease, box-shadow .14s ease;
+    position: relative; overflow: hidden;
+  }
+  .room-dark-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.22); text-decoration: none; }
+  .room-icon { font-size: 2.2rem; }
+  .room-icon-active   { color: #22c55e; }
+  .room-icon-available{ color: #374151; }
+  .room-footer-row { display: flex; align-items: flex-end; justify-content: space-between; gap: .4rem; }
+  .room-name-label { color: #fff; font-size: .95rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .badge-activa    { background: #22c55e; color: #fff; border-radius: 6px; padding: .18rem .55rem; font-size: .65rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+  .badge-disponible{ background: transparent; color: #9ca3af; border: 1px solid #374151; border-radius: 6px; padding: .18rem .55rem; font-size: .65rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+
+  @media (max-width: 400px) {
+    .room-dark-card { padding: .8rem; height: 130px; }
+    .room-name-label { font-size: .82rem; }
+    .room-new-card span { font-size: .75rem; }
+    .room-new-card .plus-icon { font-size: 1.3rem; }
+  }
+
+  .room-new-card {
+    border: 2px dashed #d1d5db; border-radius: 12px;
+    height: 152px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: .3rem;
+    text-decoration: none; color: #9ca3af;
+    transition: background .12s;
+  }
+  .room-new-card:hover { background: #f9fafb; color: #6b7280; text-decoration: none; }
+  .room-new-card .plus-icon { font-size: 1.6rem; line-height: 1; }
+  .room-new-card span { font-size: .82rem; font-weight: 500; }
+
+  /* ── Quick actions ── */
+  .action-card {
+    display: flex; align-items: center; gap: .85rem;
+    background: #fff; border-radius: 12px; padding: .9rem 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06); text-decoration: none; color: inherit;
+    transition: transform .12s, box-shadow .12s;
+    margin-bottom: .75rem;
+  }
+  .action-card:last-child { margin-bottom: 0; }
+  .action-card:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(0,0,0,.1); text-decoration: none; color: inherit; }
+  .action-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .action-icon-green  { background: #dcfce7; color: #16a34a; }
+  .action-icon-blue   { background: #dbeafe; color: #2563eb; }
+  .action-icon-orange { background: #fed7aa; color: #ea580c; }
+  .action-title { font-size: .9rem; font-weight: 600; color: #111827; line-height: 1.2; }
+  .action-sub   { font-size: .75rem; color: #6b7280; }
 </style>
 
-<div class="container-fluid py-3">
-  <div class="card shadow-sm mb-4">
-    <div class="card-body text-center py-4">
-      <h1 class="display-4">Bienvenido <strong><%= @user_conected&.name || "Usuario" %></strong></h1>
-      <% if @active_suscription.present? %>
-        <h5 class="mb-0">Estás registrado en el programa <span class="badge badge-pill badge-dark"><%= @active_suscription.name %></span></h5>
-      <% end %>
-    </div>
-  </div>
+<%
+  s1 = @active_suscriptions.first
+  s1_total     = s1 ? s1.hours_total : 0
+  s1_used      = s1 ? s1.hours_used : 0
+  s1_remaining = s1 ? [s1_total - s1_used, 0].max : 0
+  s1_pct       = s1_total > 0 ? [(s1_used.to_f / s1_total * 100).round, 100].min : 0
+  s1_bar_class = s1_pct >= 90 ? 'danger' : (s1_pct >= 60 ? 'warn' : '')
+  s1_expires   = s1&.expires_at ? s1.expires_at.strftime("%d/%m/%Y") : "Sin vencimiento"
+  s1_days      = s1&.expires_at ? (s1.expires_at - Date.current).to_i : nil
+%>
 
-  <div class="row">
-    <% @rooms.each_with_index do |r, index| %>
-      <div class="col-md-3 col-sm-6 mb-4">
-        <div class="card shadow-sm rounded overflow-hidden">
-          <%= image_tag "dj-cabin.jpg", class: "card-img-top" %>
-          <div class="card-img-overlay rounded d-flex align-items-center justify-content-center">
-            <h4 class="text-white big-number mb-0"><%= link_to r.name, room_schedules_path(r), class: "text-white" %></h4>
+<div class="container-fluid py-4" style="max-width: 1200px; padding-bottom: 80px;">
+
+  <%# ── Fila superior: 3 tarjetas ── %>
+  <div class="row mb-3" style="row-gap: .75rem;">
+
+    <%# Tarjeta 1 — Bienvenida %>
+    <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+      <div class="dash-card">
+        <div class="eyebrow">Bienvenido,</div>
+        <div class="welcome-name"><%= @user_conected&.name || "Usuario" %></div>
+        <% if s1 %>
+          <span class="sub-pill mr-2">
+            <span class="sub-pill-dot"></span>
+            <%= s1.name %>
+          </span>
+          <span class="expiry-text"><%= s1_expires %></span>
+          <% if @active_suscriptions.size > 1 %>
+            <br><small class="text-muted mt-1 d-inline-block">+<%= @active_suscriptions.size - 1 %> suscripción(es) adicional(es)</small>
+          <% end %>
+        <% else %>
+          <small class="text-muted">Sin suscripción activa</small>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Tarjeta 2 — Horas (primera suscripción) %>
+    <div class="col-lg-4 col-md-6 mb-3 mb-lg-0">
+      <div class="dash-card">
+        <div class="eyebrow">Horas del mes</div>
+        <% if s1 %>
+          <div class="d-flex align-items-baseline gap-2 flex-wrap">
+            <span class="hours-big"><%= s1_remaining %>h</span>
+            <span class="hours-label ml-2 text-muted">restantes de <%= s1_total %>h</span>
           </div>
+          <div class="hours-bar">
+            <div class="hours-bar-inner <%= s1_bar_class %>" style="width:<%= s1_pct %>%;"></div>
+          </div>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted"><%= s1_used %>h usadas</small>
+            <small class="text-muted"><%= s1_total %>h total</small>
+          </div>
+          <%# Suscripciones adicionales (compacto) %>
+          <% @active_suscriptions.drop(1).each do |sx| %>
+            <%
+              sx_rem = [sx.hours_total - sx.hours_used, 0].max
+              sx_pct = sx.hours_total > 0 ? [(sx.hours_used.to_f / sx.hours_total * 100).round, 100].min : 0
+              sx_bar = sx_pct >= 90 ? 'danger' : (sx_pct >= 60 ? 'warn' : '')
+            %>
+            <div class="mt-2 pt-2 border-top">
+              <small class="text-muted"><%= sx.name %> — <strong><%= sx_rem %>h</strong> restantes</small>
+              <div class="hours-bar mt-1" style="height:4px;">
+                <div class="hours-bar-inner <%= sx_bar %>" style="width:<%= sx_pct %>%;"></div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted mb-0 mt-2">Sin horas disponibles</p>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Tarjeta 3 — Próxima reserva %>
+    <div class="col-lg-4 col-md-12 mb-3 mb-lg-0">
+      <div class="dash-card">
+        <div class="eyebrow">Próxima reserva</div>
+        <% if @next_reservation %>
+          <%
+            nr = @next_reservation
+            nr_date  = I18n.l(nr.reserve_date, format: :long) rescue nr.reserve_date.strftime("%A %d de %B").capitalize
+            nr_start = nr.start_hour.to_s.rjust(2,'0') + ":00"
+            nr_end   = (nr.start_hour + nr.duration_hours).to_s.rjust(2,'0') + ":00"
+            nr_room  = @next_reservation_room&.name || "Cabina #{nr.room}"
+          %>
+          <div class="next-date"><%= nr_date.capitalize %></div>
+          <div class="next-time mb-2"><%= nr_start %> – <%= nr_end %></div>
+          <div class="d-flex flex-wrap" style="gap:.4rem;">
+            <span class="chip"><i class="bi bi-broadcast"></i> <%= nr_room %></span>
+            <span class="chip"><i class="bi bi-clock"></i> <%= nr.duration_hours %>h</span>
+          </div>
+        <% else %>
+          <div class="text-center py-3">
+            <i class="bi bi-calendar-x text-muted" style="font-size:2rem;"></i>
+            <p class="text-muted mt-2 mb-0" style="font-size:.85rem;">Sin reservas próximas</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  </div><%# /row top %>
+
+  <%# ── Fila inferior: Cabinas + Acciones rápidas ── %>
+  <div class="row" style="row-gap:.75rem;">
+
+    <%# Columna cabinas %>
+    <div class="col-lg-8 mb-3 mb-lg-0">
+      <div class="rooms-section">
+        <div class="eyebrow mb-3">Cabinas disponibles</div>
+        <div class="row" style="row-gap:.75rem;">
+          <% @rooms.each do |r| %>
+            <%
+              is_active = @room_has_reservation&.dig(r.id)
+              icon_class = is_active ? 'room-icon-active' : 'room-icon-available'
+              icon_name  = is_active ? 'bi-disc-fill'     : 'bi-music-note-beamed'
+            %>
+            <div class="col-6 col-md-4">
+              <%= link_to room_schedules_path(r), class: "room-dark-card d-block" do %>
+                <div class="room-icon">
+                  <i class="bi <%= icon_name %> <%= icon_class %>"></i>
+                </div>
+                <div class="room-footer-row">
+                  <span class="room-name-label"><%= r.name %></span>
+                  <% if is_active %>
+                    <span class="badge-activa">Activa</span>
+                  <% else %>
+                    <span class="badge-disponible">Disponible</span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <%# Placeholder "Reservar nueva" si hay espacio %>
+          <% if @rooms.size < 6 %>
+            <div class="col-6 col-md-4">
+              <%= link_to @rooms.first ? room_schedules_path(@rooms.first) : root_path, class: "room-new-card d-block" do %>
+                <span class="plus-icon">+</span>
+                <span>Reservar nueva</span>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if @rooms.empty? %>
+            <div class="col-12">
+              <div class="alert alert-warning mb-0">No tienes salas disponibles con tu suscripción actual.</div>
+            </div>
+          <% end %>
         </div>
       </div>
-    <% end %>
+    </div>
+
+    <%# Columna acciones rápidas %>
+    <div class="col-lg-4">
+      <div class="eyebrow mb-3">Acciones rápidas</div>
+
+      <%= link_to @rooms.first ? room_schedules_path(@rooms.first) : root_path, class: "action-card" do %>
+        <div class="action-icon action-icon-green"><i class="bi bi-calendar-plus"></i></div>
+        <div>
+          <div class="action-title">Nueva reserva</div>
+          <div class="action-sub">Elige cabina y horario</div>
+        </div>
+      <% end %>
+
+      <%= link_to reservations_path, class: "action-card" do %>
+        <div class="action-icon action-icon-blue"><i class="bi bi-calendar-event"></i></div>
+        <div>
+          <div class="action-title">Mis reservas</div>
+          <div class="action-sub">Ver historial completo</div>
+        </div>
+      <% end %>
+
+      <a href="#" class="action-card" data-toggle="modal" data-target="#modal-suscripcion">
+        <div class="action-icon action-icon-orange"><i class="bi bi-credit-card"></i></div>
+        <div>
+          <div class="action-title">Mi suscripción</div>
+          <div class="action-sub"><%= s1 ? "Detalles del plan #{s1.name}" : "Ver planes" %></div>
+        </div>
+      </a>
+    </div>
+
+  </div><%# /row bottom %>
+
+</div>
+
+<%# ── Modal Mi Suscripción ── %>
+<div class="modal fade" id="modal-suscripcion" tabindex="-1" role="dialog" aria-labelledby="modalSuscripcionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius:20px; border:none; overflow:hidden;">
+
+      <%# Header %>
+      <div class="modal-header border-0 pb-0 px-4 pt-4">
+        <div class="d-flex align-items-center">
+          <%# Avatar con iniciales %>
+          <div style="
+            width:52px; height:52px; border-radius:50%;
+            background:#1f2937; color:#fff;
+            display:flex; align-items:center; justify-content:center;
+            font-size:1.1rem; font-weight:700; flex-shrink:0; margin-right:1rem;
+          ">
+            <%= @user_conected&.name.to_s.split.map(&:first).first(2).join.upcase %>
+          </div>
+          <div>
+            <h5 class="mb-0 font-weight-bold" id="modalSuscripcionLabel" style="color:#111827;">
+              <%= @user_conected&.name %>
+            </h5>
+            <small class="text-muted"><%= current_student.email %></small>
+          </div>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" style="font-size:1.4rem;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body px-4 pt-3 pb-4">
+
+        <%# Info del usuario %>
+        <div style="
+          background:#f9fafb; border-radius:12px;
+          padding:.9rem 1.1rem; margin-bottom:1.25rem;
+          display:flex; gap:2rem; flex-wrap:wrap;
+        ">
+          <div>
+            <div style="font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#9ca3af; margin-bottom:.15rem;">Correo</div>
+            <div style="font-size:.88rem; color:#374151; font-weight:500;"><%= current_student.email %></div>
+          </div>
+          <div>
+            <div style="font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#9ca3af; margin-bottom:.15rem;">Teléfono</div>
+            <div style="font-size:.88rem; color:#374151; font-weight:500;"><%= @user_conected&.phone.presence || "—" %></div>
+          </div>
+          <div>
+            <div style="font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#9ca3af; margin-bottom:.15rem;">Rol</div>
+            <div style="font-size:.88rem; color:#374151; font-weight:500; text-transform:capitalize;"><%= @user_conected&.rol %></div>
+          </div>
+        </div>
+
+        <%# Suscripciones %>
+        <div style="font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#9ca3af; margin-bottom:.75rem;">
+          Suscripciones activas
+        </div>
+
+        <% if @active_suscriptions.present? %>
+          <% @active_suscriptions.each do |s| %>
+            <%
+              total     = s.hours_total
+              used      = s.hours_used
+              remaining = [total - used, 0].max
+              pct       = total > 0 ? [(used.to_f / total * 100).round, 100].min : 0
+              bar_color = pct >= 90 ? '#ef4444' : (pct >= 60 ? '#f59e0b' : '#22c55e')
+              expires_text = s.expires_at ? s.expires_at.strftime("%d/%m/%Y") : "Sin vencimiento"
+              days_left    = s.expires_at ? (s.expires_at - Date.current).to_i : nil
+              created_text = s.created_at.strftime("%d/%m/%Y")
+            %>
+            <div style="
+              background:#fff;
+              border:1px solid #e5e7eb;
+              border-radius:14px;
+              padding:1rem 1.15rem;
+              margin-bottom:.75rem;
+            ">
+              <%# Fila superior: nombre + vencimiento %>
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center" style="gap:.6rem;">
+                  <span style="
+                    background:#1f2937; color:#fff;
+                    border-radius:99px; padding:.2rem .75rem;
+                    font-size:.75rem; font-weight:700;
+                    display:inline-flex; align-items:center; gap:.4rem;
+                  ">
+                    <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+                    <%= s.name %>
+                  </span>
+                  <span style="font-size:.78rem; color:#6b7280;">Plan <%= s.hours %>h</span>
+                </div>
+                <div class="text-right">
+                  <% if days_left %>
+                    <span style="font-size:.72rem; color:<%= days_left <= 7 ? '#ef4444' : (days_left <= 30 ? '#f59e0b' : '#16a34a') %>; font-weight:600;">
+                      Vence en <%= days_left %>d
+                    </span><br>
+                  <% end %>
+                  <span style="font-size:.72rem; color:#9ca3af;"><i class="bi bi-calendar-x"></i> <%= expires_text %></span>
+                </div>
+              </div>
+
+              <%# Barra de horas %>
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <small style="color:#9ca3af; font-size:.72rem;">Horas usadas</small>
+                <small style="font-weight:600; font-size:.78rem; color:#374151;"><%= used %>h / <%= total %>h</small>
+              </div>
+              <div style="height:6px; background:#e5e7eb; border-radius:99px; margin-bottom:.5rem;">
+                <div style="height:100%; border-radius:99px; width:<%= pct %>%; background:<%= bar_color %>; transition:width .4s;"></div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                <span style="font-size:1.05rem; font-weight:700; color:<%= bar_color %>;"><%= remaining %>h restantes</span>
+                <span style="font-size:.72rem; color:#9ca3af;"><i class="bi bi-calendar-plus"></i> Creada el <%= created_text %></span>
+              </div>
+
+              <%# Salas asignadas %>
+              <% if s.rooms.present? %>
+                <div class="mt-2 pt-2" style="border-top:1px solid #f3f4f6;">
+                  <small style="color:#9ca3af; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em;">Salas asignadas</small><br>
+                  <% s.rooms.to_s.split(',').map(&:strip).each do |room_id| %>
+                    <% room_obj = Room.find_by(id: room_id) %>
+                    <span style="
+                      display:inline-flex; align-items:center; gap:.25rem;
+                      background:#f3f4f6; color:#374151;
+                      border-radius:6px; padding:.18rem .5rem;
+                      font-size:.72rem; font-weight:600;
+                      margin-top:.3rem; margin-right:.3rem;
+                    ">
+                      <i class="bi bi-broadcast" style="color:#22c55e;"></i>
+                      <%= room_obj&.name || "Cabina #{room_id}" %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-3 text-muted">
+            <i class="bi bi-credit-card" style="font-size:2rem;"></i>
+            <p class="mt-2 mb-0" style="font-size:.85rem;">Sin suscripciones activas</p>
+          </div>
+        <% end %>
+
+      </div><%# /modal-body %>
+    </div>
   </div>
 </div>
 
-<footer class="fixed-bottom py-3 bg-dark text-center">
-  <span class="text-muted small">Powered by <a href="https://56kz.github.io/#contact" target="_blank" class="text-muted">Verzion56</a></span>
-</footer>

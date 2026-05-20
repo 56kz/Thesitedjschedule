@@ -2,6 +2,11 @@
 # Expone la app solo en localhost para que solo Nginx (en el host) pueda acceder.
 
 services:
+  db:
+    security_opt:
+      - apparmor=unconfined
   web:
     ports:
       - "127.0.0.1:${PORT:-3000}:3000"
+    security_opt:
+      - apparmor=unconfined

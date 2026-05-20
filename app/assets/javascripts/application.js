@@ -121,9 +121,11 @@ document.addEventListener("turbolinks:load", function () {
     //turbolinks load wrapper
     moment.tz.setDefault("America/Bogota");
 
-    var Calendar = FullCalendar.Calendar;
-
     var calendarEl = document.getElementById('calendar');
+
+    if (!calendarEl) { return; }
+
+    var Calendar = FullCalendar.Calendar;
 
     // initialize the external events
     // -----------------------------------------------------------------
@@ -137,7 +139,7 @@ document.addEventListener("turbolinks:load", function () {
         titleFormat: { year: 'numeric', month: '2-digit', day: '2-digit' },
         locale: 'es-us',
         eventTextColor: 'rgb(255,255,255)',
-        height: 980,
+        height: 'parent',
         minTime: '06:00:00',
         /* calendar start Timing */
         maxTime: '22:00:00',
@@ -169,9 +171,8 @@ document.addEventListener("turbolinks:load", function () {
                     dateStr = $('.datepicker-here').val()
                     time_range = $('#time-picker').val()
                     inicio = 0
-                    fin = 0
 
-                    if (dateStr == '' || time_range == '') {
+                    if (dateStr == '' || !$('#selected_hour').val()) {
 
                         Swal.fire({
                             icon: 'info',
@@ -181,47 +182,57 @@ document.addEventListener("turbolinks:load", function () {
 
                     } else {
 
-                        switch (time_range) {
-                            case '6:00 - 08:00 am':
-                                inicio = '06';
-                                fin = '08';
-                                break;
-                            case '8:00 - 10:00 am':
-                                inicio = '08';
-                                fin = '10';
-                                break;
-                            case '10:00 - 12:00 pm':
-                                inicio = '10';
-                                fin = '12';
-                                break;
-                            case '12:00 - 02:00 pm':
-                                inicio = '12';
-                                fin = '14';
-                                break;
-                            case '2:00 - 4:00 pm':
-                                inicio = '14';
-                                fin = '16';
-                                break;
-                            case '4:00 - 6:00 pm':
-                                inicio = '16';
-                                fin = '18';
-                                break;
-                            case '6:00 - 8:00 pm':
-                                inicio = '18';
-                                fin = '20';
-                                break;
-                            case '8:00 - 10:00 pm':
-                                inicio = '20';
-                                fin = '22';
-                                break;
+                        inicio = $('#selected_hour').val();
+
+
+                        var calMode = $('#calendar_mode').val() || 'reserve';
+                        var suscrip = $('#suscription_id').val();
+                        var duration = $('#duration_hours').val() || '2';
+
+                        if (calMode === 'block') {
+                            // Crear bloqueo
+                            var blockData = "block_date=" + dateStr +
+                                "&start_hour=" + inicio +
+                                "&duration_hours=" + duration;
+
+                            $.ajax({
+                                type: "POST",
+                                url: '/rooms/' + $('#roow_id').val() + '/blocked_slots',
+                                data: blockData,
+                                error: function (xhr) {
+                                    if (xhr.status == 401) {
+                                        Swal.fire({ icon:'info', title:'...', text:'La sesión ha finalizado.' })
+                                            .then(function(r){ if(r.value) window.location.replace(window.location.origin+'/students/sign_in'); });
+                                    }
+                                }
+                            }).done(function (data) {
+                                if (data.status_code == '1') {
+                                    var s_inicio_b = Right('0' + data.start_hour, 2);
+                                    var s_fin_b = Right('0' + (data.start_hour + (data.duration_hours || 2)), 2);
+                                    var d_b = new Date(data.reserve_date + 'T' + s_inicio_b + ':00:00Z');
+                                    var e_b = new Date(data.reserve_date + 'T' + s_fin_b + ':00:00Z');
+                                    calendar.addEvent({
+                                        id: 'block_' + data.id,
+                                        title: 'No disponible',
+                                        start: d_b, end: e_b,
+                                        backgroundColor: '#b22222', borderColor: '#b22222',
+                                        editable: false,
+                                        extendedProps: { blocked: true, blocked_slot_id: data.id }
+                                    });
+                                    Swal.fire({ icon:'success', title:'Bloqueado', text:'El horario fue bloqueado.', timer:1500, showConfirmButton:false });
+                                } else {
+                                    Swal.fire({ icon:'warning', title:'No se pudo bloquear', text: data.result });
+                                }
+                            });
+                            return;
                         }
 
-
-                        data = "suscription_id=" + $('#suscription_id').val() +
+                        data = "suscription_id=" + suscrip +
                             "&schedule_id=1" +
                             "&start_hour=" + inicio +
                             "&reserve_date=" + dateStr +
-                            "&room=" + $('#roow_id').val()
+                            "&room=" + $('#roow_id').val() +
+                            "&duration_hours=" + duration
 
                         $.ajax({
                             type: "GET",
@@ -269,7 +280,8 @@ document.addEventListener("turbolinks:load", function () {
 
                                 var s_date = data.reserve_date;
                                 var s_inicio = Right('0' + data.start_hour, 2);
-                                var s_fin = Right('0' + (data.start_hour + 2), 2);
+                                var dur = data.duration_hours || 2;
+                                var s_fin = Right('0' + (data.start_hour + dur), 2);
                                 var reservation_id = data.id
                                 var suscription_id = data.suscription_id
                                 var usr_name = data.username
@@ -327,6 +339,37 @@ document.addEventListener("turbolinks:load", function () {
         },
         eventClick: function (event, element) {
 
+            var isBlocked = event.event.extendedProps.blocked;
+            var rol = $("#user_rol").val();
+
+            if (isBlocked) {
+                if (rol !== 'admin' && rol !== 'instructor') { return; }
+                Swal.fire({
+                    title: '¿Desbloquear horario?',
+                    text: "Se eliminará el bloqueo y el horario quedará disponible.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, desbloquear',
+                    cancelButtonText: 'Cancelar'
+                }).then(function(result) {
+                    if (result.value) {
+                        var slotId = event.event.extendedProps.blocked_slot_id;
+                        $.ajax({
+                            type: "DELETE",
+                            url: '/rooms/' + $('#roow_id').val() + '/blocked_slots/' + slotId,
+                        }).done(function(data) {
+                            if (data.status_code == '1') {
+                                calendar.getEventById('block_' + slotId).remove();
+                                Swal.fire({ icon:'success', title:'Desbloqueado', timer:1200, showConfirmButton:false });
+                            } else {
+                                Swal.fire({ icon:'error', title:'Error', text: data.result });
+                            }
+                        });
+                    }
+                });
+                return;
+            }
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: "¿Deseas eliminar esta programación?",
@@ -340,8 +383,8 @@ document.addEventListener("turbolinks:load", function () {
                 if (result.value) {
 
 
-                    var event_id = event.event.extendedProps.reserv_id
-                    var suscription_id = event.event.extendedProps.suscrip_id
+                    var event_id = event.event.extendedProps.reserv_id;
+                    var suscription_id = event.event.extendedProps.suscrip_id;
 
                     $.ajax({
                         type: "DELETE",
@@ -419,8 +462,10 @@ document.addEventListener("turbolinks:load", function () {
     $('.fc-addEventButton-button').addClass("btn-success");
 
     $(".hour-btn").click(function () {
-        val = $(this).text();
-        $("#time-picker").val(val);
+        $(".hour-btn").removeClass("active");
+        $(this).addClass("active");
+        $("#time-picker").val($(this).text());
+        $("#selected_hour").val($(this).data("hour"));
     });
 
     var disabledDays = [];
@@ -460,7 +505,8 @@ document.addEventListener("turbolinks:load", function () {
 
                     var s_date = data[i].reserve_date;
                     var s_inicio = Right('0' + data[i].start_hour, 2);
-                    var s_fin = Right('0' + (data[i].start_hour + 2), 2);
+                    var dur_i = data[i].duration_hours || 2;
+                    var s_fin = Right('0' + (data[i].start_hour + dur_i), 2);
                     var sucrip_id = data[i].suscription_id
                     var reservation_id = data[i].id
                     var suscription_id = data[i].suscription_id
@@ -473,25 +519,41 @@ document.addEventListener("turbolinks:load", function () {
                     const date_m = moment(date);
                     const dow = date_m.day();
 
-                    if (sucrip_id != $('#suscription_id').val() && $("#user_rol").val() == "estudiante") {
-                        var color = '#708090'
-                        title = 'Cabina Ocupada'
+                    var userIds = ($('#user_suscription_ids').val() || '').split(',').map(function(x){ return parseInt(x, 10); });
+                    var isOwn = userIds.indexOf(parseInt(sucrip_id, 10)) !== -1;
+                    var rol = $("#user_rol").val();
+
+                    if (data[i].blocked) {
+                        var color = '#b22222';
+                        title = 'No disponible';
+                    } else if (!isOwn && rol === 'estudiante') {
+                        var color = '#708090';
+                        title = 'Cabina Ocupada';
+                    } else if (isOwn && rol === 'estudiante') {
+                        var color = '#10b981';
+                        title = 'Suscripción ' + suscription_name;
                     } else {
                         var color = get_color(dow);
-                        title = 'Suscripción ' + suscription_name
+                        title = 'Suscripción ' + suscription_name;
                     }
 
+                    var isBlocked_i = data[i].blocked || false;
                     event = {
-                        id: reservation_id,
+                        id: isBlocked_i ? ('block_' + data[i].blocked_slot_id) : reservation_id,
                         title: title,
                         start: date,
                         end: end,
                         overlap: false,
                         backgroundColor: color,
                         borderColor: color,
-                        reserv_id: reservation_id,
-                        suscrip_id: suscription_id,
-                        username: usr_name
+                        editable: false,
+                        extendedProps: {
+                            reserv_id: reservation_id,
+                            suscrip_id: suscription_id,
+                            username: usr_name,
+                            blocked: isBlocked_i,
+                            blocked_slot_id: data[i].blocked_slot_id || null
+                        }
                     }
 
                     if (!isOverlapping(event)) {

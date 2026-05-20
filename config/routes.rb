@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   # resources :schedules
   resources :rooms do
     resources :schedules
+    resources :blocked_slots, only: [:create, :destroy]
   end
   resources :suscriptions
   resources :users do

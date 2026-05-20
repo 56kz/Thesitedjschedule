@@ -35,6 +35,7 @@ services:
       RAILS_LOG_TO_STDOUT: "1"
       FORCE_SSL: ${FORCE_SSL:-false}
       DISABLE_SSL: ${DISABLE_SSL:-1}
+      TZ: America/Bogota
     ports:
       - "${PORT:-3000}:3000"
     volumes:

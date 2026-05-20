@@ -1,0 +1,101 @@
+<div class="form-group">
+  <%= s.label "Fecha de vencimiento" %>
+  <div class="d-flex mb-1" id="expires-toggle-btns" role="group">
+    <button type="button" class="btn btn-sm btn-outline-secondary mr-2 expires-toggle active" data-mode="months">Por meses</button>
+    <button type="button" class="btn btn-sm btn-outline-secondary expires-toggle" data-mode="date">Fecha exacta</button>
+  </div>
+
+  <div id="expires-months-input">
+    <div class="input-group">
+      <input type="number" id="expires_months" class="form-control" value="6" min="1" max="120" placeholder="Meses desde hoy">
+      <div class="input-group-append">
+        <span class="input-group-text">meses</span>
+      </div>
+    </div>
+    <small class="form-text text-muted">Vence <span id="expires-months-preview"></span></small>
+  </div>
+
+  <div id="expires-date-input" style="display:none;">
+    <input type="text" id="expires_at_picker" class="form-control" placeholder="Selecciona una fecha">
+    <small class="form-text text-muted">Dejar en blanco para que no venza.</small>
+  </div>
+
+  <%= s.hidden_field :expires_at, id: "suscription_expires_at", value: suscription_expires_value(s.object) %>
+</div>
+
+<script>
+document.addEventListener("turbolinks:load", function () {
+  var todayMs = new Date().getTime();
+
+  function formatDate(d) {
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  function addMonths(date, months) {
+    var d = new Date(date);
+    d.setMonth(d.getMonth() + months);
+    return d;
+  }
+
+  function updateFromMonths() {
+    var months = parseInt(document.getElementById('expires_months').value) || 6;
+    var result = addMonths(new Date(), months);
+    document.getElementById('suscription_expires_at').value = formatDate(result);
+    document.getElementById('expires-months-preview').textContent = result.toLocaleDateString('es-CO', {year:'numeric', month:'long', day:'numeric'});
+  }
+
+  var monthsInput = document.getElementById('expires_months');
+  if (monthsInput) {
+    monthsInput.addEventListener('input', updateFromMonths);
+    updateFromMonths();
+  }
+
+  // Datepicker para fecha exacta (AirDatepicker v2 API)
+  $('#expires_at_picker').datepicker({
+    dateFormat: 'yyyy-mm-dd',
+    language: 'es',
+    onSelect: function(formattedDate) {
+      document.getElementById('suscription_expires_at').value = formattedDate;
+    }
+  });
+
+  // Valor inicial si ya tiene fecha
+  var currentVal = document.getElementById('suscription_expires_at').value;
+  if (currentVal) {
+    document.getElementById('expires_at_picker').value = currentVal;
+    try {
+      var parts = currentVal.split('-');
+      var initDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      $('#expires_at_picker').datepicker().data('datepicker').selectDate(initDate);
+    } catch(e) {}
+  }
+
+  // Toggle entre meses / fecha exacta
+  document.querySelectorAll('.expires-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.expires-toggle').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.dataset.mode === 'months') {
+        document.getElementById('expires-months-input').style.display = '';
+        document.getElementById('expires-date-input').style.display = 'none';
+        updateFromMonths();
+      } else {
+        document.getElementById('expires-months-input').style.display = 'none';
+        document.getElementById('expires-date-input').style.display = '';
+        document.getElementById('suscription_expires_at').value = document.getElementById('expires_at_picker').value;
+      }
+    });
+  });
+
+  // Si el objeto ya tiene expires_at, mostrar modo "fecha exacta" activo
+  if (currentVal) {
+    document.querySelectorAll('.expires-toggle').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelector('[data-mode="date"]').classList.add('active');
+    document.getElementById('expires-months-input').style.display = 'none';
+    document.getElementById('expires-date-input').style.display = '';
+  }
+});
+</script>

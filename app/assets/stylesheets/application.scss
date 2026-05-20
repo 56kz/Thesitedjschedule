@@ -93,14 +93,90 @@ footer {
 
 .card-img-overlay {
   display: flex;
-  backdrop-filter: blur(1px); 
+  backdrop-filter: blur(1px);
   background:rgba(150,150,150,0.3);
   flex-direction: column;
   justify-content: center;
-  height: 100%;   
+  height: 100%;
 }
 
 .card-img-overlay a{
   text-decoration: none;
   color: #fff;
+}
+
+/* ── Shared admin aesthetic ────────────────────────────── */
+body.users-index, body.users-new, body.users-edit,
+body.users-edit_password, body.suscriptions-index,
+body.suscriptions-new, body.suscriptions-edit,
+body.my_passwords-edit, body.reservations-index {
+  background: #f0ede8 !important;
+}
+
+.admin-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07), 0 0 0 1px rgba(0,0,0,.04);
+  overflow: hidden;
+}
+
+.admin-card-header {
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.admin-table th {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  border-top: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 1rem 1.5rem !important;
+  background: #fff !important;
+}
+
+.admin-table td {
+  padding: 1.1rem 1.5rem !important;
+  border-top: 1px solid #f9fafb !important;
+  vertical-align: middle !important;
+  font-size: .88rem;
+  color: #374151;
+}
+
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table.table-bordered td,
+.admin-table.table-bordered th { border-left: none; border-right: none; }
+
+.admin-form { padding: 2rem 1.5rem; }
+
+.admin-form .form-control {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: .9rem;
+}
+
+.admin-form label {
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: .3rem;
+}
+
+.admin-btn-back {
+  border-radius: 8px !important;
+  font-size: .82rem;
 }
